@@ -1127,6 +1127,14 @@ function identity(x) {
 __name(identity, "identity");
 
 // node_modules/rxjs/dist/esm5/internal/util/pipe.js
+function pipe() {
+  var fns = [];
+  for (var _i = 0; _i < arguments.length; _i++) {
+    fns[_i] = arguments[_i];
+  }
+  return pipeFromArray(fns);
+}
+__name(pipe, "pipe");
 function pipeFromArray(fns) {
   if (fns.length === 0) {
     return identity;
@@ -2341,6 +2349,10 @@ function last(arr) {
   return arr[arr.length - 1];
 }
 __name(last, "last");
+function popResultSelector(args) {
+  return isFunction(last(args)) ? args.pop() : void 0;
+}
+__name(popResultSelector, "popResultSelector");
 function popScheduler(args) {
   return isScheduler(last(args)) ? args.pop() : void 0;
 }
@@ -2846,6 +2858,12 @@ function observeNotification(notification, observer) {
 }
 __name(observeNotification, "observeNotification");
 
+// node_modules/rxjs/dist/esm5/internal/util/isObservable.js
+function isObservable(obj) {
+  return !!obj && (obj instanceof Observable || isFunction(obj.lift) && isFunction(obj.subscribe));
+}
+__name(isObservable, "isObservable");
+
 // node_modules/rxjs/dist/esm5/internal/util/EmptyError.js
 var EmptyError = createErrorClass(function(_super) {
   return /* @__PURE__ */ __name(function EmptyErrorImpl() {
@@ -2908,10 +2926,117 @@ __name(map, "map");
 
 // node_modules/rxjs/dist/esm5/internal/util/mapOneOrManyArgs.js
 var isArray = Array.isArray;
+function callOrApply(fn, args) {
+  return isArray(args) ? fn.apply(void 0, __spreadArray([], __read(args))) : fn(args);
+}
+__name(callOrApply, "callOrApply");
+function mapOneOrManyArgs(fn) {
+  return map(function(args) {
+    return callOrApply(fn, args);
+  });
+}
+__name(mapOneOrManyArgs, "mapOneOrManyArgs");
 
 // node_modules/rxjs/dist/esm5/internal/util/argsArgArrayOrObject.js
 var isArray2 = Array.isArray;
+var getPrototypeOf = Object.getPrototypeOf;
 var objectProto = Object.prototype;
+var getKeys = Object.keys;
+function argsArgArrayOrObject(args) {
+  if (args.length === 1) {
+    var first_1 = args[0];
+    if (isArray2(first_1)) {
+      return { args: first_1, keys: null };
+    }
+    if (isPOJO(first_1)) {
+      var keys = getKeys(first_1);
+      return {
+        args: keys.map(function(key) {
+          return first_1[key];
+        }),
+        keys
+      };
+    }
+  }
+  return { args, keys: null };
+}
+__name(argsArgArrayOrObject, "argsArgArrayOrObject");
+function isPOJO(obj) {
+  return obj && typeof obj === "object" && getPrototypeOf(obj) === objectProto;
+}
+__name(isPOJO, "isPOJO");
+
+// node_modules/rxjs/dist/esm5/internal/util/createObject.js
+function createObject(keys, values) {
+  return keys.reduce(function(result, key, i) {
+    return result[key] = values[i], result;
+  }, {});
+}
+__name(createObject, "createObject");
+
+// node_modules/rxjs/dist/esm5/internal/observable/combineLatest.js
+function combineLatest() {
+  var args = [];
+  for (var _i = 0; _i < arguments.length; _i++) {
+    args[_i] = arguments[_i];
+  }
+  var scheduler = popScheduler(args);
+  var resultSelector = popResultSelector(args);
+  var _a7 = argsArgArrayOrObject(args), observables = _a7.args, keys = _a7.keys;
+  if (observables.length === 0) {
+    return from([], scheduler);
+  }
+  var result = new Observable(combineLatestInit(observables, scheduler, keys ? function(values) {
+    return createObject(keys, values);
+  } : identity));
+  return resultSelector ? result.pipe(mapOneOrManyArgs(resultSelector)) : result;
+}
+__name(combineLatest, "combineLatest");
+function combineLatestInit(observables, scheduler, valueTransform) {
+  if (valueTransform === void 0) {
+    valueTransform = identity;
+  }
+  return function(subscriber) {
+    maybeSchedule(scheduler, function() {
+      var length = observables.length;
+      var values = new Array(length);
+      var active = length;
+      var remainingFirstValues = length;
+      var _loop_1 = /* @__PURE__ */ __name(function(i2) {
+        maybeSchedule(scheduler, function() {
+          var source = from(observables[i2], scheduler);
+          var hasFirstValue = false;
+          source.subscribe(createOperatorSubscriber(subscriber, function(value) {
+            values[i2] = value;
+            if (!hasFirstValue) {
+              hasFirstValue = true;
+              remainingFirstValues--;
+            }
+            if (!remainingFirstValues) {
+              subscriber.next(valueTransform(values.slice()));
+            }
+          }, function() {
+            if (!--active) {
+              subscriber.complete();
+            }
+          }));
+        }, subscriber);
+      }, "_loop_1");
+      for (var i = 0; i < length; i++) {
+        _loop_1(i);
+      }
+    }, subscriber);
+  };
+}
+__name(combineLatestInit, "combineLatestInit");
+function maybeSchedule(scheduler, execute, subscription) {
+  if (scheduler) {
+    executeSchedule(subscription, scheduler, execute);
+  } else {
+    execute();
+  }
+}
+__name(maybeSchedule, "maybeSchedule");
 
 // node_modules/rxjs/dist/esm5/internal/operators/mergeInternals.js
 function mergeInternals(source, subscriber, project, concurrent, onBeforeNext, expand2, innerSubScheduler, additionalFinalizer) {
@@ -2994,6 +3119,39 @@ function mergeMap(project, resultSelector, concurrent) {
 }
 __name(mergeMap, "mergeMap");
 
+// node_modules/rxjs/dist/esm5/internal/operators/mergeAll.js
+function mergeAll(concurrent) {
+  if (concurrent === void 0) {
+    concurrent = Infinity;
+  }
+  return mergeMap(identity, concurrent);
+}
+__name(mergeAll, "mergeAll");
+
+// node_modules/rxjs/dist/esm5/internal/operators/concatAll.js
+function concatAll() {
+  return mergeAll(1);
+}
+__name(concatAll, "concatAll");
+
+// node_modules/rxjs/dist/esm5/internal/observable/concat.js
+function concat() {
+  var args = [];
+  for (var _i = 0; _i < arguments.length; _i++) {
+    args[_i] = arguments[_i];
+  }
+  return concatAll()(from(args, popScheduler(args)));
+}
+__name(concat, "concat");
+
+// node_modules/rxjs/dist/esm5/internal/observable/defer.js
+function defer(observableFactory) {
+  return new Observable(function(subscriber) {
+    innerFrom(observableFactory()).subscribe(subscriber);
+  });
+}
+__name(defer, "defer");
+
 // node_modules/rxjs/dist/esm5/internal/observable/never.js
 var NEVER = new Observable(noop);
 
@@ -3011,11 +3169,110 @@ function filter(predicate, thisArg) {
 }
 __name(filter, "filter");
 
+// node_modules/rxjs/dist/esm5/internal/operators/catchError.js
+function catchError(selector) {
+  return operate(function(source, subscriber) {
+    var innerSub = null;
+    var syncUnsub = false;
+    var handledResult;
+    innerSub = source.subscribe(createOperatorSubscriber(subscriber, void 0, void 0, function(err) {
+      handledResult = innerFrom(selector(err, catchError(selector)(source)));
+      if (innerSub) {
+        innerSub.unsubscribe();
+        innerSub = null;
+        handledResult.subscribe(subscriber);
+      } else {
+        syncUnsub = true;
+      }
+    }));
+    if (syncUnsub) {
+      innerSub.unsubscribe();
+      innerSub = null;
+      handledResult.subscribe(subscriber);
+    }
+  });
+}
+__name(catchError, "catchError");
+
+// node_modules/rxjs/dist/esm5/internal/operators/scanInternals.js
+function scanInternals(accumulator, seed, hasSeed, emitOnNext, emitBeforeComplete) {
+  return function(source, subscriber) {
+    var hasState = hasSeed;
+    var state = seed;
+    var index = 0;
+    source.subscribe(createOperatorSubscriber(subscriber, function(value) {
+      var i = index++;
+      state = hasState ? accumulator(state, value, i) : (hasState = true, value);
+      emitOnNext && subscriber.next(state);
+    }, emitBeforeComplete && (function() {
+      hasState && subscriber.next(state);
+      subscriber.complete();
+    })));
+  };
+}
+__name(scanInternals, "scanInternals");
+
 // node_modules/rxjs/dist/esm5/internal/operators/concatMap.js
 function concatMap(project, resultSelector) {
   return isFunction(resultSelector) ? mergeMap(project, resultSelector, 1) : mergeMap(project, 1);
 }
 __name(concatMap, "concatMap");
+
+// node_modules/rxjs/dist/esm5/internal/operators/defaultIfEmpty.js
+function defaultIfEmpty(defaultValue) {
+  return operate(function(source, subscriber) {
+    var hasValue = false;
+    source.subscribe(createOperatorSubscriber(subscriber, function(value) {
+      hasValue = true;
+      subscriber.next(value);
+    }, function() {
+      if (!hasValue) {
+        subscriber.next(defaultValue);
+      }
+      subscriber.complete();
+    }));
+  });
+}
+__name(defaultIfEmpty, "defaultIfEmpty");
+
+// node_modules/rxjs/dist/esm5/internal/operators/take.js
+function take(count2) {
+  return count2 <= 0 ? function() {
+    return EMPTY;
+  } : operate(function(source, subscriber) {
+    var seen = 0;
+    source.subscribe(createOperatorSubscriber(subscriber, function(value) {
+      if (++seen <= count2) {
+        subscriber.next(value);
+        if (count2 <= seen) {
+          subscriber.complete();
+        }
+      }
+    }));
+  });
+}
+__name(take, "take");
+
+// node_modules/rxjs/dist/esm5/internal/operators/throwIfEmpty.js
+function throwIfEmpty(errorFactory) {
+  if (errorFactory === void 0) {
+    errorFactory = defaultErrorFactory;
+  }
+  return operate(function(source, subscriber) {
+    var hasValue = false;
+    source.subscribe(createOperatorSubscriber(subscriber, function(value) {
+      hasValue = true;
+      subscriber.next(value);
+    }, function() {
+      return hasValue ? subscriber.complete() : subscriber.error(errorFactory());
+    }));
+  });
+}
+__name(throwIfEmpty, "throwIfEmpty");
+function defaultErrorFactory() {
+  return new EmptyError();
+}
+__name(defaultErrorFactory, "defaultErrorFactory");
 
 // node_modules/rxjs/dist/esm5/internal/operators/finalize.js
 function finalize(callback) {
@@ -3028,6 +3285,84 @@ function finalize(callback) {
   });
 }
 __name(finalize, "finalize");
+
+// node_modules/rxjs/dist/esm5/internal/operators/first.js
+function first(predicate, defaultValue) {
+  var hasDefaultValue = arguments.length >= 2;
+  return function(source) {
+    return source.pipe(predicate ? filter(function(v, i) {
+      return predicate(v, i, source);
+    }) : identity, take(1), hasDefaultValue ? defaultIfEmpty(defaultValue) : throwIfEmpty(function() {
+      return new EmptyError();
+    }));
+  };
+}
+__name(first, "first");
+
+// node_modules/rxjs/dist/esm5/internal/operators/takeLast.js
+function takeLast(count2) {
+  return count2 <= 0 ? function() {
+    return EMPTY;
+  } : operate(function(source, subscriber) {
+    var buffer2 = [];
+    source.subscribe(createOperatorSubscriber(subscriber, function(value) {
+      buffer2.push(value);
+      count2 < buffer2.length && buffer2.shift();
+    }, function() {
+      var e_1, _a7;
+      try {
+        for (var buffer_1 = __values(buffer2), buffer_1_1 = buffer_1.next(); !buffer_1_1.done; buffer_1_1 = buffer_1.next()) {
+          var value = buffer_1_1.value;
+          subscriber.next(value);
+        }
+      } catch (e_1_1) {
+        e_1 = { error: e_1_1 };
+      } finally {
+        try {
+          if (buffer_1_1 && !buffer_1_1.done && (_a7 = buffer_1.return)) _a7.call(buffer_1);
+        } finally {
+          if (e_1) throw e_1.error;
+        }
+      }
+      subscriber.complete();
+    }, void 0, function() {
+      buffer2 = null;
+    }));
+  });
+}
+__name(takeLast, "takeLast");
+
+// node_modules/rxjs/dist/esm5/internal/operators/last.js
+function last2(predicate, defaultValue) {
+  var hasDefaultValue = arguments.length >= 2;
+  return function(source) {
+    return source.pipe(predicate ? filter(function(v, i) {
+      return predicate(v, i, source);
+    }) : identity, takeLast(1), hasDefaultValue ? defaultIfEmpty(defaultValue) : throwIfEmpty(function() {
+      return new EmptyError();
+    }));
+  };
+}
+__name(last2, "last");
+
+// node_modules/rxjs/dist/esm5/internal/operators/scan.js
+function scan(accumulator, seed) {
+  return operate(scanInternals(accumulator, seed, arguments.length >= 2, true));
+}
+__name(scan, "scan");
+
+// node_modules/rxjs/dist/esm5/internal/operators/startWith.js
+function startWith() {
+  var values = [];
+  for (var _i = 0; _i < arguments.length; _i++) {
+    values[_i] = arguments[_i];
+  }
+  var scheduler = popScheduler(values);
+  return operate(function(source, subscriber) {
+    (scheduler ? concat(values, source, scheduler) : concat(values, source)).subscribe(subscriber);
+  });
+}
+__name(startWith, "startWith");
 
 // node_modules/rxjs/dist/esm5/internal/operators/switchMap.js
 function switchMap(project, resultSelector) {
@@ -3055,6 +3390,49 @@ function switchMap(project, resultSelector) {
   });
 }
 __name(switchMap, "switchMap");
+
+// node_modules/rxjs/dist/esm5/internal/operators/takeUntil.js
+function takeUntil(notifier) {
+  return operate(function(source, subscriber) {
+    innerFrom(notifier).subscribe(createOperatorSubscriber(subscriber, function() {
+      return subscriber.complete();
+    }, noop));
+    !subscriber.closed && source.subscribe(subscriber);
+  });
+}
+__name(takeUntil, "takeUntil");
+
+// node_modules/rxjs/dist/esm5/internal/operators/tap.js
+function tap(observerOrNext, error, complete) {
+  var tapObserver = isFunction(observerOrNext) || error || complete ? { next: observerOrNext, error, complete } : observerOrNext;
+  return tapObserver ? operate(function(source, subscriber) {
+    var _a7;
+    (_a7 = tapObserver.subscribe) === null || _a7 === void 0 ? void 0 : _a7.call(tapObserver);
+    var isUnsub = true;
+    source.subscribe(createOperatorSubscriber(subscriber, function(value) {
+      var _a8;
+      (_a8 = tapObserver.next) === null || _a8 === void 0 ? void 0 : _a8.call(tapObserver, value);
+      subscriber.next(value);
+    }, function() {
+      var _a8;
+      isUnsub = false;
+      (_a8 = tapObserver.complete) === null || _a8 === void 0 ? void 0 : _a8.call(tapObserver);
+      subscriber.complete();
+    }, function(err) {
+      var _a8;
+      isUnsub = false;
+      (_a8 = tapObserver.error) === null || _a8 === void 0 ? void 0 : _a8.call(tapObserver, err);
+      subscriber.error(err);
+    }, function() {
+      var _a8, _b;
+      if (isUnsub) {
+        (_a8 = tapObserver.unsubscribe) === null || _a8 === void 0 ? void 0 : _a8.call(tapObserver);
+      }
+      (_b = tapObserver.finalize) === null || _b === void 0 ? void 0 : _b.call(tapObserver);
+    }));
+  }) : identity;
+}
+__name(tap, "tap");
 
 // node_modules/@angular/core/fesm2022/effect.mjs
 function createLinkedSignal(sourceFn, computationFn, equalityFn) {
@@ -31768,14 +32146,39 @@ var REQUEST_CONTEXT = new InjectionToken(typeof ngDevMode === "undefined" || ngD
 export {
   setCurrentInjector,
   SIGNAL,
+  Subscription,
+  pipe,
   Observable,
+  refCount,
+  ConnectableObservable,
   Subject,
+  BehaviorSubject,
+  EMPTY,
+  from,
   of,
+  throwError,
+  isObservable,
+  EmptyError,
   map,
+  combineLatest,
+  mergeMap,
+  mergeAll,
+  concat,
+  defer,
   filter,
+  catchError,
   concatMap,
+  defaultIfEmpty,
+  take,
   finalize,
+  first,
+  takeLast,
+  last2 as last,
+  scan,
+  startWith,
   switchMap,
+  takeUntil,
+  tap,
   setAlternateWeakRefImpl,
   XSS_SECURITY_URL,
   RuntimeError,
@@ -32314,4 +32717,4 @@ export {
    * found in the LICENSE file at https://angular.dev/license
    *)
 */
-//# sourceMappingURL=chunk-CUBYN7MU.js.map
+//# sourceMappingURL=chunk-7JTMETAR.js.map

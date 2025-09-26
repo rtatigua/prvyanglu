@@ -1,0 +1,17 @@
+<div class="quest-card">
+    <h2>{{ quest().title }}</h2>
+    <p>{{ quest().description }}</p>
+    <p>Status: {{ quest().completed ? 'Completed' : 'In Progress' }}</p>
+    <p>XP: {{ quest().xp }}</p>
+  
+    @if (quest().xp > 100) {
+      <p>→ MEGA XP!</p>
+    } @else if (quest().xp > 50) {
+      <p>→ SUPER XP!</p>
+    } @else {
+      <p>→ Keep going...</p>
+    }
+  
+    <button (click)="onDelete()">Delete</button>
+  </div>
+  

@@ -1,0 +1,10 @@
+<main>
+  <button (click)="addQuest()">Add Quest</button>
+
+  @for (quest of quests; track quest.id) {
+    <app-quest-item 
+      [quest]="quest" 
+      (delete)="deleteQuest($event)">
+    </app-quest-item>
+  }
+</main>

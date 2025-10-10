@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { QuestItemComponent } from './quest-item';
 import { QuestService, Quest } from './quest.service';
 
@@ -8,8 +8,14 @@ import { QuestService, Quest } from './quest.service';
   imports: [QuestItemComponent],
   templateUrl: './quests.html',
 })
-export class Quests {
+export class Quests implements OnInit,OnDestroy {
   constructor(private questService: QuestService) {}
+  ngOnInit(): void {
+    console.log('Component was created');
+  }
+  ngOnDestroy(): void {
+    console.log('Component will be destroyed.');
+  }
 
   get quests(): Quest[] {
     return this.questService.getQuests();
@@ -30,4 +36,5 @@ export class Quests {
   deleteQuest(id: number) {
     this.questService.deleteQuest(id);
   }
+  
 }

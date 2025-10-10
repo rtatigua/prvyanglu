@@ -12,6 +12,9 @@ export type Quest = {
   providedIn: 'root'
 })
 export class QuestService {
+  constructor () {
+    console.log("Service created.")
+  }
   private quests: Quest[] = [
     { id: 1, title: 'Find the Lost Sword', description: 'Retrieve the legendary sword from the ancient ruins.', completed: false, xp: 120 },
     { id: 2, title: 'Rescue the Villagers', description: 'Save the villagers captured by goblins.', completed: true, xp: 60 },

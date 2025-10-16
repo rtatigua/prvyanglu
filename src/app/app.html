@@ -1,11 +1,13 @@
 <main>
   <header>
-      <img src="{{ header_logo }}" alt="">
-      <h1>{{ header }}</h1>
+    <img src="{{ header_logo }}" alt="">
+    <h1>{{ header }}</h1>
   </header>
+
+  <nav>
+    <a routerLink="">Home</a>
+    <a routerLink="quests">Quests</a>
+  </nav>
+
   <router-outlet></router-outlet>
-  <button (click)="toggle()">Toggle quests</button>
-  @if (showQuests) {
-    <app-quests></app-quests>
-  }
 </main>

@@ -1,13 +1,17 @@
 <main>
   <header>
-    <img src="{{ header_logo }}" alt="">
+    <img src="assets/logo.jpgx+" alt="Logo" />
     <h1>{{ header }}</h1>
   </header>
 
   <nav>
-    <a routerLink="">Home</a>
-    <a routerLink="quests">Quests</a>
+    <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    <a routerLink="quests" routerLinkActive="active">Quests</a>
   </nav>
 
-  <router-outlet></router-outlet>
+    <button (click)="toggle()">Toggle Quests</button>
+
+  @if (showQuests) {
+    <router-outlet></router-outlet>
+  }
 </main>

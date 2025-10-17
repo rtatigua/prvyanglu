@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { QuestItemComponent } from './quest-item';
 import { QuestService, Quest } from './quest.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quests',
@@ -9,13 +10,14 @@ import { QuestService, Quest } from './quest.service';
   templateUrl: './quests.html',
 })
 export class Quests implements OnInit,OnDestroy {
-  constructor(private questService: QuestService) {}
+  constructor(private questService: QuestService, private router: Router) {}
   ngOnInit(): void {
     console.log('Component was created');
   }
   ngOnDestroy(): void {
     console.log('Component will be destroyed.');
   }
+
 
   get quests(): Quest[] {
     return this.questService.getQuests();
@@ -36,5 +38,7 @@ export class Quests implements OnInit,OnDestroy {
   deleteQuest(id: number) {
     this.questService.deleteQuest(id);
   }
-  
+  goToDetail(id: number) {
+    this.router.navigate(['/quests', id]);
+  }
 }

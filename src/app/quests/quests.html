@@ -1,10 +1,16 @@
 <main>
   <button (click)="addQuest()">Add Quest</button>
-  
+
   @for (quest of quests; track quest.id) {
-    <app-quest-item 
-      [quest]="quest" 
-      (delete)="deleteQuest($event)">
-    </app-quest-item>
+    <div 
+      class="quest-item" 
+      (click)="goToDetail(quest.id)" 
+      style="cursor: pointer; border: 1px solid #555; padding: 10px; margin: 8px 0; border-radius: 8px;"
+    >
+      <app-quest-item 
+        [quest]="quest" 
+        (delete)="deleteQuest($event)">
+      </app-quest-item>
+    </div>
   }
 </main>

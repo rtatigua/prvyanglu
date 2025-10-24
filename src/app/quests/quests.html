@@ -1,7 +1,9 @@
 <main>
+  <h2>Current quest count: {{ questCount() }}</h2>
+
   <button (click)="addQuest()">Add Quest</button>
 
-  @for (quest of quests; track quest.id) {
+  @for (quest of quests(); track quest.id) {
     <div 
       class="quest-item" 
       (click)="goToDetail(quest.id)" 

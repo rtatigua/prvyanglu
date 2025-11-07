@@ -1,0 +1,67 @@
+section.players-list {
+    background: #121212;
+    color: #f0f0f0;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 0 15px rgba(0, 200, 255, 0.3);
+  
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #00bfff;
+    }
+  
+    button {
+      background: #00bfff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s ease;
+  
+      &:hover {
+        background: #0099cc;
+      }
+    }
+  
+    ul {
+      margin-top: 1.5rem;
+      list-style: none;
+      padding: 0;
+  
+      li {
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.6rem;
+        background: #1e1e1e;
+        border: 1px solid #333;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+  
+        &:hover {
+          background: #292929;
+          border-color: #00bfff;
+        }
+  
+        button {
+          float: right;
+          background: #333;
+          border: none;
+          color: #00bfff;
+          font-weight: bold;
+  
+          &:hover {
+            background: #00bfff;
+            color: #fff;
+          }
+        }
+      }
+    }
+  
+    p {
+      color: #999;
+    }
+  }
+  

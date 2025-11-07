@@ -1,0 +1,21 @@
+<div *ngIf="clan; else notFound">
+    <h2>{{ clan.name }}</h2>
+    <p>{{ clan.description }}</p>
+    <p>Capacity: {{ clan.memberIds.length }}/{{ clan.capacity }}</p>
+  
+    <h3>Members</h3>
+    <ul *ngIf="members.length; else noMembers">
+      <li *ngFor="let m of members">
+        <a [routerLink]="['/players', m.id]">{{ m.nickname }}</a>
+      </li>
+    </ul>
+    <ng-template #noMembers><p>No members yet.</p></ng-template>
+  
+    <button (click)="goBack()">⬅ Back to Clans</button>
+  </div>
+  
+  <ng-template #notFound>
+    <p>Clan not found.</p>
+    <button (click)="goBack()">Back</button>
+  </ng-template>
+  

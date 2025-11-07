@@ -1,0 +1,29 @@
+<div *ngIf="player; else notFound" class="player-detail">
+    <h2>{{ player.nickname }} (lvl {{ player.level }})</h2>
+  
+    <p *ngIf="player.clanId">
+      Clan:
+      <a [routerLink]="['/clans', player.clanId]">View Clan {{ player.clanId }}</a>
+    </p>
+  
+    <p>Quests:</p>
+    <ul *ngIf="player.questIds && player.questIds.length; else noQuests">
+      <li *ngFor="let qid of player.questIds">
+        <a (click)="goToQuest(qid)">{{ 'Quest #' + qid }}</a>
+      </li>
+    </ul>
+    <ng-template #noQuests>
+      <p>No quests assigned.</p>
+    </ng-template>
+  
+    <div style="margin-top:1rem;">
+      <button (click)="deletePlayer()">Delete Player</button>
+      <button (click)="goBack()">Back to Players</button>
+    </div>
+  </div>
+  
+  <ng-template #notFound>
+    <p>Player not found.</p>
+    <button (click)="goBack()">Back</button>
+  </ng-template>
+  

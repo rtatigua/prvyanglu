@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 
 import { Quests } from './quests/quests';
-import { QuestDetail } from './quests/quests';
+import { QuestDetail } from './quest-detail/quest-detail';
 
-import { Players } from './players/players';
+import { Players } from './players/player';
 import { PlayerDetail } from './players/player-detail';
 
 import { Clans } from './clans/clans';

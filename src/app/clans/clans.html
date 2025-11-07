@@ -1,0 +1,16 @@
+<section class="clans-list">
+    <h2>Clans ({{ clanCount() }})</h2>
+    <button (click)="addClan()">Add Clan</button>
+  
+    <ul *ngIf="clans().length; else noClans">
+      <li *ngFor="let c of clans()" (click)="goToDetail(c.id)" style="cursor:pointer;">
+        <strong>{{ c.name }}</strong> — Capacity: {{ c.memberIds.length }}/{{ c.capacity }}
+        <button (click)="deleteClan(c.id, $event)">Delete</button>
+      </li>
+    </ul>
+  
+    <ng-template #noClans>
+      <p>No clans yet.</p>
+    </ng-template>
+  </section>
+      

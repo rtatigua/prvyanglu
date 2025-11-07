@@ -1,0 +1,67 @@
+section.clans-list {
+    background: #121212;
+    color: #f0f0f0;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 0 15px rgba(255, 255, 0, 0.3);
+  
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #ffd700;
+    }
+  
+    button {
+      background: #ffd700;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      color: #000;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s ease;
+  
+      &:hover {
+        background: #ffea00;
+      }
+    }
+  
+    ul {
+      margin-top: 1.5rem;
+      list-style: none;
+      padding: 0;
+  
+      li {
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.6rem;
+        background: #1e1e1e;
+        border: 1px solid #333;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+  
+        &:hover {
+          background: #292929;
+          border-color: #ffd700;
+        }
+  
+        button {
+          float: right;
+          background: #333;
+          border: none;
+          color: #ffd700;
+          font-weight: bold;
+  
+          &:hover {
+            background: #ffd700;
+            color: #000;
+          }
+        }
+      }
+    }
+  
+    p {
+      color: #999;
+    }
+  }
+  

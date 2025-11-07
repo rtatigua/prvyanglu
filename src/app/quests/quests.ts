@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, QuestItemComponent],
   templateUrl: './quests.html',
+  styleUrls: ['./quests.scss']
 })
 export class Quests implements OnInit, OnDestroy {
   quests = signal<Quest[]>([]);

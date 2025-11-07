@@ -1,37 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&family=Inter:wght@400;600&display=swap');
 
-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
-  img {
-    max-width: 3%;
-    height: auto;
-    padding-right: 1%;
-  }
+:root {
+  --bg: #0d0d0f;
+  --panel: #1a1a1f;
+  --accent-quests: #ff4747;
+  --accent-players: #00bfff;
+  --accent-clans: #ffd700;
+  --text: #f2f2f2;
+  --muted: #aaa;
 }
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin: 1rem 0;
 
-  a {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.app-header {
+  background: #141418;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--accent-quests);
+
+  h1 {
+    font-family: 'MedievalSharp', cursive;
+    color: var(--accent-quests);
+    letter-spacing: 1px;
+  }
+
+  nav a {
+    color: var(--text);
+    margin: 0 0.6rem;
     text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    transition: background 0.2s ease;
+    font-weight: 600;
+    transition: 0.2s;
 
     &:hover {
-      background: #f0f0f0;
+      color: var(--accent-quests);
     }
 
     &.active {
-      background: #1976d2;
-      color: white;
+      color: var(--accent-quests);
+      border-bottom: 2px solid var(--accent-quests);
     }
   }
 }
+
+.content {
+  padding: 2rem;
+}
+
+.footer {
+  text-align: center;
+  padding: 1rem;
+  border-top: 2px solid #222;
+  color: var(--muted);
+  margin-top: 2rem;
+}
+
+/* BUTTONS */
+button {
+  background: var(--accent-quests);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0.5rem;
+
+  &:hover {
+    background: #ff2e2e;
+    box-shadow: 0 0 8px rgba(255, 71, 71, 0.5);
+  }
+
+  &:active {
+    background: #b11b1b;
+  }
+
+  &.blue { background: var(--accent-players); &:hover { background: #0099cc; } }
+  &.yellow { background: var(--accent-clans); color: #000; &:hover { background: #ffe600; } }
+}
+  

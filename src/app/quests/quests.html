@@ -1,18 +1,25 @@
-<main>
-  <h2>Current quest count: {{ questCount() }}</h2>
+<section class="quests-page">
+  <div class="header-bar">
+    <h2>🗡️ Quests</h2>
+    <button (click)="addQuest()">+ Add Quest</button>
+  </div>
 
-  <button (click)="addQuest()">Add Quest</button>
+  <p class="summary">You currently have {{ quests().length }} quests.</p>
 
-  @for (quest of quests(); track quest.id) {
-    <div 
-      class="quest-item" 
-      (click)="goToDetail(quest.id)" 
-      style="cursor: pointer; border: 1px solid #555; padding: 10px; margin: 8px 0; border-radius: 8px;"
-    >
-      <app-quest-item 
-        [quest]="quest" 
-        (delete)="deleteQuest($event)">
-      </app-quest-item>
+  <div class="quest-list">
+    <div class="quest-card" *ngFor="let quest of quests()">
+      <h3>{{ quest.title }}</h3>
+      <p>{{ quest.description }}</p>
+      <div class="details">
+        <span>XP: {{ quest.xp }}</span>
+        <span [class.done]="quest.completed">
+          {{ quest.completed ? '✔ Completed' : '❌ In Progress' }}
+        </span>
+      </div>
+      <div class="actions">
+        <button class="blue" (click)="goToDetail(quest.id)">View</button>
+        <button class="yellow" (click)="deleteQuest(quest.id)">Delete</button>
+      </div>
     </div>
-  }
-</main>
+  </div>
+</section>

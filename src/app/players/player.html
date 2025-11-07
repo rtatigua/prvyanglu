@@ -1,0 +1,25 @@
+<section class="players-list">
+    <h2>Players ({{ playersCount() }})</h2>
+    <button (click)="addPlayer()">Add Player</button>
+  
+    <ul *ngIf="players().length > 0; else noPlayers">
+      <li *ngFor="let p of players()" class="player-row" (click)="goToDetail(p.id)" style="cursor: pointer;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:40px; height:40px; background:#ddd; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+            {{ p.nickname[0] }}
+          </div>
+          <div>
+            <div><strong>{{ p.nickname }}</strong> — lvl {{ p.level }}</div>
+          </div>
+          <div style="margin-left:auto;">
+            <button (click)="deletePlayer(p.id, $event)">Delete</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  
+    <ng-template #noPlayers>
+      <p>No players yet. Click "Add Player" to create one.</p>
+    </ng-template>
+  </section>
+  

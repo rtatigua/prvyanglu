@@ -1,20 +1,16 @@
-<main>
-  <header>
-    <img src="assets/logo.jpgx+" alt="Logo" />
-    <h1>{{ header }}</h1>
-  </header>
-
+<header class="app-header">
+  <h1>⚔️ Quest World</h1>
   <nav>
-    <a routerLink="" routerLinkActive="active">Home</a>
-    <a routerLink="quests" routerLinkActive="active">Quests</a>
-    <a routerLink="Players" routerLinkActive="active">Players</a>
-    <a routerLink="Clans" routerLinkActive="active">Clans</a>
-
+    <a routerLink="/quests" routerLinkActive="active">Quests</a>
+    <a routerLink="/players" routerLinkActive="active">Players</a>
+    <a routerLink="/clans" routerLinkActive="active">Clans</a>
   </nav>
+</header>
 
-    <button (click)="toggle()">Toggle Quests</button>
-
-  @if (showQuests) {
-    <router-outlet></router-outlet>
-  }
+<main class="content">
+  <router-outlet></router-outlet>
 </main>
+
+<footer class="footer">
+  <p>🜂 Built with Angular — Quest Management RPG UI</p>
+</footer>

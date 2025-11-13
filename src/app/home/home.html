@@ -1,14 +1,46 @@
-.<main class="home">
-  <section class="intro">
-    <img [src]="image" alt="Home Image">
-    <h1>{{ title }}</h1>
-    <p>{{ subtitle }}</p>
-  </section>
+<div class="home-container">
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">⚔️ Welcome to Quest Overflow</h1>
+      <p class="hero-subtitle">{{ subtitle }}</p>
+      <p class="hero-description">
+        Embark on an epic adventure! Explore challenging quests, build powerful teams, 
+        and conquer legendary clans. Your journey awaits!
+      </p>
+      <div class="hero-buttons">
+        <a routerLink="/quests" class="btn btn-primary">
+          <span class="icon">📜</span> Start Questing
+        </a>
+        <a routerLink="/players" class="btn btn-secondary">
+          <span class="icon">👥</span> View Players
+        </a>
+      </div>
+    </div>
+  </div>
 
-  <section class="content">
-    <p>
-      Explore quests, earn experience, and level up your hero.  
-      Click the “Quests” section to begin your journey!
-    </p>
+  <section class="features-section">
+    <h2>Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📜</div>
+        <h3>Quests</h3>
+        <p>Challenge yourself with exciting quests. Earn XP, unlock achievements, and become a legend.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👤</div>
+        <h3>Players</h3>
+        <p>Create and manage your heroes. Level them up and track their progress through epic adventures.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏰</div>
+        <h3>Clans</h3>
+        <p>Unite with other players! Form clans, build alliances, and dominate the gaming world together.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⭐</div>
+        <h3>Achievements</h3>
+        <p>Complete missions, earn rewards, and unlock exclusive content. The more you play, the more you gain.</p>
+      </div>
+    </div>
   </section>
-</main>
+</div>

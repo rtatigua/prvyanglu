@@ -1,0 +1,37 @@
+<div class="clans-container">
+  <div class="header-section">
+    <h1>🏰 Clans</h1>
+    <p class="subtitle">Manage and organize your gaming clans</p>
+  </div>
+
+  <button class="btn-add" (click)="addClan()">
+    <span class="icon">➕</span> Add New Clan
+  </button>
+
+  <div class="clans-grid">
+    @for (c of clans; track c.id) {
+      <div class="clan-card" (click)="openDetail(c.id)">
+        <div class="card-header">
+          <h3>{{ c.name }}</h3>
+          <span class="capacity-badge">{{ c.members.length }}/{{ c.capacity }}</span>
+        </div>
+        <p class="description">{{ c.description }}</p>
+        <div class="card-footer">
+          <div class="members-info">
+            <span class="members-count">{{ c.members.length }} members</span>
+          </div>
+          <button 
+            class="btn-remove" 
+            (click)="removeClan(c.id); $event.stopPropagation()"
+            title="Delete this clan">
+            ❌
+          </button>
+        </div>
+      </div>
+    } @empty {
+      <div class="empty-state">
+        <p>🏜️ No clans yet. Create your first one!</p>
+      </div>
+    }
+  </div>
+</div>

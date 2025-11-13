@@ -1,4 +1,6 @@
+
 import { Component, input, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 export type Quest = {
   id: number;
@@ -11,7 +13,7 @@ export type Quest = {
 @Component({
   selector: 'app-quest-item',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './quest-item.html',
 })
 export class QuestItemComponent {

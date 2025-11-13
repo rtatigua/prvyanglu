@@ -1,0 +1,270 @@
+.clan-detail-container {
+  padding: 2rem;
+  background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+  min-height: 100vh;
+
+  .detail-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .btn-back {
+      background: rgba(33, 150, 243, 0.2);
+      border: 1px solid #2196f3;
+      color: #64b5f6;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(33, 150, 243, 0.4);
+        transform: translateX(-4px);
+      }
+    }
+
+    h1 {
+      color: #ffd54f;
+      font-size: 2.5rem;
+      margin: 0;
+      text-shadow: 0 2px 8px rgba(255, 213, 79, 0.3);
+    }
+  }
+
+  .clan-info {
+    background: linear-gradient(135deg, #23233b 0%, #2d2d4a 100%);
+    border: 2px solid rgba(100, 181, 246, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+
+    .description {
+      color: #b0bec5;
+      font-size: 1.1rem;
+      margin: 0 0 1.5rem;
+    }
+
+    .capacity-info {
+      .capacity-bar {
+        width: 100%;
+        height: 24px;
+        background: rgba(100, 181, 246, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+
+        .capacity-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #81c784, #ffd54f);
+          border-radius: 12px;
+          transition: width 0.3s ease;
+        }
+      }
+
+      .capacity-text {
+        color: #b0bec5;
+        margin: 0;
+        font-size: 0.95rem;
+
+        strong {
+          color: #ffd54f;
+        }
+      }
+    }
+  }
+
+  .add-player-section {
+    background: linear-gradient(135deg, #1e5a33 0%, #2a6f42 100%);
+    border: 2px solid rgba(129, 199, 132, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+
+    h3 {
+      color: #81c784;
+      margin: 0 0 1rem;
+      font-size: 1.1rem;
+    }
+
+    .form-group {
+      display: flex;
+      gap: 1rem;
+
+      .player-select {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(129, 199, 132, 0.3);
+        color: #eee;
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+
+        &:hover:not(:disabled) {
+          border-color: rgba(129, 199, 132, 0.6);
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        &:focus {
+          outline: none;
+          border-color: #81c784;
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        option {
+          background: #1a1a2e;
+          color: #eee;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+
+      .btn-add-player {
+        background: linear-gradient(135deg, #81c784, #66bb6a);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+
+        &:hover:not(:disabled) {
+          background: linear-gradient(135deg, #66bb6a, #4caf50);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(129, 199, 132, 0.3);
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  .at-capacity-message {
+    background: rgba(255, 152, 0, 0.2);
+    border: 1px solid #ffa726;
+    color: #ffb74d;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    font-weight: bold;
+  }
+
+  .members-section {
+    h2 {
+      color: #64b5f6;
+      font-size: 1.5rem;
+      margin: 0 0 1.5rem;
+    }
+
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+
+      .member-card {
+        background: linear-gradient(135deg, #23233b 0%, #2d2d4a 100%);
+        border: 2px solid rgba(100, 181, 246, 0.15);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: rgba(100, 181, 246, 0.4);
+          transform: translateY(-6px);
+          box-shadow: 0 12px 24px rgba(66, 165, 245, 0.15);
+        }
+
+        .member-header {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 1rem;
+          align-items: center;
+
+          .member-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ffd54f;
+          }
+
+          .member-info {
+            flex: 1;
+
+            h4 {
+              color: #ffd54f;
+              margin: 0 0 0.3rem;
+              font-size: 1.05rem;
+            }
+
+            .level {
+              color: #81c784;
+              margin: 0;
+              font-size: 0.85rem;
+            }
+          }
+        }
+
+        .member-actions {
+          display: flex;
+          gap: 0.5rem;
+
+          .btn-view {
+            flex: 1;
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid #2196f3;
+            color: #64b5f6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            text-align: center;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background: rgba(33, 150, 243, 0.4);
+            }
+          }
+
+          .btn-remove-member {
+            background: rgba(211, 47, 47, 0.2);
+            border: 1px solid #d32f2f;
+            color: #ff6b6b;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background: rgba(211, 47, 47, 0.4);
+            }
+          }
+        }
+      }
+
+      .empty-members {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 2rem;
+
+        p {
+          color: #b0bec5;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}

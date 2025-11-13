@@ -1,0 +1,29 @@
+<div *ngIf="player" class="detail">
+  <h2>{{ player.nickname }}</h2>
+  <img *ngIf="player.avatar" [src]="player.avatar" alt="{{ player.nickname }}" class="player-avatar" />
+  <p><strong>Level:</strong> {{ player.level }}</p>
+
+  <div class="clan-section">
+    <h3>Clan</h3>
+    <p *ngIf="clan">
+      <a [routerLink]="['/clans', clan.id]">{{ clan.name }}</a>
+    </p>
+    <p *ngIf="!clan">No clan</p>
+  </div>
+
+  <h3>Quests</h3>
+  <div class="quests-section">
+    @for (q of player.quests; track q.id) {
+      <div class="quest-card">
+        <p>
+          <a [routerLink]="['/quests', q.id]">{{ q.title }}</a>
+        </p>
+        <p class="xp">{{ q.xp }} XP</p>
+      </div>
+    } @empty {
+      <p>No quests yet.</p>
+    }
+  </div>
+
+  <button (click)="goBack()">⬅ Back to Players</button>
+</div>

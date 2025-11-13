@@ -1,37 +1,104 @@
-
-header {
+.app-container {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+  color: #eee;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-bottom: 3px solid #ffd54f;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 8px 24px rgba(255, 213, 79, 0.15);
   
-  img {
-    max-width: 3%;
-    height: auto;
-    padding-right: 1%;
+  .header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    
+    .logo-section {
+      .app-title {
+        color: #ffd54f;
+        font-size: 2rem;
+        margin: 0 0 0.3rem;
+        text-shadow: 0 4px 12px rgba(255, 213, 79, 0.3);
+      }
+      
+      .app-tagline {
+        color: #b0bec5;
+        margin: 0;
+        font-size: 0.9rem;
+      }
+    }
   }
 }
-nav {
+
+.main-nav {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin: 1rem 0;
-
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: rgba(26, 26, 46, 0.5);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(100, 181, 246, 0.1);
+  flex-wrap: wrap;
+  
   a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
+    color: #b0bec5;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
     border-radius: 8px;
-    transition: background 0.2s ease;
-
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    font-size: 1rem;
+    
+    .nav-icon {
+      font-size: 1.2rem;
+    }
+    
+    .nav-text {
+      display: inline;
+    }
+    
     &:hover {
-      background: #f0f0f0;
+      background: rgba(100, 181, 246, 0.1);
+      color: #64b5f6;
+      border-color: rgba(100, 181, 246, 0.3);
+      transform: translateY(-2px);
     }
-
+    
     &.active {
-      background: #1976d2;
+      background: linear-gradient(135deg, #42a5f5, #2196f3);
       color: white;
+      border-color: #2196f3;
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
     }
+  }
+}
+
+.main-content {
+  flex: 1;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.app-footer {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-top: 1px solid rgba(100, 181, 246, 0.1);
+  padding: 1.5rem;
+  text-align: center;
+  color: #b0bec5;
+  margin-top: auto;
+  
+  p {
+    margin: 0;
+    font-size: 0.9rem;
   }
 }

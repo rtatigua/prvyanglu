@@ -1,0 +1,96 @@
+.detail {
+  padding: 2rem;
+  background: #1e1e2f;
+  color: #eee;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+
+  h2 {
+    color: #ffd54f;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    color: #64b5f6;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .player-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 3px solid #ffd54f;
+    object-fit: cover;
+    display: block;
+  }
+
+  .clan-section {
+    background: #23233b;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+
+    p {
+      margin: 0.5rem 0;
+    }
+
+    a {
+      color: #64b5f6;
+      text-decoration: none;
+      font-weight: bold;
+
+      &:hover {
+        text-decoration: underline;
+        color: #ffd54f;
+      }
+    }
+  }
+
+  .quests-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .quest-card {
+      background: #23233b;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 4px solid #64b5f6;
+
+      a {
+        color: #64b5f6;
+        text-decoration: none;
+        font-weight: bold;
+
+        &:hover {
+          text-decoration: underline;
+          color: #ffd54f;
+        }
+      }
+
+      .xp {
+        color: #81c784;
+        font-weight: bold;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  button {
+    margin-top: 2rem;
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+
+    &:hover {
+      background: #1565c0;
+    }
+  }
+}

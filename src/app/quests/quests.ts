@@ -1,17 +1,19 @@
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { QuestItemComponent } from './quest-item';
 import { QuestService, Quest } from './quest.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quests',
   standalone: true,
-  imports: [CommonModule, QuestItemComponent],
+  imports: [CommonModule],
   templateUrl: './quests.html',
 })
 export class Quests implements OnInit, OnDestroy {
   quests = signal<Quest[]>([]);
+
+  // map questId -> expanded (show full description)
+  private expandedMap = signal<Record<number, boolean>>({});
 
   questCount = computed(() => this.quests().length);
 
@@ -43,9 +45,25 @@ export class Quests implements OnInit, OnDestroy {
 
   deleteQuest(id: number) {
     this.quests.set(this.quests().filter(q => q.id !== id));
+    // also remove any expanded state for deleted quest
+    const map = { ...this.expandedMap() };
+    if (map[id]) {
+      delete map[id];
+      this.expandedMap.set(map);
+    }
   }
 
   goToDetail(id: number) {
     this.router.navigate(['/quests', id]);
+  }
+
+  isExpanded(id: number) {
+    return !!this.expandedMap()[id];
+  }
+
+  toggleExpand(id: number) {
+    const map = { ...this.expandedMap() };
+    map[id] = !map[id];
+    this.expandedMap.set(map);
   }
 }

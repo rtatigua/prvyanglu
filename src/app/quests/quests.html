@@ -1,18 +1,42 @@
-<main>
-  <h2>Current quest count: {{ questCount() }}</h2>
+<div class="quests-container">
+  <div class="quests-header">
+    <h1>📜 Quests</h1>
+    <p class="quest-count">Total Quests: {{ questCount() }}</p>
+  </div>
 
-  <button (click)="addQuest()">Add Quest</button>
+  <button class="btn-add-quest" (click)="addQuest()">
+    <span class="icon">➕</span> Create New Quest
+  </button>
 
-  @for (quest of quests(); track quest.id) {
-    <div 
-      class="quest-item" 
-      (click)="goToDetail(quest.id)" 
-      style="cursor: pointer; border: 1px solid #555; padding: 10px; margin: 8px 0; border-radius: 8px;"
-    >
-      <app-quest-item 
-        [quest]="quest" 
-        (delete)="deleteQuest($event)">
-      </app-quest-item>
-    </div>
-  }
-</main>
+  <div class="quests-grid">
+    <ng-container *ngIf="quests().length; else empty">
+      <div *ngFor="let quest of quests()" class="quest-card" (click)="goToDetail(quest.id)">
+        <div class="quest-header-section">
+          <h3>{{ quest.title }}</h3>
+          <span class="xp-badge">{{ quest.xp }} XP</span>
+        </div>
+
+        <p class="quest-description" [class.clamped]="!isExpanded(quest.id)">{{ quest.description }}</p>
+
+        <div class="quest-meta">
+          <span class="status" [class.completed]="quest.completed">{{ quest.completed ? 'Completed' : 'In Progress' }}</span>
+
+          <div class="actions">
+            <button class="btn-toggle" (click)="$event.stopPropagation(); toggleExpand(quest.id)">
+              {{ isExpanded(quest.id) ? 'Show less' : 'Show more' }}
+            </button>
+
+            <button class="btn-delete" (click)="$event.stopPropagation(); deleteQuest(quest.id)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #empty>
+      <div class="empty-state">
+        <p>🏜️ No quests available yet.</p>
+        <p>Click "Create New Quest" to get started!</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

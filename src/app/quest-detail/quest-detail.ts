@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { QuestService, Quest } from '../quests/quest.service';
 
 @Component({
   selector: 'app-quest-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './quest-detail.html',
   styleUrls: ['./quest-detail.scss']
 })

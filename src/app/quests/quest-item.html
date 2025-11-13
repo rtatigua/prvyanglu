@@ -1,16 +1,18 @@
-<div class="quest-card">
-  <h2>{{ quest().title }}</h2>
-  <p>{{ quest().description }}</p>
-  <p>Status: {{ quest().completed ? 'Completed' : 'In Progress' }}</p>
-  <p>XP: {{ quest().xp }}</p>
+<div class="quest-item">
+  <div class="header">
+    <div class="title">{{ quest().title }}</div>
+    <div class="xp">{{ quest().xp }} XP</div>
+  </div>
 
-  @if (quest().xp > 100) {
-    <p>→ MEGA XP!</p>
-  } @else if (quest().xp > 50) {
-    <p>→ SUPER XP!</p>
-  } @else {
-    <p>→ Keep going...</p>
-  }
+  <p class="description">{{ quest().description }}</p>
 
-  <button (click)="onDelete()">Delete</button>
+  <div class="meta">
+    <span class="status">{{ quest().completed ? 'Completed' : 'In Progress' }}</span>
+    <div class="right">
+      <span *ngIf="quest().xp > 100" class="badge mega">→ MEGA XP!</span>
+      <span *ngIf="quest().xp > 50 && quest().xp <= 100" class="badge super">→ SUPER XP!</span>
+      <span *ngIf="quest().xp <= 50" class="badge small">→ Keep going...</span>
+      <button class="btn-delete" (click)="$event.stopPropagation(); onDelete()">Delete</button>
+    </div>
+  </div>
 </div>

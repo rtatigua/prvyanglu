@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QuestService, Quest } from './quest.service';
 import { Router } from '@angular/router';
@@ -11,47 +11,46 @@ import { Router } from '@angular/router';
   styleUrls: ['./quests.scss']
 })
 export class Quests implements OnInit, OnDestroy {
+
+  // signal for quest list
   quests = signal<Quest[]>([]);
 
-  // map questId -> expanded (show full description)
-  private expandedMap = signal<Record<number, boolean>>({});
+  // map for expanded states (questId -> boolean)
+  expandedMap = signal<{ [key: number]: boolean }>({});
 
-  questCount = computed(() => this.quests().length);
+  constructor(
+    private questService: QuestService,
+    private router: Router
+  ) {}
 
-  constructor(private questService: QuestService, private router: Router) {}
-
-  ngOnInit(): void {
-    console.log('Component was created');
+  ngOnInit() {
+    // load initial quests from service
     this.quests.set(this.questService.getQuests());
   }
 
-  ngOnDestroy(): void {
-    console.log('Component will be destroyed.');
+  ngOnDestroy() {}
+
+  // returns number of quests (used by template)
+  questCount() {
+    return this.quests().length;
   }
 
   addQuest() {
-    const currentQuests = this.quests();
-    const maxId = Math.max(...currentQuests.map(q => q.id), 0);
-
+    const newId = this.quests().length ? Math.max(...this.quests().map(q => q.id)) + 1 : 1;
     const newQuest: Quest = {
-      id: maxId + 1,
-      title: 'New Quest',
-      description: 'A mysterious new adventure awaits...',
+      id: newId,
+      title: `New Quest #${newId}`,
+      description: 'Describe the quest here...',
       completed: false,
-      xp: 50
+      xp: 10
     };
-
-    this.quests.set([...currentQuests, newQuest]);
+    this.questService.addQuest(newQuest);
+    this.quests.set(this.questService.getQuests());
   }
 
   deleteQuest(id: number) {
-    this.quests.set(this.quests().filter(q => q.id !== id));
-    // also remove any expanded state for deleted quest
-    const map = { ...this.expandedMap() };
-    if (map[id]) {
-      delete map[id];
-      this.expandedMap.set(map);
-    }
+    this.questService.deleteQuest(id);
+    this.quests.set(this.questService.getQuests());
   }
 
   goToDetail(id: number) {

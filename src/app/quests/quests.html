@@ -16,18 +16,23 @@
           <span class="xp-badge">{{ quest.xp }} XP</span>
         </div>
 
-        <p class="quest-description" [class.clamped]="!isExpanded(quest.id)">{{ quest.description }}</p>
+        <div class="quest-body">
+          <p class="quest-desc">{{ quest.description }}</p>
+        </div>
 
-        <div class="quest-meta">
-          <span class="status" [class.completed]="quest.completed">{{ quest.completed ? 'Completed' : 'In Progress' }}</span>
+        <div class="quest-actions">
+          <button class="btn-toggle" (click)="$event.stopPropagation(); toggleExpand(quest.id)">
+            {{ isExpanded(quest.id) ? 'Collapse' : 'Expand' }}
+          </button>
 
-          <div class="actions">
-            <button class="btn-toggle" (click)="$event.stopPropagation(); toggleExpand(quest.id)">
-              {{ isExpanded(quest.id) ? 'Show less' : 'Show more' }}
-            </button>
+          <button class="btn-delete" (click)="$event.stopPropagation(); deleteQuest(quest.id)">
+            Delete
+          </button>
+        </div>
 
-            <button class="btn-delete" (click)="$event.stopPropagation(); deleteQuest(quest.id)">Delete</button>
-          </div>
+        <div *ngIf="isExpanded(quest.id)" class="quest-expanded">
+          <p><strong>Details:</strong> {{ quest.description }}</p>
+          <p><strong>Status:</strong> {{ quest.completed ? 'Completed' : 'In Progress' }}</p>
         </div>
       </div>
     </ng-container>

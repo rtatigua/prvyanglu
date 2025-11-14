@@ -1,14 +1,6 @@
-
-import { Component, input, output } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-export type Quest = {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-  xp: number;
-};
+import { Quest } from './quest.service';
 
 @Component({
   selector: 'app-quest-item',
@@ -17,9 +9,10 @@ export type Quest = {
   templateUrl: './quest-item.html',
 })
 export class QuestItemComponent {
-  quest = input.required<Quest>();
-  delete = output<number>();
+  @Input() quest!: Quest;
+  @Output() delete = new EventEmitter<number>();
+
   onDelete() {
-    this.delete.emit(this.quest().id);
+    this.delete.emit(this.quest.id);
   }
 }

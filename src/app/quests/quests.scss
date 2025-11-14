@@ -1,206 +1,80 @@
 .quests-container {
-  width: 100%;
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
 
-  .quests-header {
-    text-align: center;
-    margin-bottom: 2rem;
+.quests-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    h1 {
-      color: #ffd54f;
-      font-size: 2.5rem;
-      margin: 0 0 0.5rem;
-      text-shadow: 0 4px 12px rgba(255, 213, 79, 0.3);
-    }
+.btn-add-quest {
+  margin: 20px 0;
+  padding: 10px 15px;
+  background: #4caf50;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-    .quest-count {
-      color: #b0bec5;
-      font-size: 1.05rem;
-      margin: 0;
-    }
-  }
+.quests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
 
-  .btn-add-quest {
-    display: inline-block;
-    margin-bottom: 2rem;
-    background: linear-gradient(135deg, #42a5f5, #2196f3);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
-    font-weight: bold;
+.quest-card {
+  padding: 15px;
+  border-radius: 10px;
+  background: #222;
+  border: 1px solid #444;
+  color: white;
+}
 
-    .icon {
-      margin-right: 8px;
-    }
+.quest-top {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
 
-    &:hover {
-      background: linear-gradient(135deg, #2196f3, #1976d2);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);
-    }
-  }
+.xp {
+  font-weight: bold;
+  color: #ffca28;
+}
 
-  .quests-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
+.desc {
+  margin: 10px 0;
+  cursor: pointer;
+}
 
-    .quest-card {
-      background: linear-gradient(135deg, #23233b 0%, #2d2d4a 100%);
-      border: 2px solid rgba(100, 181, 246, 0.2);
-        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-        border: 1px solid rgba(255,255,255,0.04);
-        border-radius: 10px;
-        padding: 1.25rem;
-        cursor: pointer;
-        transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
-        position: relative;
-        overflow: visible;
-        box-shadow: 0 6px 18px rgba(2,6,23,0.45);
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #42a5f5, #ffd54f);
-          height: 4px;
-          background: linear-gradient(90deg, #42a5f5, #ffd54f);
-          transform: translateX(-100%);
-          transition: transform 0.22s ease;
-      &:hover {
-        background: linear-gradient(135deg, #2d2d4a 0%, #3a3a5a 100%);
-        border-color: rgba(100, 181, 246, 0.5);
-          background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-          border-color: rgba(100, 181, 246, 0.12);
-          transform: translateY(-6px);
-          box-shadow: 0 18px 36px rgba(2,6,23,0.5);
-          transform: translateX(0);
-        }
-      }
+.card-actions {
+  display: flex;
+  gap: 10px;
+}
 
-      .quest-header-section {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
+.card-actions button {
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
 
-        h3 {
-          color: #ffd54f;
-          margin: 0;
-            color: #ffd54f;
-            margin: 0;
-            font-size: 1.15rem;
-            font-weight: 700;
-            letter-spacing: 0.2px;
-        .xp-badge {
-          background: rgba(129, 199, 132, 0.2);
-          color: #81c784;
-            background: rgba(255,213,79,0.06);
-            color: #ffd54f;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 800;
-            box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12);
+.card-actions .delete {
+  background: #d9534f;
+  color: white;
+}
 
-      .quest-description {
-        color: #b0bec5;
-        margin: 1rem 0;
-          color: #c0ccd6;
-          margin: 0.8rem 0 0.6rem 0;
-          font-size: 0.95rem;
-          line-height: 1.45;
-          max-width: 100%;
-      .quest-description {
-        transition: max-height 0.25s ease;
-      }
+.expanded {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #555;
+}
 
-      .quest-description.clamped {
-        display: -webkit-box;
-        line-clamp: 3;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-
-      .quest-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 0.5rem;
-      }
-
-      .status {
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: rgba(176, 190, 197, 0.06);
-        color: #b0bec5;
-        font-weight: 600;
-        font-size: 0.9rem;
-      }
-
-      .status.completed {
-        background: rgba(129, 199, 132, 0.14);
-          background: rgba(144,202,249,0.06);
-          color: #90caf9;
-          border: 1px solid rgba(144, 202, 249, 0.16);
-          padding: 8px 12px;
-          border-radius: 10px;
-          cursor: pointer;
-          font-weight: 700;
-          transition: all 0.18s ease;
-          box-shadow: 0 2px 8px rgba(144,202,249,0.04);
-      }
-          &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(144,202,249,0.06);
-        color: #90caf9;
-        border: 1px solid rgba(144, 202, 249, 0.12);
-        padding: 6px 10px;
-        border-radius: 8px;
-          background: rgba(244, 67, 54, 0.06);
-          color: #ff8a80;
-          border: 1px solid rgba(244, 67, 54, 0.12);
-          padding: 8px 12px;
-          border-radius: 10px;
-          cursor: pointer;
-          font-weight: 700;
-          transition: transform 0.14s ease, box-shadow 0.14s ease;
-        border: 1px solid rgba(244, 67, 54, 0.08);
-          &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(244,67,54,0.06);
-          }
-        }
-
-        /* ensure each card appears clearly separated */
-        + & + & {
-          margin-top: 1rem;
-        }
-        padding: 6px 10px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 700;
-      }
-    }
-
-    .empty-state {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 3rem 1rem;
-
-      p {
-        color: #b0bec5;
-        font-size: 1.1rem;
-        margin: 0.5rem 0;
-      }
-    }
-  }
-    }  }
+.empty-state {
+  padding: 20px;
+  text-align: center;
+  opacity: 0.6;
 }

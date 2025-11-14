@@ -1,47 +1,52 @@
 <div class="quests-container">
+
   <div class="quests-header">
     <h1>📜 Quests</h1>
-    <p class="quest-count">Total Quests: {{ questCount() }}</p>
+    <p>Total Quests: {{ questCount() }}</p>
   </div>
 
   <button class="btn-add-quest" (click)="addQuest()">
-    <span class="icon">➕</span> Create New Quest
+    ➕ Add Quest
   </button>
 
-  <div class="quests-grid">
-    <ng-container *ngIf="quests().length; else empty">
-      <div *ngFor="let quest of quests()" class="quest-card" (click)="goToDetail(quest.id)">
-        <div class="quest-header-section">
+  @if (quests().length === 0) {
+    <div class="empty-state">No quests found.</div>
+  }
+
+  <div class="quests-list">
+    @for (quest of quests(); track quest.id) {
+
+      <div class="quest-card">
+
+        <div class="quest-top" (click)="goToDetail(quest.id)">
           <h3>{{ quest.title }}</h3>
-          <span class="xp-badge">{{ quest.xp }} XP</span>
+          <span class="xp">{{ quest.xp }} XP</span>
         </div>
 
-        <div class="quest-body">
-          <p class="quest-desc">{{ quest.description }}</p>
-        </div>
+        <p class="desc" (click)="goToDetail(quest.id)">
+          {{ quest.description }}
+        </p>
 
-        <div class="quest-actions">
-          <button class="btn-toggle" (click)="$event.stopPropagation(); toggleExpand(quest.id)">
-            {{ isExpanded(quest.id) ? 'Collapse' : 'Expand' }}
+        <div class="card-actions">
+          <button (click)="toggleExpand(quest.id); $event.stopPropagation()">
+            {{ isExpanded(quest.id) ? "Collapse" : "Expand" }}
           </button>
 
-          <button class="btn-delete" (click)="$event.stopPropagation(); deleteQuest(quest.id)">
+          <button class="delete" (click)="deleteQuest(quest.id); $event.stopPropagation()">
             Delete
           </button>
         </div>
 
-        <div *ngIf="isExpanded(quest.id)" class="quest-expanded">
-          <p><strong>Details:</strong> {{ quest.description }}</p>
-          <p><strong>Status:</strong> {{ quest.completed ? 'Completed' : 'In Progress' }}</p>
-        </div>
-      </div>
-    </ng-container>
+        @if (isExpanded(quest.id)) {
+          <div class="expanded">
+            <strong>Status:</strong>
+            {{ quest.completed ? 'Completed' : 'In progress' }}
+          </div>
+        }
 
-    <ng-template #empty>
-      <div class="empty-state">
-        <p>🏜️ No quests available yet.</p>
-        <p>Click "Create New Quest" to get started!</p>
       </div>
-    </ng-template>
+
+    }
   </div>
+
 </div>

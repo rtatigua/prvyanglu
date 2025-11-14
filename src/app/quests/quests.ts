@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QuestService, Quest } from './quest.service';
 import { Router } from '@angular/router';
@@ -15,6 +15,9 @@ export class Quests implements OnInit, OnDestroy {
   // signal for quest list
   quests = signal<Quest[]>([]);
 
+  // computed boolean for template ngIf
+  hasQuests = computed(() => this.quests().length > 0);
+
   // map for expanded states (questId -> boolean)
   expandedMap = signal<{ [key: number]: boolean }>({});
 
@@ -25,7 +28,8 @@ export class Quests implements OnInit, OnDestroy {
 
   ngOnInit() {
     // load initial quests from service
-    this.quests.set(this.questService.getQuests());
+    const fromService = this.questService.getQuests() ?? [];
+    this.quests.set(fromService);
   }
 
   ngOnDestroy() {}

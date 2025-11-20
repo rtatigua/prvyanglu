@@ -8,35 +8,61 @@
     <span class="icon">➕</span> Create New Quest
   </button>
 
-  <div class="quests-grid">
-    <ng-container *ngIf="quests().length; else empty">
-      <div *ngFor="let quest of quests()" class="quest-card" (click)="goToDetail(quest.id)">
-        <div class="quest-header-section">
-          <h3>{{ quest.title }}</h3>
-          <span class="xp-badge">{{ quest.xp }} XP</span>
+  @if (showForm()) {
+    <div class="new-quest-form">
+      <form (ngSubmit)="createQuest()">
+        <div>
+          <label for="title">Title</label>
+          <input id="title" name="title" [(ngModel)]="newQuest.title" required />
         </div>
 
-        <p class="quest-description" [class.clamped]="!isExpanded(quest.id)">{{ quest.description }}</p>
+        <div>
+          <label for="description">Description</label>
+          <textarea id="description" name="description" [(ngModel)]="newQuest.description"></textarea>
+        </div>
 
-        <div class="quest-meta">
-          <span class="status" [class.completed]="quest.completed">{{ quest.completed ? 'Completed' : 'In Progress' }}</span>
+        <div>
+          <label for="xp">XP</label>
+          <input id="xp" name="xp" type="number" [(ngModel)]="newQuest.xp" />
+        </div>
 
-          <div class="actions">
-            <button class="btn-toggle" (click)="$event.stopPropagation(); toggleExpand(quest.id)">
-              {{ isExpanded(quest.id) ? 'Show less' : 'Show more' }}
-            </button>
+        <div class="form-actions">
+          <button type="submit" class="btn-add-quest">Create</button>
+          <button type="button" (click)="showForm.set(false)">Cancel</button>
+        </div>
+      </form>
+    </div>
+  }
 
-            <button class="btn-delete" (click)="$event.stopPropagation(); deleteQuest(quest.id)">Delete</button>
+  <div class="quests-grid">
+    @if (quests().length) {
+      @for (quest of quests(); track quest.id) {
+        <div class="quest-card" (click)="goToDetail(quest.id)">
+          <div class="quest-header-section">
+            <h3>{{ quest.title }}</h3>
+            <span class="xp-badge">{{ quest.xp }} XP</span>
+          </div>
+
+          <p class="quest-description" [class.clamped]="!isExpanded(quest.id)">{{ quest.description }}</p>
+
+          <div class="quest-meta">
+            <span class="status" [class.completed]="quest.completed">{{ quest.completed ? 'Completed' : 'In Progress' }}</span>
+
+            <div class="actions">
+              <button class="btn-toggle" (click)="$event.stopPropagation(); toggleExpand(quest.id)">
+                {{ isExpanded(quest.id) ? 'Show less' : 'Show more' }}
+              </button>
+
+              <button class="btn-delete" (click)="$event.stopPropagation(); deleteQuest(quest.id)">Delete</button>
+            </div>
           </div>
         </div>
-      </div>
-    </ng-container>
-
-    <ng-template #empty>
+      }
+    } @else {
       <div class="empty-state">
         <p>🏜️ No quests available yet.</p>
         <p>Click "Create New Quest" to get started!</p>
       </div>
-    </ng-template>
+    }
   </div>
 </div>

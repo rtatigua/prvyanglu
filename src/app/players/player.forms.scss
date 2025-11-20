@@ -1,0 +1,52 @@
+.new-player-form {
+  margin: 1rem 0 2rem 0;
+  form {
+    display: grid;
+    gap: 0.6rem;
+    max-width: 520px;
+    margin: 0 auto;
+
+    label { color: #c0ccd6; font-size: 0.9rem; }
+
+    input, select {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      color: #e6eef7;
+      outline: none;
+    }
+
+    .avatar-selector {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.4rem;
+      
+      .avatar-btn {
+        padding: 0.6rem;
+        background: rgba(255,255,255,0.02);
+        border: 2px solid rgba(255,255,255,0.06);
+        border-radius: 6px;
+        font-size: 1.4rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background: rgba(66,165,245,0.1);
+          border-color: rgba(66,165,245,0.3);
+        }
+        
+        &.selected {
+          background: rgba(66,165,245,0.2);
+          border-color: #42a5f5;
+          box-shadow: 0 0 8px rgba(66,165,245,0.3);
+        }
+      }
+    }
+
+    .form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+    .btn-add-player { padding: 8px 12px; }
+  }
+}

@@ -9,29 +9,52 @@
   </button>
 
   <div class="clans-grid">
-    @for (c of clans; track c.id) {
-      <div class="clan-card" (click)="openDetail(c.id)">
-        <div class="card-header">
-          <h3>{{ c.name }}</h3>
-          <span class="capacity-badge">{{ c.members.length }}/{{ c.capacity }}</span>
-        </div>
-        <p class="description">{{ c.description }}</p>
-        <div class="card-footer">
-          <div class="members-info">
-            <span class="members-count">{{ c.members.length }} members</span>
+    @if (clans.length) {
+      @for (c of clans; track c.id) {
+        <div class="clan-card" (click)="openDetail(c.id)">
+          <div class="card-header">
+            <h3>{{ c.name }}</h3>
+            <span class="capacity-badge">{{ c.members.length }}/{{ c.capacity }}</span>
           </div>
-          <button 
-            class="btn-remove" 
-            (click)="removeClan(c.id); $event.stopPropagation()"
-            title="Delete this clan">
-            ❌
-          </button>
+          <p class="description">{{ c.description }}</p>
+          <div class="card-footer">
+            <div class="members-info">
+              <span class="members-count">{{ c.members.length }} members</span>
+            </div>
+            <button 
+              class="btn-remove" 
+              (click)="removeClan(c.id); $event.stopPropagation()"
+              title="Delete this clan">
+              ❌
+            </button>
+          </div>
         </div>
-      </div>
-    } @empty {
+      }
+    } @else {
       <div class="empty-state">
         <p>🏜️ No clans yet. Create your first one!</p>
       </div>
     }
+  </div>
+
+  <div *ngIf="showForm()" class="new-clan-form">
+    <form (ngSubmit)="createClan()">
+      <div>
+        <label for="name">Clan Name</label>
+        <input id="name" name="name" [(ngModel)]="newClan.name" required />
+      </div>
+      <div>
+        <label for="description">Description</label>
+        <textarea id="description" name="description" [(ngModel)]="newClan.description"></textarea>
+      </div>
+      <div>
+        <label for="capacity">Capacity</label>
+        <input id="capacity" name="capacity" type="number" [(ngModel)]="newClan.capacity" />
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-add">Create</button>
+        <button type="button" (click)="showForm.set(false)">Cancel</button>
+      </div>
+    </form>
   </div>
 </div>

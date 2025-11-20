@@ -1,29 +1,44 @@
-<div *ngIf="player" class="detail">
-  <h2>{{ player.nickname }}</h2>
-  <img *ngIf="player.avatar" [src]="player.avatar" alt="{{ player.nickname }}" class="player-avatar" />
-  <p><strong>Level:</strong> {{ player.level }}</p>
-
-  <div class="clan-section">
-    <h3>Clan</h3>
-    <p *ngIf="clan">
-      <a [routerLink]="['/clans', clan.id]">{{ clan.name }}</a>
-    </p>
-    <p *ngIf="!clan">No clan</p>
-  </div>
-
-  <h3>Quests</h3>
-  <div class="quests-section">
-    @for (q of player.quests; track q.id) {
-      <div class="quest-card">
-        <p>
-          <a [routerLink]="['/quests', q.id]">{{ q.title }}</a>
-        </p>
-        <p class="xp">{{ q.xp }} XP</p>
+<div class="player-detail-container">
+  @if (player) {
+    <div class="player-header">
+      <button class="back-btn" (click)="goBack()">← Back to Players</button>
+      <div class="player-info">
+        <div class="avatar">
+          @if (player.avatar && isEmoji(player.avatar)) {
+            <span class="emoji-avatar">{{ player.avatar }}</span>
+          } @else if (player.avatar) {
+            <img [src]="player.avatar" alt="{{ player.nickname }}" />
+          } @else {
+            <span class="emoji-avatar">⚔️</span>
+          }
+        </div>
+        <div class="info-text">
+          <h2>{{ player.nickname }}</h2>
+          <p class="level">Level {{ player.level }}</p>
+        </div>
       </div>
-    } @empty {
-      <p>No quests yet.</p>
-    }
-  </div>
+    </div>
 
-  <button (click)="goBack()">⬅ Back to Players</button>
+    <div class="quest-section">
+      <h3>Assigned Quests</h3>
+      <app-quest-list
+        [quests]="assignedQuests"
+        [actionButton]="true"
+        [actionLabel]="'Mark Complete'"
+        (onAction)="completeQuest($event)">
+      </app-quest-list>
+    </div>
+
+    <div class="quest-section">
+      <h3>Completed Quests</h3>
+      <app-quest-list
+        [quests]="completedQuests"
+        [actionButton]="true"
+        [actionLabel]="'Mark Incomplete'"
+        (onAction)="uncompleteQuest($event)">
+      </app-quest-list>
+    </div>
+  } @else {
+    <p class="error">Player not found.</p>
+  }
 </div>

@@ -29,7 +29,7 @@
         [disabled]="availablePlayers.length === 0">
         <option [value]="null">-- Select a player to add --</option>
         @for (p of availablePlayers; track p.id) {
-          <option [value]="p.id">{{ p.nickname }} (Level {{ p.level }})</option>
+          <option [ngValue]="p.id">{{ p.nickname }} (Level {{ p.level }})</option>
         }
       </select>
       <button 
@@ -49,13 +49,13 @@
   <div class="members-section">
     <h2>Members</h2>
     <div class="members-grid">
-      @for (m of clan.members; track m.id) {
-        <div class="member-card">
+      <ng-container *ngIf="clan.members?.length; else noMembers">
+        <div class="member-card" *ngFor="let m of clan.members">
           <div class="member-header">
             <img 
               *ngIf="m.avatar" 
               [src]="m.avatar" 
-              alt="{{ m.nickname }}" 
+              [alt]="m.nickname" 
               class="member-avatar" />
             <div class="member-info">
               <h4>{{ m.nickname }}</h4>
@@ -72,11 +72,13 @@
             </button>
           </div>
         </div>
-      } @empty {
+      </ng-container>
+
+      <ng-template #noMembers>
         <div class="empty-members">
           <p>No members yet. Add your first member!</p>
         </div>
-      }
+      </ng-template>
     </div>
   </div>
 </div>

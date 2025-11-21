@@ -1,0 +1,27 @@
+.new-quest-form {
+  margin: 1rem 0 2rem 0;
+  form {
+    display: grid;
+    gap: 0.75rem;
+    max-width: 720px;
+    margin: 0 auto;
+
+    label { color: #c0ccd6; font-size: 0.9rem; }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      color: #e6eef7;
+      outline: none;
+    }
+
+    textarea { min-height: 88px; resize: vertical; }
+
+    .form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+    .btn-add-quest { padding: 8px 14px; }
+  }
+}

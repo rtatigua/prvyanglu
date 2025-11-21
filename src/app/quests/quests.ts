@@ -1,60 +1,72 @@
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { QuestService, Quest } from './quest.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quests',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './quests.html',
-  styleUrls: ['./quests.scss']
+  styleUrls: ['./quests.scss', './quests.forms.scss']
 })
 export class Quests implements OnInit, OnDestroy {
-
-  // signal for quest list
   quests = signal<Quest[]>([]);
+  showForm = signal(false);
 
-  // computed boolean for template ngIf
-  hasQuests = computed(() => this.quests().length > 0);
+  newQuest: Partial<Quest> = {
+    title: '',
+    description: '',
+    xp: 50,
+    completed: false,
+  };
 
-  // map for expanded states (questId -> boolean)
-  expandedMap = signal<{ [key: number]: boolean }>({});
+  // map questId -> expanded (show full description)
+  private expandedMap = signal<Record<number, boolean>>({});
 
-  constructor(
-    private questService: QuestService,
-    private router: Router
-  ) {}
+  questCount = computed(() => this.quests().length);
 
-  ngOnInit() {
-    // load initial quests from service
-    const fromService = this.questService.getQuests() ?? [];
-    this.quests.set(fromService);
+  constructor(private questService: QuestService, private router: Router) {}
+
+  ngOnInit(): void {
+    console.log('Component was created');
+    this.quests.set(this.questService.getQuests());
   }
 
-  ngOnDestroy() {}
-
-  // returns number of quests (used by template)
-  questCount() {
-    return this.quests().length;
+  ngOnDestroy(): void {
+    console.log('Component will be destroyed.');
   }
 
   addQuest() {
-    const newId = this.quests().length ? Math.max(...this.quests().map(q => q.id)) + 1 : 1;
-    const newQuest: Quest = {
-      id: newId,
-      title: `New Quest #${newId}`,
-      description: 'Describe the quest here...',
-      completed: false,
-      xp: 10
+    // open form when clicking add
+    this.showForm.set(true);
+  }
+
+  createQuest() {
+    const current = this.questService.getQuests();
+    const maxId = Math.max(...current.map(q => q.id), 0);
+    const q: Quest = {
+      id: maxId + 1,
+      title: this.newQuest.title || 'New Quest',
+      description: this.newQuest.description || '',
+      completed: !!this.newQuest.completed,
+      xp: this.newQuest.xp || 0,
     };
-    this.questService.addQuest(newQuest);
+    this.questService.addQuest(q);
     this.quests.set(this.questService.getQuests());
+    this.showForm.set(false);
+    this.newQuest = { title: '', description: '', xp: 50, completed: false };
   }
 
   deleteQuest(id: number) {
-    this.questService.deleteQuest(id);
-    this.quests.set(this.questService.getQuests());
+    this.quests.set(this.quests().filter(q => q.id !== id));
+    // also remove any expanded state for deleted quest
+    const map = { ...this.expandedMap() };
+    if (map[id]) {
+      delete map[id];
+      this.expandedMap.set(map);
+    }
   }
 
   goToDetail(id: number) {

@@ -1,96 +1,103 @@
-.detail {
+.player-detail-container {
   padding: 2rem;
-  background: #1e1e2f;
-  color: #eee;
-  border-radius: 10px;
-  max-width: 600px;
-  margin: 0 auto;
+  background: linear-gradient(135deg, #1e1e2f, #23233b);
+  color: #c0ccd6;
+  min-height: 100vh;
 
-  h2 {
-    color: #ffd54f;
-    margin-bottom: 1rem;
-  }
+  .player-header {
+    background: rgba(255, 213, 79, 0.05);
+    border: 1px solid rgba(255, 213, 79, 0.2);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
 
-  h3 {
-    color: #64b5f6;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .player-avatar {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin-bottom: 1rem;
-    border: 3px solid #ffd54f;
-    object-fit: cover;
-    display: block;
-  }
-
-  .clan-section {
-    background: #23233b;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-
-    p {
-      margin: 0.5rem 0;
-    }
-
-    a {
+    .back-btn {
+      background: transparent;
       color: #64b5f6;
-      text-decoration: none;
-      font-weight: bold;
+      border: 1px solid #64b5f6;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s ease;
 
       &:hover {
-        text-decoration: underline;
-        color: #ffd54f;
+        background: #64b5f6;
+        color: #1e1e2f;
       }
     }
-  }
 
-  .quests-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
 
-    .quest-card {
-      background: #23233b;
-      padding: 1rem;
-      border-radius: 8px;
-      border-left: 4px solid #64b5f6;
+      .avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        border: 3px solid #ffd54f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 213, 79, 0.1);
+        overflow: hidden;
 
-      a {
-        color: #64b5f6;
-        text-decoration: none;
-        font-weight: bold;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
 
-        &:hover {
-          text-decoration: underline;
-          color: #ffd54f;
+        .emoji-avatar {
+          font-size: 3rem;
         }
       }
 
-      .xp {
-        color: #81c784;
-        font-weight: bold;
-        margin-top: 0.5rem;
+      .info-text {
+        h2 {
+          color: #ffd54f;
+          margin: 0 0 0.5rem 0;
+          font-size: 2rem;
+        }
+
+        .level {
+          color: #42a5f5;
+          font-size: 1.1rem;
+          margin: 0;
+          font-weight: 600;
+        }
+
+        .clan {
+          color: #8a92a0;
+          margin: 0.5rem 0 0 0;
+          font-size: 0.95rem;
+        }
       }
     }
   }
 
-  button {
-    margin-top: 2rem;
-    background: #1976d2;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 1rem;
+  .quest-section {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
 
-    &:hover {
-      background: #1565c0;
+    h3 {
+      color: #64b5f6;
+      margin: 0 0 1rem 0;
+      font-size: 1.2rem;
+      border-bottom: 1px solid rgba(100, 181, 246, 0.2);
+      padding-bottom: 0.5rem;
     }
   }
+
+  .error {
+    color: #ef5350;
+    text-align: center;
+    font-size: 1.1rem;
+  }
 }
+

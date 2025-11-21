@@ -5,23 +5,56 @@
       ➕ Add Player
     </button>
   </div>
-
   <div class="grid">
-    @for (p of players; track p.id) {
-      <div class="card" (click)="openDetail(p.id)">
+    @if (players.length) {
+      @for (p of players; track p.id) {
+        <div class="card" (click)="openDetail(p.id)">
         <div class="avatar-container">
-          <img *ngIf="p.avatar" [src]="p.avatar" alt="{{ p.nickname }}" class="player-avatar" />
-          <div *ngIf="!p.avatar" class="avatar-placeholder">{{ p.nickname.charAt(0).toUpperCase() }}</div>
+            <img *ngIf="p.avatar && !isEmoji(p.avatar)" [src]="p.avatar" [alt]="p.nickname" class="player-avatar" />
+            <div *ngIf="!p.avatar || isEmoji(p.avatar)" class="avatar-placeholder">{{ p.avatar || p.nickname.charAt(0).toUpperCase() }}</div>
+          </div>
+          <h3>{{ p.nickname }}</h3>
+          <p>⭐ Level {{ p.level }}</p>
+          <p>Clan: {{ getClanName(p.clanId) }}</p>
+          <button class="btn-remove" (click)="removePlayer(p.id); $event.stopPropagation()">❌ Remove</button>
         </div>
-        <h3>{{ p.nickname }}</h3>
-        <p>⭐ Level {{ p.level }}</p>
-        <p>Clan: {{ getClanName(p.clanId) }}</p>
-        <button class="btn-remove" (click)="removePlayer(p.id); $event.stopPropagation()">❌ Remove</button>
-      </div>
-    } @empty {
+      }
+    } @else {
       <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #b0bec5;">
         <p>🏜️ No players yet. Create your first hero!</p>
       </div>
     }
   </div>
+
+  @if (showForm()) {
+    <div class="new-player-form">
+      <form (ngSubmit)="createPlayer()">
+        <div>
+          <label for="nickname">Nickname</label>
+          <input id="nickname" name="nickname" [(ngModel)]="newPlayer.nickname" required />
+        </div>
+        <div>
+          <label for="level">Level</label>
+          <input id="level" name="level" type="number" [(ngModel)]="newPlayer.level" />
+        </div>
+        <div>
+          <label for="avatar">Avatar</label>
+          <div class="avatar-selector">
+            @for (avatar of avatarOptions; track avatar) {
+              <button type="button" 
+                      (click)="newPlayer.avatar = avatar"
+                      [class.selected]="newPlayer.avatar === avatar"
+                      class="avatar-btn">
+                {{ avatar }}
+              </button>
+            }
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-add-player">Create</button>
+          <button type="button" (click)="showForm.set(false)">Cancel</button>
+        </div>
+      </form>
+    </div>
+  }
 </div>

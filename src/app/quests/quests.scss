@@ -1,80 +1,130 @@
+/* Simplified and fixed styles for quests list */
 .quests-container {
-  padding: 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
+  width: 100%;
+  padding: 1rem;
 
-.quests-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  .quests-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
 
-.btn-add-quest {
-  margin: 20px 0;
-  padding: 10px 15px;
-  background: #4caf50;
-  border: none;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-}
+    h1 {
+      color: #ffd54f;
+      font-size: 2rem;
+      margin: 0 0 0.25rem 0;
+      text-shadow: 0 3px 8px rgba(255, 213, 79, 0.25);
+    }
 
-.quests-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+    .quest-count {
+      color: #b0bec5;
+      font-size: 0.95rem;
+      margin: 0;
+    }
+  }
 
-.quest-card {
-  padding: 15px;
-  border-radius: 10px;
-  background: #222;
-  border: 1px solid #444;
-  color: white;
-}
+  .btn-add-quest {
+    display: inline-block;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #42a5f5, #2196f3);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
 
-.quest-top {
-  display: flex;
-  justify-content: space-between;
-  cursor: pointer;
-}
+  .quests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
 
-.xp {
-  font-weight: bold;
-  color: #ffca28;
-}
+    .quest-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 
-.desc {
-  margin: 10px 0;
-  cursor: pointer;
-}
+      &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 28px rgba(2,6,23,0.45);
+      }
 
-.card-actions {
-  display: flex;
-  gap: 10px;
-}
+      .quest-header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.6rem;
 
-.card-actions button {
-  padding: 6px 10px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-}
+        h3 {
+          color: #ffd54f;
+          margin: 0;
+          font-size: 1.05rem;
+          font-weight: 700;
+        }
 
-.card-actions .delete {
-  background: #d9534f;
-  color: white;
-}
+        .xp-badge {
+          background: rgba(255,213,79,0.06);
+          color: #ffd54f;
+          padding: 6px 10px;
+          border-radius: 10px;
+          font-size: 0.8rem;
+          font-weight: 700;
+        }
+      }
 
-.expanded {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #555;
-}
+      .quest-description {
+        color: #c0ccd6;
+        margin: 0.6rem 0;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        max-width: 100%;
+      }
 
-.empty-state {
-  padding: 20px;
-  text-align: center;
-  opacity: 0.6;
+      .quest-description.clamped {
+        display: -webkit-box;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .quest-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .status {
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(176, 190, 197, 0.06);
+        color: #b0bec5;
+        font-weight: 600;
+        font-size: 0.85rem;
+      }
+
+      .status.completed {
+        background: rgba(144,202,249,0.06);
+        color: #90caf9;
+        border: 1px solid rgba(144,202,249,0.12);
+      }
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 2rem 1rem;
+
+      p {
+        color: #b0bec5;
+        font-size: 1rem;
+        margin: 0.25rem 0;
+      }
+    }
+  }
 }

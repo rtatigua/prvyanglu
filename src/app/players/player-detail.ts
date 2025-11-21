@@ -2,21 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Player, Quest, Clan } from '../models';
+import { PlayerService } from '../player.service';
+import { QuestService } from '../quests/quest.service';
+import { QuestListComponent } from '../shared/quest-list.component';
 
 @Component({
   selector: 'app-player-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, QuestListComponent],
   templateUrl: './player-detail.html',
-  styleUrl: './player-detail.scss',
+  styleUrls: ['./player-detail.scss'],
 })
 export class PlayerDetail implements OnInit {
   player?: Player;
-  clan?: Clan;
-  allPlayers: Player[] = [];
-  allClans: Clan[] = [];
+  assignedQuests: Quest[] = [];
+  completedQuests: Quest[] = [];
+  allQuests: Quest[] = [];
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private playerService: PlayerService,
+    private questService: QuestService
+  ) {}
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
@@ -24,61 +32,35 @@ export class PlayerDetail implements OnInit {
   }
 
   private loadPlayerData(id: number) {
-    // Mock data - same as in Players component
-    const quests: Quest[] = [
-      { id: 1, title: 'Slay the Dragon', description: 'Defeat the beast in the cave.', xp: 120 },
-      { id: 2, title: 'Collect Herbs', description: 'Gather 10 healing herbs.', xp: 40 },
-      { id: 3, title: 'Find the Lost Treasure', description: 'Locate the treasure map.', xp: 200 },
-    ];
+    this.player = this.playerService.getPlayerById(id);
+    this.allQuests = this.questService.getQuests();
 
-    this.allClans = [
-      { id: 1, name: 'Fire Wolves', description: 'Hunters united by flame.', capacity: 5, members: [] },
-      { id: 2, name: 'Shadow Foxes', description: 'Masters of stealth.', capacity: 4, members: [] },
-    ];
+    if (this.player) {
+      this.assignedQuests = this.allQuests.filter(q => this.player!.assignedQuests.includes(q.id));
+      this.completedQuests = this.allQuests.filter(q => this.player!.completedQuests.includes(q.id));
+    }
+  }
 
-    this.allPlayers = [
-      {
-        id: 1,
-        nickname: 'Knightmare',
-        level: 15,
-        quests: [quests[0]],
-        clanId: 1,
-        avatar: 'assets/avatars/knight.png',
-      },
-      {
-        id: 2,
-        nickname: 'Herbalist',
-        level: 5,
-        quests: [quests[1]],
-        avatar: 'assets/avatars/herbalist.png',
-      },
-      {
-        id: 3,
-        nickname: 'TreasureHunter',
-        level: 12,
-        quests: [quests[2]],
-        clanId: 2,
-        avatar: 'assets/avatars/hunter.png',
-      },
-    ];
+  isEmoji(text?: string): boolean {
+    if (!text) return false;
+    return /^[\p{Emoji}]+$/u.test(text);
+  }
 
-    this.player = this.allPlayers.find(p => p.id === id);
-    if (this.player && this.player.clanId) {
-      this.clan = this.allClans.find(c => c.id === this.player?.clanId);
+  completeQuest(questId: number) {
+    if (this.player) {
+      this.playerService.completeQuest(this.player.id, questId);
+      this.loadPlayerData(this.player.id);
+    }
+  }
+
+  uncompleteQuest(questId: number) {
+    if (this.player) {
+      this.playerService.uncompleteQuest(this.player.id, questId);
+      this.loadPlayerData(this.player.id);
     }
   }
 
   goBack() {
     this.router.navigate(['/players']);
-  }
-
-  goToClan(clanId?: number) {
-    if (clanId) {
-      this.router.navigate(['/clans', clanId]);
-    }
-  }
-
-  goToQuest(questId: number) {
-    this.router.navigate(['/quests', questId]);
   }
 }

@@ -1,52 +1,68 @@
 <div class="quests-container">
-
   <div class="quests-header">
     <h1>📜 Quests</h1>
-    <p>Total Quests: {{ questCount() }}</p>
+    <p class="quest-count">Total Quests: {{ questCount() }}</p>
   </div>
 
   <button class="btn-add-quest" (click)="addQuest()">
-    ➕ Add Quest
+    <span class="icon">➕</span> Create New Quest
   </button>
 
-  @if (quests().length === 0) {
-    <div class="empty-state">No quests found.</div>
+  @if (showForm()) {
+    <div class="new-quest-form">
+      <form (ngSubmit)="createQuest()">
+        <div>
+          <label for="title">Title</label>
+          <input id="title" name="title" [(ngModel)]="newQuest.title" required />
+        </div>
+
+        <div>
+          <label for="description">Description</label>
+          <textarea id="description" name="description" [(ngModel)]="newQuest.description"></textarea>
+        </div>
+
+        <div>
+          <label for="xp">XP</label>
+          <input id="xp" name="xp" type="number" [(ngModel)]="newQuest.xp" />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-add-quest">Create</button>
+          <button type="button" (click)="showForm.set(false)">Cancel</button>
+        </div>
+      </form>
+    </div>
   }
 
-  <div class="quests-list">
-    @for (quest of quests(); track quest.id) {
-
-      <div class="quest-card">
-
-        <div class="quest-top" (click)="goToDetail(quest.id)">
-          <h3>{{ quest.title }}</h3>
-          <span class="xp">{{ quest.xp }} XP</span>
-        </div>
-
-        <p class="desc" (click)="goToDetail(quest.id)">
-          {{ quest.description }}
-        </p>
-
-        <div class="card-actions">
-          <button (click)="toggleExpand(quest.id); $event.stopPropagation()">
-            {{ isExpanded(quest.id) ? "Collapse" : "Expand" }}
-          </button>
-
-          <button class="delete" (click)="deleteQuest(quest.id); $event.stopPropagation()">
-            Delete
-          </button>
-        </div>
-
-        @if (isExpanded(quest.id)) {
-          <div class="expanded">
-            <strong>Status:</strong>
-            {{ quest.completed ? 'Completed' : 'In progress' }}
+  <div class="quests-grid">
+    @if (quests().length) {
+      @for (quest of quests(); track quest.id) {
+        <div class="quest-card" (click)="goToDetail(quest.id)">
+          <div class="quest-header-section">
+            <h3>{{ quest.title }}</h3>
+            <span class="xp-badge">{{ quest.xp }} XP</span>
           </div>
-        }
 
+          <p class="quest-description" [class.clamped]="!isExpanded(quest.id)">{{ quest.description }}</p>
+
+          <div class="quest-meta">
+            <span class="status" [class.completed]="quest.completed">{{ quest.completed ? 'Completed' : 'In Progress' }}</span>
+
+            <div class="actions">
+              <button class="btn-toggle" (click)="$event.stopPropagation(); toggleExpand(quest.id)">
+                {{ isExpanded(quest.id) ? 'Show less' : 'Show more' }}
+              </button>
+
+              <button class="btn-delete" (click)="$event.stopPropagation(); deleteQuest(quest.id)">Delete</button>
+            </div>
+          </div>
+        </div>
+      }
+    } @else {
+      <div class="empty-state">
+        <p>🏜️ No quests available yet.</p>
+        <p>Click "Create New Quest" to get started!</p>
       </div>
-
     }
   </div>
-
 </div>

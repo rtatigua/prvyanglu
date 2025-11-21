@@ -11,9 +11,10 @@ export interface Player {
   id: number;
   nickname: string;
   level: number;
-  quests: Quest[];
-  clanId?: number; // prepojenie na clan
-  avatar?: string;
+  assignedQuests: number[]; // quest IDs not yet completed
+  completedQuests: number[]; // quest IDs completed
+  clanId?: number; // prepojenie na clan (only one clan per player)
+  avatar?: string; // emoji or image URL
 }
 
 // 🔹 Clan

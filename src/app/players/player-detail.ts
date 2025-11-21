@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { playerLevels } from '../levels';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Player, Quest, Clan } from '../models';
-import { PlayerService } from '../player.service';
+import { PlayerService } from './player.service';
 import { QuestService } from '../quests/quest.service';
 import { QuestListComponent } from '../shared/quest-list.component';
 
@@ -14,11 +15,19 @@ import { QuestListComponent } from '../shared/quest-list.component';
   styleUrls: ['./player-detail.scss'],
 })
 export class PlayerDetail implements OnInit {
-  player?: Player;
-  assignedQuests: Quest[] = [];
-  completedQuests: Quest[] = [];
-  allQuests: Quest[] = [];
+  playerSignal = signal<Player | undefined>(undefined);
+  assignedQuests = signal<Quest[]>([]);
+  completedQuests = signal<Quest[]>([]);
+  allQuests = signal<Quest[]>([]);
   selectedQuestId?: number;
+
+  // Computed signal for player level data
+  playerLevelData = computed(() => {
+    const player = this.playerSignal();
+    if (!player) return { level: 0, levelTitle: '' };
+    const level = this.getPlayerLevel(player.xp);
+    return { level, levelTitle: `Level ${level}` };
+  });
 
   constructor(
     private route: ActivatedRoute,
@@ -33,13 +42,25 @@ export class PlayerDetail implements OnInit {
   }
 
   private loadPlayerData(id: number) {
-    this.player = this.playerService.getPlayerById(id);
-    this.allQuests = this.questService.getQuests();
+    const player = this.playerService.getPlayerById(id);
+    this.playerSignal.set(player);
+    this.allQuests.set(this.questService.getQuests());
 
-    if (this.player) {
-      this.assignedQuests = this.allQuests.filter(q => this.player!.assignedQuests.includes(q.id));
-      this.completedQuests = this.allQuests.filter(q => this.player!.completedQuests.includes(q.id));
+    if (player) {
+      this.assignedQuests.set(this.allQuests().filter((q: Quest) => player.assignedQuests.includes(q.id)));
+      this.completedQuests.set(this.allQuests().filter((q: Quest) => player.completedQuests.includes(q.id)));
     }
+  }
+
+  getPlayerLevel(xp: number): number {
+    let level = 1;
+    for (let i = playerLevels.length - 1; i >= 0; i--) {
+      if (xp >= playerLevels[i].xpRequired) {
+        level = playerLevels[i].level;
+        break;
+      }
+    }
+    return level;
   }
 
   isEmoji(text?: string): boolean {
@@ -48,30 +69,36 @@ export class PlayerDetail implements OnInit {
   }
 
   completeQuest(questId: number) {
-    if (this.player) {
-      this.playerService.completeQuest(this.player.id, questId);
-      this.loadPlayerData(this.player.id);
+    const player = this.playerSignal();
+    if (player) {
+      const quest = this.questService.getQuestById(questId);
+      const xp = quest?.xp ?? 0;
+      this.playerService.completeQuest(player.id, questId, xp);
+      this.loadPlayerData(player.id);
     }
   }
 
   uncompleteQuest(questId: number) {
-    if (this.player) {
-      this.playerService.uncompleteQuest(this.player.id, questId);
-      this.loadPlayerData(this.player.id);
+    const player = this.playerSignal();
+    if (player) {
+      this.playerService.uncompleteQuest(player.id, questId);
+      this.loadPlayerData(player.id);
     }
   }
 
   assignQuest(questIdRaw: any) {
     const questId = Number(questIdRaw);
-    if (!this.player || !questId) return;
-    this.playerService.assignQuestToPlayer(this.player.id, questId);
-    this.loadPlayerData(this.player.id);
+    const player = this.playerSignal();
+    if (!player || !questId) return;
+    this.playerService.assignQuestToPlayer(player.id, questId);
+    this.loadPlayerData(player.id);
   }
 
   unassignQuest(questId: number) {
-    if (!this.player) return;
-    this.playerService.removeQuestFromPlayer(this.player.id, questId);
-    this.loadPlayerData(this.player.id);
+    const player = this.playerSignal();
+    if (!player) return;
+    this.playerService.removeQuestFromPlayer(player.id, questId);
+    this.loadPlayerData(player.id);
   }
 
   goBack() {

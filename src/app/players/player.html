@@ -1,13 +1,20 @@
 <div class="players">
   <h2>👤 Players</h2>
-  <div style="display: flex; justify-content: center; margin-bottom: 2rem;">
-    <button class="btn-add-player" (click)="addPlayer()">
-      ➕ Add Player
-    </button>
+  <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; align-items: center;">
+    <button class="btn-add-player" (click)="addPlayer()">➕ Add Player</button>
+    <div>
+      <label for="levelFilter">Filter by Level</label>
+      <select id="levelFilter" (change)="levelFilter.set($any($event.target).value)">
+        <option value="All">All</option>
+        @for (t of levelOptions; track t) {
+          <option [value]="t">{{ t }}</option>
+        }
+      </select>
+    </div>
   </div>
   <div class="grid">
-    @if (players().length) {
-      @for (p of players(); track p.id) {
+    @if (filteredPlayersWithLevelData().length) {
+      @for (p of filteredPlayersWithLevelData(); track p.id) {
         <div class="card" (click)="openDetail(p.id)">
           <div class="avatar-container">
             @if (p.avatar && !isEmoji(p.avatar)) {
@@ -17,7 +24,13 @@
             }
           </div>
           <h3>{{ p.nickname }}</h3>
-          <p>⭐ Level {{ p.level }}</p>
+          <p class="player-level">{{ p.levelTitle }} <span class="level-badge">Lv. {{ p.level }}</span></p>
+          <div class="level-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="p.levelPercent"></div>
+            </div>
+            <span class="xp-to-next">{{ p.xpToNext }} XP to next level</span>
+          </div>
           <p>Clan: {{ getClanName(p.clanId) }}</p>
           <button class="btn-remove" (click)="removePlayer(p.id); $event.stopPropagation()">❌ Remove</button>
         </div>
@@ -38,7 +51,10 @@
         </div>
         <div>
           <label for="level">Level</label>
-          <input id="level" formControlName="level" type="number" inputmode="numeric" pattern="\d*" min="1" step="1" />
+          <input id="level" formControlName="level" type="number" inputmode="numeric" min="1" max="10" step="1" />
+          @if (playerForm.get('level')?.value == 10) {
+            <span class="error">Max level is 10 (you can't put higher number)</span>
+          }
         </div>
         <div>
           <label for="avatar">Avatar</label>

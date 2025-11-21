@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Player, Quest, Clan } from '../models';
-import { PlayerService } from '../player.service';
+import { playerLevels } from '../levels';
+import { PlayerService } from './player.service';
 import { ClanService } from '../clans/clans.service';
 
 @Component({
@@ -20,12 +21,41 @@ export class Players {
   players = computed(() => this.playerService.getPlayers());
   clans = computed(() => this.clanService.getClans().map(c => ({ ...c, members: this.playerService.getPlayers().filter(p => p.clanId === c.id) } as unknown as Clan)));
 
+  // Computed signals for each player's level data
+  playersWithLevelData = computed(() => 
+    this.players().map(p => ({
+      ...p,
+      level: this.getPlayerLevel(p.xp),
+      levelTitle: this.getPlayerLevelTitle(p.xp),
+      levelPercent: this.getPlayerLevelPercent(p.xp),
+      xpToNext: this.getPlayerXpToNext(p.xp)
+    }))
+  );
+
+  // Filter state: selected level title ('' or 'All' = no filter)
+  levelFilter = signal<string>('All');
+  levelOptions = playerLevels.map(l => l.title);
+
+  // Computed filtered players based on selected level title
+  filteredPlayersWithLevelData = computed(() => {
+    const sel = this.levelFilter();
+    if (!sel || sel === 'All') return this.playersWithLevelData();
+    return this.playersWithLevelData().filter(p => p.levelTitle === sel);
+  });
+
   constructor(private router: Router, private playerService: PlayerService, private clanService: ClanService, private fb: FormBuilder) {
     this.avatarOptions = this.playerService.getAvatarOptions();
     this.playerForm = this.fb.group({
       nickname: ['', [Validators.required, Validators.minLength(8)]],
-      level: [1, [Validators.required, Validators.min(1)]],
+      level: [1, [Validators.required, Validators.min(1), Validators.max(10)]],
       avatar: ['⚔️']
+    });
+
+    // Watch for level changes to enforce max level
+    this.playerForm.get('level')?.valueChanges.subscribe((level) => {
+      if (level >= 10) {
+        this.playerForm.get('level')?.setValue(10, { emitEvent: false });
+      }
     });
   }
 
@@ -43,9 +73,42 @@ export class Players {
     }
     const val = this.playerForm.value;
     const level = Number(val.level) || 1;
-    this.playerService.addPlayer({ nickname: val.nickname, level: level, avatar: val.avatar });
+    const xp = playerLevels.find(l => l.level === level)?.xpRequired ?? 0;
+    this.playerService.addPlayer({ nickname: val.nickname, xp: xp, avatar: val.avatar });
     this.playerForm.reset({ nickname: '', level: 1, avatar: '⚔️' });
     this.showForm.set(false);
+  }
+  getPlayerLevel(xp: number): number {
+    let level = 1;
+    for (let i = playerLevels.length - 1; i >= 0; i--) {
+      if (xp >= playerLevels[i].xpRequired) {
+        level = playerLevels[i].level;
+        break;
+      }
+    }
+    return level;
+  }
+
+  getPlayerLevelTitle(xp: number): string {
+    const lvl = this.getPlayerLevel(xp);
+    return playerLevels.find(l => l.level === lvl)?.title || 'Novice';
+  }
+
+  getPlayerLevelPercent(xp: number): number {
+    const lvl = this.getPlayerLevel(xp);
+    const current = playerLevels.find(l => l.level === lvl);
+    const next = playerLevels.find(l => l.level === lvl + 1);
+    if (!current || !next) return 100;
+    const range = next.xpRequired - current.xpRequired;
+    const progress = xp - current.xpRequired;
+    return Math.min(100, Math.round((progress / range) * 100));
+  }
+
+  getPlayerXpToNext(xp: number): number {
+    const lvl = this.getPlayerLevel(xp);
+    const next = playerLevels.find(l => l.level === lvl + 1);
+    if (!next) return 0;
+    return Math.max(0, next.xpRequired - xp);
   }
 
   removePlayer(id: number) {

@@ -31,7 +31,7 @@
             [disabled]="availablePlayers.length === 0">
             <option [value]="null">-- Select a player to add --</option>
             @for (p of availablePlayers; track p.id) {
-              <option [ngValue]="p.id">{{ p.nickname }} (Level {{ p.level }})</option>
+              <option [ngValue]="p.id">{{ p.nickname }} (Level {{ getPlayerLevel(p.xp) }})</option>
             }
           </select>
           <button 
@@ -63,7 +63,7 @@
                 }
                 <div class="member-info">
                   <h4>{{ m.nickname }}</h4>
-                  <p class="level">⭐ Level {{ m.level }}</p>
+                  <p class="level">⭐ Level {{ getPlayerLevel(m.xp) }}</p>
                 </div>
               </div>
               <div class="member-actions">

@@ -13,7 +13,7 @@ export type Clan = {
 export class ClanService {
   private _clans = signal<Clan[]>([
     { id: 1, name: 'Dragon Knights', description: 'Elite slayers of dragons', capacity: 10, memberIds: [1] },
-    { id: 2, name: 'Moon Order', description: 'Secretive moonlight clan', capacity: 5, memberIds: [2] },
+    { id: 2, name: 'VodaHeaven', description: 'cotyjebetaku ultinu že mi zaplo spotify', capacity: 5, memberIds: [2] },
   ]);
 
   clans = () => this._clans();

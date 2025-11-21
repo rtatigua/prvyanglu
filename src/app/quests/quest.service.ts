@@ -13,9 +13,9 @@ export type Quest = {
 })
 export class QuestService {
   private quests: Quest[] = [
-    { id: 1, title: 'Find the Lost Sword', description: 'Retrieve the legendary sword from the haunted canyon.', completed: false, xp: 50 },
-    { id: 2, title: 'Defeat the Bandits', description: 'Clear the bandit camp and rescue the merchant caravan.', completed: false, xp: 75 },
-    { id: 3, title: 'Collect Herbs', description: 'Gather 10 healing herbs for the village healer.', completed: false, xp: 30 }
+    { id: 1, title: 'Plesniva YES!-ka', description: 'Oblej si yesku džusom', completed: false, xp: 50 },
+    { id: 2, title: 'Zapni spotify', description: 'Nehraf svoju ulty', completed: false, xp: 75 },
+    { id: 3, title: 'Ísť ako Kačka je Hračka', description: 'Prejdi do dalšieho mesta ako kačička', completed: false, xp: 300 }
   ];
 
   getQuests(): Quest[] {

@@ -1,5 +1,5 @@
 <div class="player-detail-container">
-  @if (player) {
+  @if (playerSignal(); as player) {
     <div class="player-header">
       <button class="back-btn" (click)="goBack()">← Back to Players</button>
       <div class="player-info">
@@ -14,7 +14,7 @@
         </div>
         <div class="info-text">
           <h2>{{ player.nickname }}</h2>
-          <p class="level">Level {{ player.level }}</p>
+          <p class="level">{{ playerLevelData().levelTitle }}</p>
         </div>
       </div>
     </div>
@@ -22,7 +22,7 @@
     <div class="quest-section">
       <h3>Assigned Quests</h3>
       <app-quest-list
-        [quests]="assignedQuests"
+        [quests]="assignedQuests()"
         [actionButton]="true"
         [actionLabel]="'Mark Complete'"
         (onAction)="completeQuest($event)">
@@ -30,10 +30,10 @@
 
       <div class="assign-quest">
         <h4>Assign New Quest</h4>
-        @if (allQuests && allQuests.length) {
+        @if (allQuests() && allQuests().length) {
           <div>
             <select #questSelect>
-              @for (q of allQuests; track q.id) {
+              @for (q of allQuests(); track q.id) {
                 <option [value]="q.id" [disabled]="player && player.assignedQuests.includes(q.id)">{{ q.title }}</option>
               }
             </select>
@@ -44,11 +44,11 @@
         }
       </div>
 
-      @if (assignedQuests.length) {
+      @if (assignedQuests().length) {
         <div class="manage-assigned">
           <h4>Manage Assigned Quests</h4>
           <ul>
-            @for (q of assignedQuests; track q.id) {
+            @for (q of assignedQuests(); track q.id) {
               <li>
                 {{ q.title }}
                 <button class="btn-remove" (click)="unassignQuest(q.id)">Unassign</button>
@@ -62,7 +62,7 @@
     <div class="quest-section">
       <h3>Completed Quests</h3>
       <app-quest-list
-        [quests]="completedQuests"
+        [quests]="completedQuests()"
         [actionButton]="true"
         [actionLabel]="'Mark Incomplete'"
         (onAction)="uncompleteQuest($event)">

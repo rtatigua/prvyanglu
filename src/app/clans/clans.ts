@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Clan, Player, Quest } from '../models';
 import { ClanService } from './clans.service';
-import { PlayerService } from '../player.service';
+import { PlayerService } from '../players/player.service';
 
 @Component({
   selector: 'app-clans',

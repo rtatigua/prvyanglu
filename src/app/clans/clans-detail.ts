@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Clan, Player, Quest } from '../models';
+import { playerLevels } from '../levels';
 import { ClanService } from './clans.service';
-import { PlayerService } from '../player.service';
+import { PlayerService } from '../players/player.service';
 
 @Component({
   selector: 'app-clan-detail',
@@ -14,6 +15,16 @@ import { PlayerService } from '../player.service';
   styleUrls: ['./clans-detail.scss'],
 })
 export class ClanDetail implements OnInit {
+  getPlayerLevel(xp: number): number {
+    let level = 1;
+    for (let i = playerLevels.length - 1; i >= 0; i--) {
+      if (xp >= playerLevels[i].xpRequired) {
+        level = playerLevels[i].level;
+        break;
+      }
+    }
+    return level;
+  }
   clan?: Clan;
   allPlayers: Player[] = [];
   availablePlayers: Player[] = [];

@@ -10,7 +10,7 @@ export interface Quest {
 export interface Player {
   id: number;
   nickname: string;
-  level: number;
+  xp: number;
   assignedQuests: number[]; // quest IDs not yet completed
   completedQuests: number[]; // quest IDs completed
   clanId?: number; // prepojenie na clan (only one clan per player)

@@ -1,7 +1,7 @@
 import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Player, Quest, Clan } from '../models';
 import { PlayerService } from '../player.service';
 import { ClanService } from '../clans/clans.service';
@@ -9,39 +9,42 @@ import { ClanService } from '../clans/clans.service';
 @Component({
   selector: 'app-players',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './player.html',
   styleUrls: ['./player.scss','./player.forms.scss'],
 })
 export class Players {
   showForm = signal(false);
   avatarOptions: string[] = [];
+  playerForm: FormGroup;
+  players = computed(() => this.playerService.getPlayers());
+  clans = computed(() => this.clanService.getClans().map(c => ({ ...c, members: this.playerService.getPlayers().filter(p => p.clanId === c.id) } as unknown as Clan)));
 
-  newPlayer: Partial<Player> = {
-    nickname: '',
-    level: 1,
-    avatar: '⚔️',
-  };
-
-  constructor(private router: Router, private playerService: PlayerService, private clanService: ClanService) {
+  constructor(private router: Router, private playerService: PlayerService, private clanService: ClanService, private fb: FormBuilder) {
     this.avatarOptions = this.playerService.getAvatarOptions();
+    this.playerForm = this.fb.group({
+      nickname: ['', [Validators.required, Validators.minLength(8)]],
+      level: [1, [Validators.required, Validators.min(1)]],
+      avatar: ['⚔️']
+    });
   }
 
-  get players(): Player[] {
-    return this.playerService.getPlayers();
-  }
-
-  get clans(): Clan[] {
-    return this.clanService.getClans().map(c => ({ ...c, members: this.playerService.getPlayers().filter(p => p.clanId === c.id) } as unknown as Clan));
-  }
+  
 
   addPlayer() {
+    this.playerForm.reset({ nickname: '', level: 1, avatar: '⚔️' });
     this.showForm.set(true);
   }
 
   createPlayer() {
-    this.playerService.addPlayer({ nickname: this.newPlayer.nickname, level: this.newPlayer.level, avatar: this.newPlayer.avatar });
-    this.newPlayer = { nickname: '', level: 1, avatar: '⚔️' };
+    if (!this.playerForm.valid) {
+      alert('Nickname is required and must be at least 8 characters long.');
+      return;
+    }
+    const val = this.playerForm.value;
+    const level = Number(val.level) || 1;
+    this.playerService.addPlayer({ nickname: val.nickname, level: level, avatar: val.avatar });
+    this.playerForm.reset({ nickname: '', level: 1, avatar: '⚔️' });
     this.showForm.set(false);
   }
 

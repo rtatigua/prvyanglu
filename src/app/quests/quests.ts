@@ -1,33 +1,34 @@
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { QuestService, Quest } from './quest.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quests',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './quests.html',
   styleUrls: ['./quests.scss', './quests.forms.scss']
 })
 export class Quests implements OnInit, OnDestroy {
   quests = signal<Quest[]>([]);
   showForm = signal(false);
-
-  newQuest: Partial<Quest> = {
-    title: '',
-    description: '',
-    xp: 50,
-    completed: false,
-  };
+  questForm: FormGroup;
 
   // map questId -> expanded (show full description)
   private expandedMap = signal<Record<number, boolean>>({});
 
   questCount = computed(() => this.quests().length);
 
-  constructor(private questService: QuestService, private router: Router) {}
+  constructor(private questService: QuestService, private router: Router, private fb: FormBuilder) {
+    this.questForm = this.fb.group({
+      title: ['', [Validators.required, Validators.minLength(8)]],
+      description: ['', Validators.required],
+      xp: [50, [Validators.required, Validators.min(1)]],
+      completed: [false]
+    });
+  }
 
   ngOnInit(): void {
     console.log('Component was created');
@@ -44,19 +45,33 @@ export class Quests implements OnInit, OnDestroy {
   }
 
   createQuest() {
+    if (!this.questForm.valid) {
+      alert('Quest Title is required and must be at least 8 characters long.');
+      return;
+    }
+    const val = this.questForm.value;
+    if (!val.title || val.title.trim().length < 8) {
+      alert('Quest Title must be at least 8 characters long.');
+      return;
+    }
+    const xp = Number(val.xp) || 0;
+    if (!xp || xp <= 0) {
+      alert('XP must be greater than 0!');
+      return;
+    }
     const current = this.questService.getQuests();
     const maxId = Math.max(...current.map(q => q.id), 0);
     const q: Quest = {
       id: maxId + 1,
-      title: this.newQuest.title || 'New Quest',
-      description: this.newQuest.description || '',
-      completed: !!this.newQuest.completed,
-      xp: this.newQuest.xp || 0,
+      title: val.title,
+      description: val.description || '',
+      completed: !!val.completed,
+      xp: xp,
     };
     this.questService.addQuest(q);
     this.quests.set(this.questService.getQuests());
     this.showForm.set(false);
-    this.newQuest = { title: '', description: '', xp: 50, completed: false };
+    this.questForm.reset({ title: '', description: '', xp: 50, completed: false });
   }
 
   deleteQuest(id: number) {

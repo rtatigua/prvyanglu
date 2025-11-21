@@ -5,8 +5,8 @@
       <div class="player-info">
         <div class="avatar">
           @if (player.avatar && isEmoji(player.avatar)) {
-            <span class="emoji-avatar">{{ player.avatar }}</span>
-          } @else if (player.avatar) {
+            <div class="emoji-avatar">{{ player.avatar }}</div>
+          } @else if (player.avatar && !isEmoji(player.avatar)) {
             <img [src]="player.avatar" alt="{{ player.nickname }}" />
           } @else {
             <span class="emoji-avatar">⚔️</span>
@@ -27,6 +27,36 @@
         [actionLabel]="'Mark Complete'"
         (onAction)="completeQuest($event)">
       </app-quest-list>
+
+      <div class="assign-quest">
+        <h4>Assign New Quest</h4>
+        @if (allQuests && allQuests.length) {
+          <div>
+            <select #questSelect>
+              @for (q of allQuests; track q.id) {
+                <option [value]="q.id" [disabled]="player && player.assignedQuests.includes(q.id)">{{ q.title }}</option>
+              }
+            </select>
+            <button class="btn-add-player" (click)="assignQuest(questSelect.value)" [disabled]="!player">Assign</button>
+          </div>
+        } @else {
+          <p class="info">No quests available to assign.</p>
+        }
+      </div>
+
+      @if (assignedQuests.length) {
+        <div class="manage-assigned">
+          <h4>Manage Assigned Quests</h4>
+          <ul>
+            @for (q of assignedQuests; track q.id) {
+              <li>
+                {{ q.title }}
+                <button class="btn-remove" (click)="unassignQuest(q.id)">Unassign</button>
+              </li>
+            }
+          </ul>
+        </div>
+      }
     </div>
 
     <div class="quest-section">

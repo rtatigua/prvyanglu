@@ -1,4 +1,5 @@
-<div *ngIf="quest; else notFound" class="quest-detail">
+@if (quest) {
+  <div class="quest-detail">
     <h2>{{ quest.title }}</h2>
     <img src="assets/logo.jpg" alt="Quest Image" class="quest-image">
     <p><strong>Description:</strong> {{ quest.description }}</p>
@@ -7,12 +8,11 @@
       <strong>Status:</strong>
       {{ quest.completed ? '✅ Completed' : '❌ Not Completed' }}
     </p>
-  
+
     <button (click)="goBack()">⬅ Back to Quests</button>
   </div>
-  
-  <ng-template #notFound>
-    <p>Quest not found.</p>
-    <button (click)="goBack()">⬅ Back to Quests</button>
-  </ng-template>
+} @else {
+  <p>Quest not found.</p>
+  <button (click)="goBack()">⬅ Back to Quests</button>
+}
   

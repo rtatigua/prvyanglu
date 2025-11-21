@@ -9,9 +9,13 @@
   <div class="meta">
     <span class="status">{{ quest.completed ? 'Completed' : 'In Progress' }}</span>
     <div class="right">
-      <span *ngIf="quest.xp > 100" class="badge mega">→ MEGA XP!</span>
-      <span *ngIf="quest.xp > 50 && quest.xp <= 100" class="badge super">→ SUPER XP!</span>
-      <span *ngIf="quest.xp <= 50" class="badge small">→ Keep going...</span>
+      @if (quest.xp > 100) {
+        <span class="badge mega">→ MEGA XP!</span>
+      } @else if (quest.xp > 50 && quest.xp <= 100) {
+        <span class="badge super">→ SUPER XP!</span>
+      } @else {
+        <span class="badge small">→ Keep going...</span>
+      }
       <button class="btn-delete" (click)="$event.stopPropagation(); onDelete()">Delete</button>
     </div>
   </div>

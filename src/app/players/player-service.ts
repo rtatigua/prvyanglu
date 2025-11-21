@@ -21,7 +21,8 @@ export class PlayerService {
       id: 1,
       nickname: 'Knightmare',
       level: 15,
-      quests: [this.quests[0]],
+      assignedQuests: [1],
+      completedQuests: [],
       clanId: 1,
       avatar: 'assets/avatars/knight.png',
     },
@@ -29,14 +30,16 @@ export class PlayerService {
       id: 2,
       nickname: 'Herbalist',
       level: 5,
-      quests: [this.quests[1]],
+      assignedQuests: [2],
+      completedQuests: [],
       avatar: 'assets/avatars/herbalist.png',
     },
     {
       id: 3,
       nickname: 'TreasureHunter',
       level: 12,
-      quests: [this.quests[2]],
+      assignedQuests: [3],
+      completedQuests: [],
       clanId: 2,
       avatar: 'assets/avatars/hunter.png',
     },
@@ -98,5 +101,53 @@ export class PlayerService {
 
   getQuestById(id: number): Quest | undefined {
     return this.quests.find(q => q.id === id);
+  }
+
+  assignQuestToPlayer(playerId: number, questId: number): void {
+    const currentPlayers = this.playersSignal();
+    const playerIndex = currentPlayers.findIndex(p => p.id === playerId);
+    if (playerIndex !== -1) {
+      const player = currentPlayers[playerIndex];
+      if (!player.assignedQuests.includes(questId)) {
+        player.assignedQuests.push(questId);
+        this.playersSignal.set([...currentPlayers]);
+      }
+    }
+  }
+
+  removeQuestFromPlayer(playerId: number, questId: number): void {
+    const currentPlayers = this.playersSignal();
+    const playerIndex = currentPlayers.findIndex(p => p.id === playerId);
+    if (playerIndex !== -1) {
+      const player = currentPlayers[playerIndex];
+      player.assignedQuests = player.assignedQuests.filter(q => q !== questId);
+      this.playersSignal.set([...currentPlayers]);
+    }
+  }
+
+  completeQuest(playerId: number, questId: number): void {
+    const currentPlayers = this.playersSignal();
+    const playerIndex = currentPlayers.findIndex(p => p.id === playerId);
+    if (playerIndex !== -1) {
+      const player = currentPlayers[playerIndex];
+      player.assignedQuests = player.assignedQuests.filter(q => q !== questId);
+      if (!player.completedQuests.includes(questId)) {
+        player.completedQuests.push(questId);
+      }
+      this.playersSignal.set([...currentPlayers]);
+    }
+  }
+
+  uncompleteQuest(playerId: number, questId: number): void {
+    const currentPlayers = this.playersSignal();
+    const playerIndex = currentPlayers.findIndex(p => p.id === playerId);
+    if (playerIndex !== -1) {
+      const player = currentPlayers[playerIndex];
+      player.completedQuests = player.completedQuests.filter(q => q !== questId);
+      if (!player.assignedQuests.includes(questId)) {
+        player.assignedQuests.push(questId);
+      }
+      this.playersSignal.set([...currentPlayers]);
+    }
   }
 }

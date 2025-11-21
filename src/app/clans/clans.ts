@@ -1,7 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Clan, Player, Quest } from '../models';
 import { ClanService } from './clans.service';
 import { PlayerService } from '../player.service';
@@ -9,36 +9,48 @@ import { PlayerService } from '../player.service';
 @Component({
   selector: 'app-clans',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './clans.html',
   styleUrls: ['./clans.scss', './clans.forms.scss'],
 })
 export class Clans {
   showForm = signal(false);
 
-  newClan: Partial<Clan> = {
-    name: '',
-    description: '',
-    capacity: 5,
-  };
+  clanForm: FormGroup;
 
-  constructor(private router: Router, private clanService: ClanService, private playerService: PlayerService) {
-    // constructor
+  constructor(private router: Router, private clanService: ClanService, private playerService: PlayerService, private fb: FormBuilder) {
+    this.clanForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(8)]],
+      description: [''],
+      capacity: [5, [Validators.required, Validators.min(1)]]
+    });
   }
 
-  get clans(): Clan[] {
-    // map clan members to Player[] for templates
-    return this.clanService.getClans().map(c => ({ ...c, members: this.playerService.getPlayers().filter(p => p.clanId === c.id) } as unknown as Clan));
-  }
+  clans = computed(() => this.clanService.getClans().map(c => ({ ...c, members: this.playerService.getPlayers().filter(p => p.clanId === c.id) } as unknown as Clan)));
 
   addClan() {
+    this.clanForm.reset({ name: '', description: '', capacity: 5 });
     this.showForm.set(true);
   }
 
   createClan() {
-    this.clanService.addClan({ name: this.newClan.name, description: this.newClan.description, capacity: this.newClan.capacity });
+    if (!this.clanForm.valid) {
+      alert('Clan Name is required and must be at least 8 characters long.');
+      return;
+    }
+    const val = this.clanForm.value;
+    if (!val.name || val.name.trim().length < 8) {
+      alert('Clan Name must be at least 8 characters long.');
+      return;
+    }
+    const capacity = Number(val.capacity) || 0;
+    if (!capacity || capacity <= 0) {
+      alert('Capacity must be greater than 0!');
+      return;
+    }
+    this.clanService.addClan({ name: val.name, description: val.description, capacity: capacity });
     this.showForm.set(false);
-    this.newClan = { name: '', description: '', capacity: 5 };
+    this.clanForm.reset({ name: '', description: '', capacity: 5 });
   }
 
   removeClan(id: number) {

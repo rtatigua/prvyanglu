@@ -9,8 +9,8 @@
   </button>
 
   <div class="clans-grid">
-    @if (clans.length) {
-      @for (c of clans; track c.id) {
+    @if (clans().length) {
+      @for (c of clans(); track c.id) {
         <div class="clan-card" (click)="openDetail(c.id)">
           <div class="card-header">
             <h3>{{ c.name }}</h3>
@@ -37,24 +37,26 @@
     }
   </div>
 
-  <div *ngIf="showForm()" class="new-clan-form">
-    <form (ngSubmit)="createClan()">
-      <div>
-        <label for="name">Clan Name</label>
-        <input id="name" name="name" [(ngModel)]="newClan.name" required />
-      </div>
-      <div>
-        <label for="description">Description</label>
-        <textarea id="description" name="description" [(ngModel)]="newClan.description"></textarea>
-      </div>
-      <div>
-        <label for="capacity">Capacity</label>
-        <input id="capacity" name="capacity" type="number" [(ngModel)]="newClan.capacity" />
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn-add">Create</button>
-        <button type="button" (click)="showForm.set(false)">Cancel</button>
-      </div>
-    </form>
-  </div>
+  @if (showForm()) {
+    <div class="new-clan-form">
+      <form [formGroup]="clanForm" (ngSubmit)="createClan()">
+        <div>
+          <label for="name">Clan Name</label>
+          <input id="name" formControlName="name" />
+        </div>
+        <div>
+          <label for="description">Description</label>
+          <textarea id="description" formControlName="description"></textarea>
+        </div>
+        <div>
+          <label for="capacity">Capacity</label>
+          <input id="capacity" formControlName="capacity" type="number" inputmode="numeric" pattern="\d*" min="1" step="1" />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-add" [disabled]="!clanForm.valid">Create</button>
+          <button type="button" (click)="showForm.set(false)">Cancel</button>
+        </div>
+      </form>
+    </div>
+  }
 </div>

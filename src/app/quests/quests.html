@@ -10,24 +10,24 @@
 
   @if (showForm()) {
     <div class="new-quest-form">
-      <form (ngSubmit)="createQuest()">
+      <form [formGroup]="questForm" (ngSubmit)="createQuest()">
         <div>
           <label for="title">Title</label>
-          <input id="title" name="title" [(ngModel)]="newQuest.title" required />
+          <input id="title" formControlName="title" />
         </div>
 
         <div>
           <label for="description">Description</label>
-          <textarea id="description" name="description" [(ngModel)]="newQuest.description"></textarea>
+          <textarea id="description" formControlName="description"></textarea>
         </div>
 
         <div>
           <label for="xp">XP</label>
-          <input id="xp" name="xp" type="number" [(ngModel)]="newQuest.xp" />
+          <input id="xp" formControlName="xp" type="number" inputmode="numeric" pattern="\d*" min="1" step="1" />
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn-add-quest">Create</button>
+          <button type="submit" class="btn-add-quest" [disabled]="!questForm.valid">Create</button>
           <button type="button" (click)="showForm.set(false)">Cancel</button>
         </div>
       </form>

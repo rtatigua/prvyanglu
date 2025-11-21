@@ -1,84 +1,88 @@
-<div *ngIf="clan" class="clan-detail-container">
-  <div class="detail-header">
-    <button class="btn-back" (click)="goBack()">⬅ Back</button>
-    <h1>{{ clan.name }}</h1>
-  </div>
+@if (clan) {
+  <div class="clan-detail-container">
+    <div class="detail-header">
+      <button class="btn-back" (click)="goBack()">⬅ Back</button>
+      <h1>{{ clan.name }}</h1>
+    </div>
 
-  <div class="clan-info">
-    <p class="description">{{ clan.description }}</p>
-    <div class="capacity-info">
-      <div class="capacity-bar">
-        <div 
-          class="capacity-fill" 
-          [style.width.%]="(clan.members.length / clan.capacity) * 100">
+    <div class="clan-info">
+      <p class="description">{{ clan.description }}</p>
+      <div class="capacity-info">
+        <div class="capacity-bar">
+          <div 
+            class="capacity-fill" 
+            [style.width.%]="(clan.members.length / clan.capacity) * 100">
+          </div>
+        </div>
+        <p class="capacity-text">
+          <strong>Members:</strong> {{ clan.members.length }}/{{ clan.capacity }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Add Player Section -->
+    @if (!isAtCapacity()) {
+      <div class="add-player-section">
+        <h3>Add Member to Clan</h3>
+        <div class="form-group">
+          <select 
+            [(ngModel)]="selectedPlayerId" 
+            class="player-select"
+            [disabled]="availablePlayers.length === 0">
+            <option [value]="null">-- Select a player to add --</option>
+            @for (p of availablePlayers; track p.id) {
+              <option [ngValue]="p.id">{{ p.nickname }} (Level {{ p.level }})</option>
+            }
+          </select>
+          <button 
+            (click)="addPlayerToClan()" 
+            class="btn-add-player"
+            [disabled]="!selectedPlayerId || isAtCapacity()">
+            ➕ Add Player
+          </button>
         </div>
       </div>
-      <p class="capacity-text">
-        <strong>Members:</strong> {{ clan.members.length }}/{{ clan.capacity }}
-      </p>
-    </div>
-  </div>
+    } @else {
+      <div class="at-capacity-message">
+        ⚠️ Clan is at full capacity
+      </div>
+    }
 
-  <!-- Add Player Section -->
-  <div class="add-player-section" *ngIf="!isAtCapacity()">
-    <h3>Add Member to Clan</h3>
-    <div class="form-group">
-      <select 
-        [(ngModel)]="selectedPlayerId" 
-        class="player-select"
-        [disabled]="availablePlayers.length === 0">
-        <option [value]="null">-- Select a player to add --</option>
-        @for (p of availablePlayers; track p.id) {
-          <option [ngValue]="p.id">{{ p.nickname }} (Level {{ p.level }})</option>
-        }
-      </select>
-      <button 
-        (click)="addPlayerToClan()" 
-        class="btn-add-player"
-        [disabled]="!selectedPlayerId || isAtCapacity()">
-        ➕ Add Player
-      </button>
-    </div>
-  </div>
-
-  <div class="at-capacity-message" *ngIf="isAtCapacity()">
-    ⚠️ Clan is at full capacity
-  </div>
-
-  <!-- Members Section -->
-  <div class="members-section">
-    <h2>Members</h2>
-    <div class="members-grid">
-      <ng-container *ngIf="clan.members?.length; else noMembers">
-        <div class="member-card" *ngFor="let m of clan.members">
-          <div class="member-header">
-            <img 
-              *ngIf="m.avatar" 
-              [src]="m.avatar" 
-              [alt]="m.nickname" 
-              class="member-avatar" />
-            <div class="member-info">
-              <h4>{{ m.nickname }}</h4>
-              <p class="level">⭐ Level {{ m.level }}</p>
+    <!-- Members Section -->
+    <div class="members-section">
+      <h2>Members</h2>
+      <div class="members-grid">
+        @if (clan.members.length) {
+          @for (m of clan.members; track m.id) {
+            <div class="member-card">
+              <div class="member-header">
+                @if (m.avatar) {
+                  <img [src]="m.avatar" [alt]="m.nickname" class="member-avatar" />
+                } @else {
+                  <!-- no avatar placeholder -->
+                }
+                <div class="member-info">
+                  <h4>{{ m.nickname }}</h4>
+                  <p class="level">⭐ Level {{ m.level }}</p>
+                </div>
+              </div>
+              <div class="member-actions">
+                <a [routerLink]="['/players', m.id]" class="btn-view">View Profile</a>
+                <button 
+                  (click)="removePlayerFromClan(m.id)" 
+                  class="btn-remove-member"
+                  title="Remove from clan">
+                  ✕
+                </button>
+              </div>
             </div>
+          }
+        } @else {
+          <div class="empty-members">
+            <p>No members yet. Add your first member!</p>
           </div>
-          <div class="member-actions">
-            <a [routerLink]="['/players', m.id]" class="btn-view">View Profile</a>
-            <button 
-              (click)="removePlayerFromClan(m.id)" 
-              class="btn-remove-member"
-              title="Remove from clan">
-              ✕
-            </button>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-template #noMembers>
-        <div class="empty-members">
-          <p>No members yet. Add your first member!</p>
-        </div>
-      </ng-template>
+        }
+      </div>
     </div>
   </div>
-</div>
+}

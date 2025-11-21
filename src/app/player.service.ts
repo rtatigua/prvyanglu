@@ -80,6 +80,19 @@ export class PlayerService {
     }));
   }
 
+  assignQuestToPlayer(playerId: number, questId: number) {
+    this.assignQuest(playerId, questId);
+  }
+
+  removeQuestFromPlayer(playerId: number, questId: number) {
+    this._players.set(this._players().map(p => {
+      if (p.id === playerId && p.assignedQuests.includes(questId)) {
+        return { ...p, assignedQuests: p.assignedQuests.filter(q => q !== questId) };
+      }
+      return p;
+    }));
+  }
+
   getAvatarOptions(): string[] {
     return this.AVATAR_OPTIONS;
   }

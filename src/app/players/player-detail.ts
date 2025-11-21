@@ -18,6 +18,7 @@ export class PlayerDetail implements OnInit {
   assignedQuests: Quest[] = [];
   completedQuests: Quest[] = [];
   allQuests: Quest[] = [];
+  selectedQuestId?: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -58,6 +59,19 @@ export class PlayerDetail implements OnInit {
       this.playerService.uncompleteQuest(this.player.id, questId);
       this.loadPlayerData(this.player.id);
     }
+  }
+
+  assignQuest(questIdRaw: any) {
+    const questId = Number(questIdRaw);
+    if (!this.player || !questId) return;
+    this.playerService.assignQuestToPlayer(this.player.id, questId);
+    this.loadPlayerData(this.player.id);
+  }
+
+  unassignQuest(questId: number) {
+    if (!this.player) return;
+    this.playerService.removeQuestFromPlayer(this.player.id, questId);
+    this.loadPlayerData(this.player.id);
   }
 
   goBack() {

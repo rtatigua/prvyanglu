@@ -43,7 +43,7 @@
           "options": {
             "outputPath": "dist/first-app",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -73,7 +73,7 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+            "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular/build:dev-server",

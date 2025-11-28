@@ -1,0 +1,21 @@
+<div class="quest-list">
+  @if (quests.length) {
+    @for (q of quests; track q.id) {
+      <div class="quest-item">
+        <div class="quest-info">
+          <p>
+            <a [routerLink]="['/quests', q.id]">{{ q.title }}</a>
+          </p>
+          <p class="xp">{{ q.xp }} XP</p>
+        </div>
+        @if (actionButton && actionLabel) {
+          <button [attr.aria-label]="actionLabel" (click)="handleActionClick(q.id)" class="action-btn">
+            {{ actionLabel }}
+          </button>
+        }
+      </div>
+    }
+  } @else {
+    <p class="empty-message">{{ emptyMessage }}</p>
+  }
+</div>

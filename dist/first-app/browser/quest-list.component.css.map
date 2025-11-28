@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/shared/quest-list.component.scss"],
+  "sourcesContent": [".quest-list {\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 0.5rem;\r\n}\r\n.quest-item {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 0.6rem;\r\n  background: rgba(255,255,255,0.02);\r\n  border: 1px solid rgba(255,255,255,0.04);\r\n  border-radius: 6px;\r\n}\r\n.quest-info { flex: 1; }\r\n.quest-info p { margin: 0; color: #c0ccd6; font-size: 0.9rem; }\r\n.quest-info .xp { color: #ffd54f; font-weight: 600; }\r\n.action-btn { padding: 4px 8px; background: #42a5f5; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.8rem; margin-left: 0.5rem; }\r\n.empty-message { color: #8a92a0; font-size: 0.9rem; text-align: center; padding: 1rem; }\r\n"],
+  "mappings": ";AAAA,CAAA;AACE,WAAA;AACA,kBAAA;AACA,OAAA;;AAEF,CAAA;AACE,WAAA;AACA,mBAAA;AACA,eAAA;AACA,WAAA;AACA,cAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;AACA,UAAA,IAAA,MAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;AACA,iBAAA;;AAEF,CAAA;AAAc,QAAA;;AACd,CADA,WACA;AAAgB,UAAA;AAAW,SAAA;AAAgB,aAAA;;AAC3C,CAFA,WAEA,CAAA;AAAkB,SAAA;AAAgB,eAAA;;AAClC,CAAA;AAAc,WAAA,IAAA;AAAkB,cAAA;AAAqB,SAAA;AAAc,UAAA;AAAc,iBAAA;AAAoB,UAAA;AAAiB,aAAA;AAAmB,eAAA;;AACzI,CAAA;AAAiB,SAAA;AAAgB,aAAA;AAAmB,cAAA;AAAoB,WAAA;;",
+  "names": []
+}

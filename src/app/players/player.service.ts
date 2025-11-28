@@ -9,6 +9,8 @@ export class PlayerService {
     { id: 1, nickname: 'Knightmare', xp: 150, assignedQuests: [1], completedQuests: [2], clanId: 1, avatar: '🤺' },
     { id: 2, nickname: 'Herbalist', xp: 50, assignedQuests: [2], completedQuests: [], avatar: '🌿' },
     { id: 3, nickname: 'Vilgain', xp: 1, assignedQuests: [3], completedQuests: [], clanId: 2, avatar: '🎵' },
+    { id: 4, nickname: 'Klokočovec', xp: 10000, assignedQuests: [3], completedQuests: [], clanId: 1, avatar: '🧃' },
+
   ]);
   
   private _quests: Quest[] = [

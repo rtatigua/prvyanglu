@@ -4,6 +4,8 @@
     <p class="quest-count">Total Quests: {{ questCount() }}</p>
   </div>
 
+  <app-search [(searchQuery)]="searchTerm" placeholder="Search quests..."></app-search>
+
   <button class="btn-add-quest" (click)="addQuest()">
     <span class="icon">➕</span> Create New Quest
   </button>
@@ -35,8 +37,8 @@
   }
 
   <div class="quests-grid">
-    @if (quests().length) {
-      @for (quest of quests(); track quest.id) {
+    @if (filteredQuests().length) {
+      @for (quest of filteredQuests(); track quest.id) {
         <div class="quest-card" (click)="goToDetail(quest.id)">
           <div class="quest-header-section">
             <h3>{{ quest.title }}</h3>

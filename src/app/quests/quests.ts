@@ -2,24 +2,32 @@ import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { QuestService, Quest } from './quest.service';
+import { SearchComponent } from '../shared/search.component';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quests',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SearchComponent],
   templateUrl: './quests.html',
   styleUrls: ['./quests.scss', './quests.forms.scss']
 })
 export class Quests implements OnInit, OnDestroy {
   quests = signal<Quest[]>([]);
   showForm = signal(false);
+  searchTerm = signal<string>('');
   questForm: FormGroup;
 
   // map questId -> expanded (show full description)
   private expandedMap = signal<Record<number, boolean>>({});
 
   questCount = computed(() => this.quests().length);
+
+  filteredQuests = computed(() => {
+    const s = this.searchTerm().trim().toLowerCase();
+    if (!s) return this.quests();
+    return this.quests().filter(q => (q.title || '').toLowerCase().includes(s) || (q.description || '').toLowerCase().includes(s));
+  });
 
   constructor(private questService: QuestService, private router: Router, private fb: FormBuilder) {
     this.questForm = this.fb.group({

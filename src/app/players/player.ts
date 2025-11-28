@@ -5,12 +5,13 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Player, Quest, Clan } from '../models';
 import { playerLevels } from '../levels';
 import { PlayerService } from './player.service';
+import { SearchComponent } from '../shared/search.component';
 import { ClanService } from '../clans/clans.service';
 
 @Component({
   selector: 'app-players',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SearchComponent],
   templateUrl: './player.html',
   styleUrls: ['./player.scss','./player.forms.scss'],
 })
@@ -19,11 +20,11 @@ export class Players {
   avatarOptions: string[] = [];
   playerForm: FormGroup;
   players = computed(() => this.playerService.getPlayers());
-  clans = computed(() => this.clanService.getClans().map(c => ({ ...c, members: this.playerService.getPlayers().filter(p => p.clanId === c.id) } as unknown as Clan)));
+  clans = computed(() => this.clanService.getClans().map((c: any) => ({ ...c, members: this.playerService.getPlayers().filter((p: Player) => p.clanId === c.id) } as unknown as Clan)));
 
   // Computed signals for each player's level data
   playersWithLevelData = computed(() => 
-    this.players().map(p => ({
+    this.players().map((p: Player) => ({
       ...p,
       level: this.getPlayerLevel(p.xp),
       levelTitle: this.getPlayerLevelTitle(p.xp),
@@ -35,12 +36,30 @@ export class Players {
   // Filter state: selected level title ('' or 'All' = no filter)
   levelFilter = signal<string>('All');
   levelOptions = playerLevels.map(l => l.title);
+  // Search state
+  searchTerm = signal<string>('');
 
-  // Computed filtered players based on selected level title
+  // Two-way friendly model property for template binding
+  // get/set proxies the `searchTerm` signal so templates can use `[(model)]="searchModel"`
+  get searchModel(): string {
+    return this.searchTerm();
+  }
+  set searchModel(v: string) {
+    this.searchTerm.set(v ?? '');
+  }
+
+  // Computed filtered players based on selected level title and search term
   filteredPlayersWithLevelData = computed(() => {
     const sel = this.levelFilter();
-    if (!sel || sel === 'All') return this.playersWithLevelData();
-    return this.playersWithLevelData().filter(p => p.levelTitle === sel);
+    const search = this.searchTerm().trim().toLowerCase();
+    let list = this.playersWithLevelData();
+    if (sel && sel !== 'All') {
+      list = list.filter((p: any) => p.levelTitle === sel);
+    }
+    if (search) {
+      list = list.filter((p: any) => p.nickname.toLowerCase().includes(search));
+    }
+    return list;
   });
 
   constructor(private router: Router, private playerService: PlayerService, private clanService: ClanService, private fb: FormBuilder) {

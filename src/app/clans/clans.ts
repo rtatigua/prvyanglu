@@ -5,16 +5,18 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Clan, Player, Quest } from '../models';
 import { ClanService } from './clans.service';
 import { PlayerService } from '../players/player.service';
+import { SearchComponent } from '../shared/search.component';
 
 @Component({
   selector: 'app-clans',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SearchComponent],
   templateUrl: './clans.html',
   styleUrls: ['./clans.scss', './clans.forms.scss'],
 })
 export class Clans {
   showForm = signal(false);
+  searchTerm = signal<string>('');
 
   clanForm: FormGroup;
 
@@ -26,7 +28,12 @@ export class Clans {
     });
   }
 
-  clans = computed(() => this.clanService.getClans().map(c => ({ ...c, members: this.playerService.getPlayers().filter(p => p.clanId === c.id) } as unknown as Clan)));
+  clans = computed(() => {
+    const search = this.searchTerm().trim().toLowerCase();
+    const base = this.clanService.getClans().map((c: any) => ({ ...c, members: this.playerService.getPlayers().filter((p: Player) => p.clanId === c.id) } as unknown as Clan));
+    if (!search) return base;
+    return base.filter(c => (c.name || '').toLowerCase().includes(search) || (c.description || '').toLowerCase().includes(search));
+  });
 
   addClan() {
     this.clanForm.reset({ name: '', description: '', capacity: 5 });

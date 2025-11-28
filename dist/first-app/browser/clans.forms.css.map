@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/clans/clans.forms.scss"],
+  "sourcesContent": [".new-clan-form {\r\n  margin: 1rem 0 2rem 0;\r\n  form {\r\n    display: grid;\r\n    gap: 0.6rem;\r\n    max-width: 640px;\r\n    margin: 0 auto;\r\n\r\n    label { color: #c0ccd6; font-size: 0.9rem; }\r\n\r\n    input, textarea, select {\r\n      width: 100%;\r\n      padding: 0.5rem 0.75rem;\r\n      border-radius: 8px;\r\n      border: 1px solid rgba(255,255,255,0.06);\r\n      background: rgba(255,255,255,0.02);\r\n      color: #e6eef7;\r\n      outline: none;\r\n    }\r\n\r\n    .form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }\r\n\r\n    .btn-add { padding: 8px 12px; }\r\n  }\r\n}\r\n"],
+  "mappings": ";AAAA,CAAA;AACE,UAAA,KAAA,EAAA,KAAA;;AACA,CAFF,cAEE;AACE,WAAA;AACA,OAAA;AACA,aAAA;AACA,UAAA,EAAA;;AAEA,CARJ,cAQI,KAAA;AAAQ,SAAA;AAAgB,aAAA;;AAExB,CAVJ,cAUI,KAAA;AAAA,CAVJ,cAUI,KAAA;AAAA,CAVJ,cAUI,KAAA;AACE,SAAA;AACA,WAAA,OAAA;AACA,iBAAA;AACA,UAAA,IAAA,MAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;AACA,cAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;AACA,SAAA;AACA,WAAA;;AAGF,CApBJ,cAoBI,KAAA,CAAA;AAAgB,WAAA;AAAe,OAAA;AAAa,mBAAA;;AAE5C,CAtBJ,cAsBI,KAAA,CAAA;AAAW,WAAA,IAAA;;",
+  "names": []
+}

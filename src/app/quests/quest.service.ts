@@ -14,12 +14,11 @@ export type Quest = {
 export class QuestService {
   private quests: Quest[] = [
     { id: 1, title: 'Plesniva YES!-ka', description: 'Oblej si yesku džusom', completed: false, xp: 50 },
-    { id: 2, title: 'Zapni spotify', description: 'Nehraf svoju ulty', completed: false, xp: 75 },
-    { id: 3, title: 'Ísť ako Kačka je Hračka', description: 'Prejdi do dalšieho mesta ako kačička', completed: false, xp: 300 }
+    { id: 2, title: 'Zapni spotify', description: 'Netraf svoju ulty', completed: false, xp: 75 },
+    { id: 3, title: 'Kačka Hračka', description: 'Prejdi do dalšieho mesta ako kačička', completed: false, xp: 300 }
   ];
 
   getQuests(): Quest[] {
-    // return a shallow copy so callers can set a signal safely
     return [...this.quests];
   }
 

@@ -4,6 +4,8 @@
     <p class="subtitle">Manage and organize your gaming clans</p>
   </div>
 
+  <app-search [(searchQuery)]="searchTerm" placeholder="Search clans..."></app-search>
+
   <button class="btn-add" (click)="addClan()">
     <span class="icon">➕</span> Add New Clan
   </button>

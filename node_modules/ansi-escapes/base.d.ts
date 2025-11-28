@@ -260,7 +260,7 @@ export const iTerm: {
 
 	@param cwd - Current directory. Default: `process.cwd()`.
 	*/
-	setCwd(cwd?: string): string,
+	setCwd(cwd?: string): string;
 
 	/**
 	An annotation looks like this when shown:
@@ -272,7 +272,7 @@ export const iTerm: {
 	@param message - The message to display within the annotation. The `|` character is disallowed and will be stripped.
 	@returns An escape code which will create an annotation when printed in iTerm2.
 	*/
-	annotation(message: string, options?: AnnotationOptions): string
+	annotation(message: string, options?: AnnotationOptions): string;
 };
 
 export const ConEmu: {
@@ -281,7 +281,7 @@ export const ConEmu: {
 
 	@param cwd - Current directory. Default: `process.cwd()`.
 	*/
-	setCwd(cwd?: string): string
+	setCwd(cwd?: string): string;
 };
 
 /**

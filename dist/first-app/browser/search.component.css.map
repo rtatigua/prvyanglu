@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["src/app/shared/search.component.scss"],
-  "sourcesContent": [".search input { padding: .4rem .6rem; border-radius: 6px; border: 1px solid #ddd; width: 100%; }\r\n"],
-  "mappings": ";AAAA,CAAA,OAAA;AAAgB,WAAA,OAAA;AAAsB,iBAAA;AAAoB,UAAA,IAAA,MAAA;AAAwB,SAAA;;",
+  "sourcesContent": [".search {\r\n  margin-bottom: 1.5rem;\r\n  max-width: 400px;\r\n\r\n  input {\r\n    width: 100%;\r\n    padding: 0.75rem 1rem;\r\n    border-radius: 8px;\r\n    border: 2px solid rgba(100, 181, 246, 0.3);\r\n    background: rgba(26, 26, 46, 0.6);\r\n    color: #eee;\r\n    font-size: 1rem;\r\n    transition: all 0.3s ease;\r\n\r\n    &::placeholder {\r\n      color: rgba(176, 190, 197, 0.6);\r\n    }\r\n\r\n    &:focus {\r\n      outline: none;\r\n      border-color: #42a5f5;\r\n      background: rgba(26, 26, 46, 0.9);\r\n      box-shadow: 0 0 12px rgba(66, 165, 245, 0.3);\r\n    }\r\n\r\n    &:hover {\r\n      border-color: rgba(100, 181, 246, 0.6);\r\n    }\r\n  }\r\n}\r\n"],
+  "mappings": ";AAAA,CAAA;AACE,iBAAA;AACA,aAAA;;AAEA,CAJF,OAIE;AACE,SAAA;AACA,WAAA,QAAA;AACA,iBAAA;AACA,UAAA,IAAA,MAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;AACA,cAAA,KAAA,EAAA,EAAA,EAAA,EAAA,EAAA,EAAA;AACA,SAAA;AACA,aAAA;AACA,cAAA,IAAA,KAAA;;AAEA,CAdJ,OAcI,KAAA;AACE,SAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;;AAGF,CAlBJ,OAkBI,KAAA;AACE,WAAA;AACA,gBAAA;AACA,cAAA,KAAA,EAAA,EAAA,EAAA,EAAA,EAAA,EAAA;AACA,cAAA,EAAA,EAAA,KAAA,KAAA,EAAA,EAAA,GAAA,EAAA,GAAA,EAAA;;AAGF,CAzBJ,OAyBI,KAAA;AACE,gBAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;;",
   "names": []
 }

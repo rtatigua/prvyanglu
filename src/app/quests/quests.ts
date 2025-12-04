@@ -33,8 +33,7 @@ export class Quests implements OnInit, OnDestroy {
     this.questForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(8)]],
       description: ['', Validators.required],
-      xp: [50, [Validators.required, Validators.min(1)]],
-      completed: [false]
+      xp: [50, [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -73,13 +72,12 @@ export class Quests implements OnInit, OnDestroy {
       id: maxId + 1,
       title: val.title,
       description: val.description || '',
-      completed: !!val.completed,
       xp: xp,
     };
     this.questService.addQuest(q);
     this.quests.set(this.questService.getQuests());
     this.showForm.set(false);
-    this.questForm.reset({ title: '', description: '', xp: 50, completed: false });
+    this.questForm.reset({ title: '', description: '', xp: 50 });
   }
 
   deleteQuest(id: number) {

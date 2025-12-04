@@ -38834,16 +38834,26 @@ var ReactiveFormsModule = class _ReactiveFormsModule {
 })();
 
 // src/app/shared/search.component.ts
+function SearchComponent_Conditional_2_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r1 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "button", 3);
+    \u0275\u0275listener("click", function SearchComponent_Conditional_2_Template_button_click_0_listener() {
+      \u0275\u0275restoreView(_r1);
+      const ctx_r1 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r1.clearSearch());
+    });
+    \u0275\u0275text(1, "\u2715");
+    \u0275\u0275elementEnd();
+  }
+}
 var SearchComponent = class _SearchComponent {
   constructor() {
-    this.searchQuery = "";
-    this.searchQueryChange = new EventEmitter();
-    this.placeholder = "Search...";
+    this.searchQuery = model("", __spreadValues({}, ngDevMode ? { debugName: "searchQuery" } : {}));
+    this.placeholder = input("\u{1F50D} Search...", __spreadValues({}, ngDevMode ? { debugName: "placeholder" } : {}));
   }
-  onInput(event) {
-    const value = event.target.value;
-    this.searchQuery = value;
-    this.searchQueryChange.emit(value);
+  clearSearch() {
+    this.searchQuery.set("");
   }
   static {
     this.\u0275fac = function SearchComponent_Factory(__ngFactoryType__) {
@@ -38851,45 +38861,61 @@ var SearchComponent = class _SearchComponent {
     };
   }
   static {
-    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _SearchComponent, selectors: [["app-search"]], inputs: { searchQuery: "searchQuery", placeholder: "placeholder" }, outputs: { searchQueryChange: "searchQueryChange" }, decls: 2, vars: 2, consts: [[1, "search"], ["type", "search", 3, "input", "placeholder", "value"]], template: function SearchComponent_Template(rf, ctx) {
+    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _SearchComponent, selectors: [["app-search"]], inputs: { searchQuery: [1, "searchQuery"], placeholder: [1, "placeholder"] }, outputs: { searchQuery: "searchQueryChange" }, decls: 3, vars: 3, consts: [[1, "search-container"], ["type", "search", 1, "search-input", 3, "ngModelChange", "placeholder", "ngModel"], [1, "clear-btn"], [1, "clear-btn", 3, "click"]], template: function SearchComponent_Template(rf, ctx) {
       if (rf & 1) {
-        \u0275\u0275domElementStart(0, "div", 0)(1, "input", 1);
-        \u0275\u0275domListener("input", function SearchComponent_Template_input_input_1_listener($event) {
-          return ctx.onInput($event);
+        \u0275\u0275elementStart(0, "div", 0)(1, "input", 1);
+        \u0275\u0275twoWayListener("ngModelChange", function SearchComponent_Template_input_ngModelChange_1_listener($event) {
+          \u0275\u0275twoWayBindingSet(ctx.searchQuery, $event) || (ctx.searchQuery = $event);
+          return $event;
         });
-        \u0275\u0275domElementEnd()();
+        \u0275\u0275elementEnd();
+        \u0275\u0275conditionalCreate(2, SearchComponent_Conditional_2_Template, 2, 0, "button", 2);
+        \u0275\u0275elementEnd();
       }
       if (rf & 2) {
         \u0275\u0275advance();
-        \u0275\u0275domProperty("placeholder", ctx.placeholder)("value", ctx.searchQuery);
+        \u0275\u0275property("placeholder", ctx.placeholder());
+        \u0275\u0275twoWayProperty("ngModel", ctx.searchQuery);
+        \u0275\u0275advance();
+        \u0275\u0275conditional(ctx.searchQuery() ? 2 : -1);
       }
-    }, styles: ["\n\n.search[_ngcontent-%COMP%] {\n  margin-bottom: 1.5rem;\n  max-width: 400px;\n}\n.search[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n  padding: 0.75rem 1rem;\n  border-radius: 8px;\n  border: 2px solid rgba(100, 181, 246, 0.3);\n  background: rgba(26, 26, 46, 0.6);\n  color: #eee;\n  font-size: 1rem;\n  transition: all 0.3s ease;\n}\n.search[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]::placeholder {\n  color: rgba(176, 190, 197, 0.6);\n}\n.search[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  outline: none;\n  border-color: #42a5f5;\n  background: rgba(26, 26, 46, 0.9);\n  box-shadow: 0 0 12px rgba(66, 165, 245, 0.3);\n}\n.search[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:hover {\n  border-color: rgba(100, 181, 246, 0.6);\n}\n/*# sourceMappingURL=search.component.css.map */"] });
+    }, dependencies: [CommonModule, FormsModule, DefaultValueAccessor, NgControlStatus, NgModel], styles: ["\n\n.search-container[_ngcontent-%COMP%] {\n  position: relative;\n  margin-bottom: 1.5rem;\n  display: flex;\n  align-items: center;\n  gap: 0.5rem;\n}\n.search-input[_ngcontent-%COMP%] {\n  width: 100%;\n  padding: 0.75rem 1rem;\n  font-size: 1rem;\n  background: rgba(255, 255, 255, 0.05);\n  border: 1px solid rgba(255, 213, 79, 0.3);\n  border-radius: 6px;\n  color: #c0ccd6;\n  transition: all 0.2s ease;\n}\n.search-input[_ngcontent-%COMP%]::placeholder {\n  color: #8a92a0;\n}\n.search-input[_ngcontent-%COMP%]:focus {\n  outline: none;\n  background: rgba(255, 255, 255, 0.08);\n  border-color: #ffd54f;\n  box-shadow: 0 0 8px rgba(255, 213, 79, 0.2);\n}\n.clear-btn[_ngcontent-%COMP%] {\n  padding: 0.5rem 0.75rem;\n  background: rgba(239, 83, 80, 0.2);\n  border: 1px solid #ef5350;\n  color: #ef5350;\n  border-radius: 4px;\n  cursor: pointer;\n  font-size: 1rem;\n  transition: all 0.2s ease;\n  flex-shrink: 0;\n}\n.clear-btn[_ngcontent-%COMP%]:hover {\n  background: #ef5350;\n  color: white;\n}\n/*# sourceMappingURL=search.component.css.map */"] });
   }
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(SearchComponent, [{
     type: Component,
-    args: [{ selector: "app-search", standalone: true, template: '<div class="search">\r\n  <input\r\n    type="search"\r\n    [placeholder]="placeholder"\r\n    [value]="searchQuery"\r\n    (input)="onInput($event)"\r\n  />\r\n</div>\r\n', styles: ["/* src/app/shared/search.component.scss */\n.search {\n  margin-bottom: 1.5rem;\n  max-width: 400px;\n}\n.search input {\n  width: 100%;\n  padding: 0.75rem 1rem;\n  border-radius: 8px;\n  border: 2px solid rgba(100, 181, 246, 0.3);\n  background: rgba(26, 26, 46, 0.6);\n  color: #eee;\n  font-size: 1rem;\n  transition: all 0.3s ease;\n}\n.search input::placeholder {\n  color: rgba(176, 190, 197, 0.6);\n}\n.search input:focus {\n  outline: none;\n  border-color: #42a5f5;\n  background: rgba(26, 26, 46, 0.9);\n  box-shadow: 0 0 12px rgba(66, 165, 245, 0.3);\n}\n.search input:hover {\n  border-color: rgba(100, 181, 246, 0.6);\n}\n/*# sourceMappingURL=search.component.css.map */\n"] }]
-  }], null, { searchQuery: [{
-    type: Input
-  }], searchQueryChange: [{
-    type: Output
-  }], placeholder: [{
-    type: Input
-  }] });
+    args: [{ selector: "app-search", standalone: true, imports: [CommonModule, FormsModule], template: '<div class="search-container">\r\n  <input\r\n    type="search"\r\n    class="search-input"\r\n    [placeholder]="placeholder()"\r\n    [(ngModel)]="searchQuery"\r\n  />\r\n  @if (searchQuery()) {\r\n    <button class="clear-btn" (click)="clearSearch()">\u2715</button>\r\n  }\r\n</div>\r\n', styles: ["/* src/app/shared/search.component.scss */\n.search-container {\n  position: relative;\n  margin-bottom: 1.5rem;\n  display: flex;\n  align-items: center;\n  gap: 0.5rem;\n}\n.search-input {\n  width: 100%;\n  padding: 0.75rem 1rem;\n  font-size: 1rem;\n  background: rgba(255, 255, 255, 0.05);\n  border: 1px solid rgba(255, 213, 79, 0.3);\n  border-radius: 6px;\n  color: #c0ccd6;\n  transition: all 0.2s ease;\n}\n.search-input::placeholder {\n  color: #8a92a0;\n}\n.search-input:focus {\n  outline: none;\n  background: rgba(255, 255, 255, 0.08);\n  border-color: #ffd54f;\n  box-shadow: 0 0 8px rgba(255, 213, 79, 0.2);\n}\n.clear-btn {\n  padding: 0.5rem 0.75rem;\n  background: rgba(239, 83, 80, 0.2);\n  border: 1px solid #ef5350;\n  color: #ef5350;\n  border-radius: 4px;\n  cursor: pointer;\n  font-size: 1rem;\n  transition: all 0.2s ease;\n  flex-shrink: 0;\n}\n.clear-btn:hover {\n  background: #ef5350;\n  color: white;\n}\n/*# sourceMappingURL=search.component.css.map */\n"] }]
+  }], null, { searchQuery: [{ type: Input, args: [{ isSignal: true, alias: "searchQuery", required: false }] }, { type: Output, args: ["searchQueryChange"] }], placeholder: [{ type: Input, args: [{ isSignal: true, alias: "placeholder", required: false }] }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(SearchComponent, { className: "SearchComponent", filePath: "src/app/shared/search.component.ts", lineNumber: 9 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(SearchComponent, { className: "SearchComponent", filePath: "src/app/shared/search.component.ts", lineNumber: 12 });
 })();
 
 // src/app/quests/quest.service.ts
 var QuestService = class _QuestService {
   constructor() {
+    this.API_URL = "http://localhost:3000";
+    this._apiAvailable = false;
     this.quests = [
-      { id: 1, title: "Plesniva YES!-ka", description: "Oblej si yesku d\u017Eusom", completed: false, xp: 50 },
-      { id: 2, title: "Zapni spotify", description: "Netraf svoju ulty", completed: false, xp: 75 },
-      { id: 3, title: "Ka\u010Dka Hra\u010Dka", description: "Prejdi do dal\u0161ieho mesta ako ka\u010Di\u010Dka", completed: false, xp: 300 }
+      { id: 1, title: "Slay the Dragon", description: "Defeat the beast in the cave.", xp: 120 },
+      { id: 2, title: "Collect Herbs", description: "Gather 10 healing herbs.", xp: 40 },
+      { id: 3, title: "Find the Lost Treasure", description: "Locate the treasure map.", xp: 200 }
     ];
+    this.loadQuestsFromAPI();
+  }
+  loadQuestsFromAPI() {
+    fetch(`${this.API_URL}/quests`).then((res) => {
+      if (!res.ok)
+        throw new Error("Network error");
+      return res.json();
+    }).then((quests) => {
+      if (quests && quests.length > 0) {
+        this.quests = quests;
+        this._apiAvailable = true;
+      }
+    }).catch(() => {
+    });
   }
   getQuests() {
     return [...this.quests];
@@ -38902,6 +38928,31 @@ var QuestService = class _QuestService {
   }
   deleteQuest(id) {
     this.quests = this.quests.filter((q) => q.id !== id);
+  }
+  // ===== ASYNC API METHODS =====
+  addQuestAsync(quest) {
+    if (this._apiAvailable) {
+      return from(fetch(`${this.API_URL}/quests`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(quest)
+      }).then((res) => res.json())).pipe(tap((created) => this.addQuest(created)), catchError(() => {
+        this.addQuest(quest);
+        return of(quest);
+      }));
+    }
+    this.addQuest(quest);
+    return of(quest);
+  }
+  deleteQuestAsync(id) {
+    if (this._apiAvailable) {
+      return from(fetch(`${this.API_URL}/quests/${id}`, { method: "DELETE" }).then(() => void 0)).pipe(tap(() => this.deleteQuest(id)), catchError(() => {
+        this.deleteQuest(id);
+        return of(void 0);
+      }));
+    }
+    this.deleteQuest(id);
+    return of(void 0);
   }
   static {
     this.\u0275fac = function QuestService_Factory(__ngFactoryType__) {
@@ -38918,7 +38969,7 @@ var QuestService = class _QuestService {
     args: [{
       providedIn: "root"
     }]
-  }], null, null);
+  }], () => [], null);
 })();
 
 // src/app/quests/quests.ts
@@ -38985,10 +39036,10 @@ function Quests_Conditional_13_For_1_Template(rf, ctx) {
     \u0275\u0275elementStart(6, "p", 23);
     \u0275\u0275text(7);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "div", 24)(9, "span", 25);
+    \u0275\u0275elementStart(8, "div", 24)(9, "span", 22);
     \u0275\u0275text(10);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(11, "div", 26)(12, "button", 27);
+    \u0275\u0275elementStart(11, "div", 25)(12, "button", 26);
     \u0275\u0275listener("click", function Quests_Conditional_13_For_1_Template_button_click_12_listener($event) {
       const quest_r4 = \u0275\u0275restoreView(_r3).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
@@ -38997,7 +39048,7 @@ function Quests_Conditional_13_For_1_Template(rf, ctx) {
     });
     \u0275\u0275text(13);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(14, "button", 28);
+    \u0275\u0275elementStart(14, "button", 27);
     \u0275\u0275listener("click", function Quests_Conditional_13_For_1_Template_button_click_14_listener($event) {
       const quest_r4 = \u0275\u0275restoreView(_r3).$implicit;
       const ctx_r1 = \u0275\u0275nextContext(2);
@@ -39018,17 +39069,15 @@ function Quests_Conditional_13_For_1_Template(rf, ctx) {
     \u0275\u0275classProp("clamped", !ctx_r1.isExpanded(quest_r4.id));
     \u0275\u0275advance();
     \u0275\u0275textInterpolate(quest_r4.description);
-    \u0275\u0275advance(2);
-    \u0275\u0275classProp("completed", quest_r4.completed);
-    \u0275\u0275advance();
-    \u0275\u0275textInterpolate(quest_r4.completed ? "Completed" : "In Progress");
+    \u0275\u0275advance(3);
+    \u0275\u0275textInterpolate1("", quest_r4.xp, " XP");
     \u0275\u0275advance(3);
     \u0275\u0275textInterpolate1(" ", ctx_r1.isExpanded(quest_r4.id) ? "Show less" : "Show more", " ");
   }
 }
 function Quests_Conditional_13_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275repeaterCreate(0, Quests_Conditional_13_For_1_Template, 16, 9, "div", 19, _forTrack0);
+    \u0275\u0275repeaterCreate(0, Quests_Conditional_13_For_1_Template, 16, 7, "div", 19, _forTrack0);
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext();
@@ -39064,8 +39113,7 @@ var Quests = class _Quests {
     this.questForm = this.fb.group({
       title: ["", [Validators.required, Validators.minLength(8)]],
       description: ["", Validators.required],
-      xp: [50, [Validators.required, Validators.min(1)]],
-      completed: [false]
+      xp: [50, [Validators.required, Validators.min(1)]]
     });
   }
   ngOnInit() {
@@ -39099,13 +39147,12 @@ var Quests = class _Quests {
       id: maxId + 1,
       title: val.title,
       description: val.description || "",
-      completed: !!val.completed,
       xp
     };
     this.questService.addQuest(q);
     this.quests.set(this.questService.getQuests());
     this.showForm.set(false);
-    this.questForm.reset({ title: "", description: "", xp: 50, completed: false });
+    this.questForm.reset({ title: "", description: "", xp: 50 });
   }
   deleteQuest(id) {
     this.quests.set(this.quests().filter((q) => q.id !== id));
@@ -39132,7 +39179,7 @@ var Quests = class _Quests {
     };
   }
   static {
-    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Quests, selectors: [["app-quests"]], decls: 15, vars: 4, consts: [[1, "quests-container"], [1, "quests-header"], [1, "quest-count"], ["placeholder", "Search quests...", 3, "searchQueryChange", "searchQuery"], [1, "btn-add-quest", 3, "click"], [1, "icon"], [1, "new-quest-form"], [1, "quests-grid"], [1, "empty-state"], [3, "ngSubmit", "formGroup"], ["for", "title"], ["id", "title", "formControlName", "title"], ["for", "description"], ["id", "description", "formControlName", "description"], ["for", "xp"], ["id", "xp", "formControlName", "xp", "type", "number", "inputmode", "numeric", "pattern", "\\d*", "min", "1", "step", "1"], [1, "form-actions"], ["type", "submit", 1, "btn-add-quest", 3, "disabled"], ["type", "button", 3, "click"], [1, "quest-card"], [1, "quest-card", 3, "click"], [1, "quest-header-section"], [1, "xp-badge"], [1, "quest-description"], [1, "quest-meta"], [1, "status"], [1, "actions"], [1, "btn-toggle", 3, "click"], [1, "btn-delete", 3, "click"]], template: function Quests_Template(rf, ctx) {
+    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Quests, selectors: [["app-quests"]], decls: 15, vars: 4, consts: [[1, "quests-container"], [1, "quests-header"], [1, "quest-count"], [3, "searchQueryChange", "searchQuery"], [1, "btn-add-quest", 3, "click"], [1, "icon"], [1, "new-quest-form"], [1, "quests-grid"], [1, "empty-state"], [3, "ngSubmit", "formGroup"], ["for", "title"], ["id", "title", "formControlName", "title"], ["for", "description"], ["id", "description", "formControlName", "description"], ["for", "xp"], ["id", "xp", "formControlName", "xp", "type", "number", "inputmode", "numeric", "pattern", "\\d*", "min", "1", "step", "1"], [1, "form-actions"], ["type", "submit", 1, "btn-add-quest", 3, "disabled"], ["type", "button", 3, "click"], [1, "quest-card"], [1, "quest-card", 3, "click"], [1, "quest-header-section"], [1, "xp-badge"], [1, "quest-description"], [1, "quest-meta"], [1, "actions"], [1, "btn-toggle", 3, "click"], [1, "btn-delete", 3, "click"]], template: function Quests_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "div", 1)(2, "h1");
         \u0275\u0275text(3, "\u{1F4DC} Quests");
@@ -39182,7 +39229,7 @@ var Quests = class _Quests {
     <p class="quest-count">Total Quests: {{ questCount() }}</p>\r
   </div>\r
 \r
-  <app-search [(searchQuery)]="searchTerm" placeholder="Search quests..."></app-search>\r
+  <app-search [(searchQuery)]="searchTerm"></app-search>\r
 \r
   <button class="btn-add-quest" (click)="addQuest()">\r
     <span class="icon">\u2795</span> Create New Quest\r
@@ -39226,7 +39273,7 @@ var Quests = class _Quests {
           <p class="quest-description" [class.clamped]="!isExpanded(quest.id)">{{ quest.description }}</p>\r
 \r
           <div class="quest-meta">\r
-            <span class="status" [class.completed]="quest.completed">{{ quest.completed ? 'Completed' : 'In Progress' }}</span>\r
+            <span class="xp-badge">{{ quest.xp }} XP</span>\r
 \r
             <div class="actions">\r
               <button class="btn-toggle" (click)="$event.stopPropagation(); toggleExpand(quest.id)">\r
@@ -39270,18 +39317,13 @@ function QuestDetail_Conditional_0_Template(rf, ctx) {
     \u0275\u0275domElementEnd();
     \u0275\u0275text(11);
     \u0275\u0275domElementEnd();
-    \u0275\u0275domElementStart(12, "p")(13, "strong");
-    \u0275\u0275text(14, "Status:");
-    \u0275\u0275domElementEnd();
-    \u0275\u0275text(15);
-    \u0275\u0275domElementEnd();
-    \u0275\u0275domElementStart(16, "button", 2);
-    \u0275\u0275domListener("click", function QuestDetail_Conditional_0_Template_button_click_16_listener() {
+    \u0275\u0275domElementStart(12, "button", 2);
+    \u0275\u0275domListener("click", function QuestDetail_Conditional_0_Template_button_click_12_listener() {
       \u0275\u0275restoreView(_r1);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.goBack());
     });
-    \u0275\u0275text(17, "\u2B05 Back to Quests");
+    \u0275\u0275text(13, "\u2B05 Back to Quests");
     \u0275\u0275domElementEnd()();
   }
   if (rf & 2) {
@@ -39292,8 +39334,6 @@ function QuestDetail_Conditional_0_Template(rf, ctx) {
     \u0275\u0275textInterpolate1(" ", ctx_r1.quest.description);
     \u0275\u0275advance(4);
     \u0275\u0275textInterpolate1(" ", ctx_r1.quest.xp);
-    \u0275\u0275advance(4);
-    \u0275\u0275textInterpolate1(" ", ctx_r1.quest.completed ? "\u2705 Completed" : "\u274C Not Completed", " ");
   }
 }
 function QuestDetail_Conditional_1_Template(rf, ctx) {
@@ -39333,7 +39373,7 @@ var QuestDetail = class _QuestDetail {
   static {
     this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _QuestDetail, selectors: [["app-quest-detail"]], decls: 2, vars: 1, consts: [[1, "quest-detail"], ["src", "assets/logo.jpg", "alt", "Quest Image", 1, "quest-image"], [3, "click"]], template: function QuestDetail_Template(rf, ctx) {
       if (rf & 1) {
-        \u0275\u0275conditionalCreate(0, QuestDetail_Conditional_0_Template, 18, 4, "div", 0)(1, QuestDetail_Conditional_1_Template, 4, 0);
+        \u0275\u0275conditionalCreate(0, QuestDetail_Conditional_0_Template, 14, 3, "div", 0)(1, QuestDetail_Conditional_1_Template, 4, 0);
       }
       if (rf & 2) {
         \u0275\u0275conditional(ctx.quest ? 0 : 1);
@@ -39344,24 +39384,7 @@ var QuestDetail = class _QuestDetail {
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(QuestDetail, [{
     type: Component,
-    args: [{ selector: "app-quest-detail", standalone: true, imports: [CommonModule], template: `@if (quest) {\r
-  <div class="quest-detail">\r
-    <h2>{{ quest.title }}</h2>\r
-    <img src="assets/logo.jpg" alt="Quest Image" class="quest-image">\r
-    <p><strong>Description:</strong> {{ quest.description }}</p>\r
-    <p><strong>XP Reward:</strong> {{ quest.xp }}</p>\r
-    <p>\r
-      <strong>Status:</strong>\r
-      {{ quest.completed ? '\u2705 Completed' : '\u274C Not Completed' }}\r
-    </p>\r
-\r
-    <button (click)="goBack()">\u2B05 Back to Quests</button>\r
-  </div>\r
-} @else {\r
-  <p>Quest not found.</p>\r
-  <button (click)="goBack()">\u2B05 Back to Quests</button>\r
-}\r
-  `, styles: ["/* src/app/quest-detail/quest-detail.scss */\n.quest-detail {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 2rem;\n  background:\n    linear-gradient(\n      135deg,\n      #23233b 0%,\n      #2d2d4a 100%);\n  color: #eee;\n  border-radius: 12px;\n  border: 2px solid rgba(100, 181, 246, 0.2);\n  box-shadow: 0 12px 40px rgba(66, 165, 245, 0.2);\n}\n.quest-detail h2 {\n  color: #ffd54f;\n  font-size: 2rem;\n  margin: 0 0 1rem;\n  text-shadow: 0 2px 8px rgba(255, 213, 79, 0.2);\n}\n.quest-detail .quest-image {\n  width: 100%;\n  border-radius: 8px;\n  margin: 1.5rem 0;\n  border: 2px solid rgba(100, 181, 246, 0.2);\n}\n.quest-detail p {\n  color: #b0bec5;\n  line-height: 1.6;\n  margin: 1rem 0;\n  font-size: 1rem;\n}\n.quest-detail p strong {\n  color: #64b5f6;\n}\n.quest-detail button {\n  background:\n    linear-gradient(\n      135deg,\n      #1976d2,\n      #1565c0);\n  border: none;\n  padding: 10px 24px;\n  color: white;\n  border-radius: 6px;\n  cursor: pointer;\n  transition: all 0.3s ease;\n  font-size: 1rem;\n  font-weight: bold;\n  margin-top: 1rem;\n  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);\n}\n.quest-detail button:hover {\n  background:\n    linear-gradient(\n      135deg,\n      #1565c0,\n      #0d47a1);\n  transform: translateY(-2px);\n  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.5);\n}\n/*# sourceMappingURL=quest-detail.css.map */\n"] }]
+    args: [{ selector: "app-quest-detail", standalone: true, imports: [CommonModule], template: '@if (quest) {\r\n  <div class="quest-detail">\r\n    <h2>{{ quest.title }}</h2>\r\n    <img src="assets/logo.jpg" alt="Quest Image" class="quest-image">\r\n    <p><strong>Description:</strong> {{ quest.description }}</p>\r\n    <p><strong>XP Reward:</strong> {{ quest.xp }}</p>\r\n\r\n    <button (click)="goBack()">\u2B05 Back to Quests</button>\r\n  </div>\r\n} @else {\r\n  <p>Quest not found.</p>\r\n  <button (click)="goBack()">\u2B05 Back to Quests</button>\r\n}\r\n  ', styles: ["/* src/app/quest-detail/quest-detail.scss */\n.quest-detail {\n  max-width: 600px;\n  margin: 0 auto;\n  padding: 2rem;\n  background:\n    linear-gradient(\n      135deg,\n      #23233b 0%,\n      #2d2d4a 100%);\n  color: #eee;\n  border-radius: 12px;\n  border: 2px solid rgba(100, 181, 246, 0.2);\n  box-shadow: 0 12px 40px rgba(66, 165, 245, 0.2);\n}\n.quest-detail h2 {\n  color: #ffd54f;\n  font-size: 2rem;\n  margin: 0 0 1rem;\n  text-shadow: 0 2px 8px rgba(255, 213, 79, 0.2);\n}\n.quest-detail .quest-image {\n  width: 100%;\n  border-radius: 8px;\n  margin: 1.5rem 0;\n  border: 2px solid rgba(100, 181, 246, 0.2);\n}\n.quest-detail p {\n  color: #b0bec5;\n  line-height: 1.6;\n  margin: 1rem 0;\n  font-size: 1rem;\n}\n.quest-detail p strong {\n  color: #64b5f6;\n}\n.quest-detail button {\n  background:\n    linear-gradient(\n      135deg,\n      #1976d2,\n      #1565c0);\n  border: none;\n  padding: 10px 24px;\n  color: white;\n  border-radius: 6px;\n  cursor: pointer;\n  transition: all 0.3s ease;\n  font-size: 1rem;\n  font-weight: bold;\n  margin-top: 1rem;\n  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);\n}\n.quest-detail button:hover {\n  background:\n    linear-gradient(\n      135deg,\n      #1565c0,\n      #0d47a1);\n  transform: translateY(-2px);\n  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.5);\n}\n/*# sourceMappingURL=quest-detail.css.map */\n"] }]
   }], () => [{ type: ActivatedRoute }, { type: Router }, { type: QuestService }], null);
 })();
 (() => {
@@ -39385,6 +39408,8 @@ var playerLevels = [
 // src/app/players/player.service.ts
 var PlayerService = class _PlayerService {
   constructor() {
+    this.API_URL = "http://localhost:3000";
+    this._apiAvailable = false;
     this._players = signal([
       { id: 1, nickname: "Knightmare", xp: 150, assignedQuests: [1], completedQuests: [2], clanId: 1, avatar: "\u{1F93A}" },
       { id: 2, nickname: "Herbalist", xp: 50, assignedQuests: [2], completedQuests: [], avatar: "\u{1F33F}" },
@@ -39403,6 +39428,21 @@ var PlayerService = class _PlayerService {
     this.AVATAR_OPTIONS = ["\u{1F93A}", "\u{1F33F}", "\u{1F48E}", "\u{1F409}", "\u2694\uFE0F", "\u{1F3AF}", "\u{1F451}", "\u{1F9D9}", "\u{1F3F9}", "\u26A1"];
     this.players = () => this._players();
     this.updateClanMembers();
+    this.loadPlayersFromAPI();
+  }
+  loadPlayersFromAPI() {
+    fetch(`${this.API_URL}/players`).then((res) => {
+      if (!res.ok)
+        throw new Error("Network error");
+      return res.json();
+    }).then((players) => {
+      if (players && players.length > 0) {
+        this._players.set(players);
+        this._apiAvailable = true;
+        this.updateClanMembers();
+      }
+    }).catch(() => {
+    });
   }
   updateClanMembers() {
     this._clans.forEach((clan) => {
@@ -39504,6 +39544,68 @@ var PlayerService = class _PlayerService {
       clan.members = clan.members.filter((m) => m.id !== playerId);
     }
   }
+  // ===== ASYNC API METHODS =====
+  addPlayerAsync(player) {
+    const newPlayer = {
+      id: 0,
+      nickname: player.nickname ?? "New Player",
+      xp: player.xp ?? 0,
+      assignedQuests: player.assignedQuests ?? [],
+      completedQuests: player.completedQuests ?? [],
+      clanId: player.clanId,
+      avatar: player.avatar ?? this.AVATAR_OPTIONS[0]
+    };
+    if (this._apiAvailable) {
+      return from(fetch(`${this.API_URL}/players`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newPlayer)
+      }).then((res) => res.json())).pipe(tap((created) => {
+        this._players.set([...this._players(), created]);
+        this.updateClanMembers();
+      }), catchError(() => of(this.addPlayer(player))));
+    }
+    return of(this.addPlayer(player));
+  }
+  deletePlayerAsync(id) {
+    if (this._apiAvailable) {
+      return from(fetch(`${this.API_URL}/players/${id}`, { method: "DELETE" }).then(() => void 0)).pipe(tap(() => {
+        this.deletePlayer(id);
+      }), catchError(() => {
+        this.deletePlayer(id);
+        return of(void 0);
+      }));
+    }
+    this.deletePlayer(id);
+    return of(void 0);
+  }
+  updatePlayerAsync(id, player) {
+    if (this._apiAvailable) {
+      return from(fetch(`${this.API_URL}/players/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(player)
+      }).then((res) => res.json())).pipe(tap((updated) => {
+        this._players.set(this._players().map((p) => p.id === id ? updated : p));
+        this.updateClanMembers();
+      }), catchError(() => {
+        const current2 = this.getPlayerById(id);
+        if (current2) {
+          this._players.set(this._players().map((p) => p.id === id ? __spreadValues(__spreadValues({}, current2), player) : p));
+          this.updateClanMembers();
+          return of(__spreadValues(__spreadValues({}, current2), player));
+        }
+        return of(current2);
+      }));
+    }
+    const current = this.getPlayerById(id);
+    if (current) {
+      this._players.set(this._players().map((p) => p.id === id ? __spreadValues(__spreadValues({}, current), player) : p));
+      this.updateClanMembers();
+      return of(__spreadValues(__spreadValues({}, current), player));
+    }
+    return of(current);
+  }
   // ===== UTILITY METHODS =====
   getAvatarOptions() {
     return this.AVATAR_OPTIONS;
@@ -39527,11 +39629,27 @@ var PlayerService = class _PlayerService {
 // src/app/clans/clans.service.ts
 var ClanService = class _ClanService {
   constructor() {
+    this.API_URL = "http://localhost:3000";
+    this._apiAvailable = false;
     this._clans = signal([
-      { id: 1, name: "Dragon Knights", description: "Elite slayers of dragons", capacity: 10, memberIds: [1] },
-      { id: 2, name: "VodaHeaven", description: "cotyjebetaku ultinu \u017Ee mi zaplo spotify", capacity: 5, memberIds: [2] }
+      { id: 1, name: "Dragon Slayers", description: "Elite warriors dedicated to defeating dragons and protecting the realm", capacity: 10, memberIds: [1] },
+      { id: 2, name: "Treasure Seekers", description: "Adventurers hunting for ancient treasures and lost artifacts", capacity: 8, memberIds: [3] }
     ], __spreadValues({}, ngDevMode ? { debugName: "_clans" } : {}));
     this.clans = () => this._clans();
+    this.loadClansFromAPI();
+  }
+  loadClansFromAPI() {
+    fetch(`${this.API_URL}/clans`).then((res) => {
+      if (!res.ok)
+        throw new Error("Network error");
+      return res.json();
+    }).then((clans) => {
+      if (clans && clans.length > 0) {
+        this._clans.set(clans);
+        this._apiAvailable = true;
+      }
+    }).catch(() => {
+    });
   }
   getClans() {
     return this._clans();
@@ -39557,10 +39675,32 @@ var ClanService = class _ClanService {
     this._clans.set(this._clans().filter((c) => c.id !== id));
   }
   addMember(clanId, playerId) {
-    this._clans.set(this._clans().map((c) => c.id === clanId ? __spreadProps(__spreadValues({}, c), { memberIds: Array.from(/* @__PURE__ */ new Set([...c.memberIds, playerId])) }) : c));
+    this._clans.set(this._clans().map((c) => c.id === clanId ? __spreadProps(__spreadValues({}, c), { memberIds: Array.from(/* @__PURE__ */ new Set([...c.memberIds ?? [], playerId])) }) : c));
   }
   removeMember(clanId, playerId) {
-    this._clans.set(this._clans().map((c) => c.id === clanId ? __spreadProps(__spreadValues({}, c), { memberIds: c.memberIds.filter((id) => id !== playerId) }) : c));
+    this._clans.set(this._clans().map((c) => c.id === clanId ? __spreadProps(__spreadValues({}, c), { memberIds: (c.memberIds ?? []).filter((id) => id !== playerId) }) : c));
+  }
+  // ===== ASYNC API METHODS =====
+  addClanAsync(clan) {
+    const newClan = this.addClan(clan);
+    if (this._apiAvailable) {
+      return from(fetch(`${this.API_URL}/clans`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newClan)
+      }).then((res) => res.json())).pipe(catchError(() => of(newClan)));
+    }
+    return of(newClan);
+  }
+  deleteClanAsync(id) {
+    if (this._apiAvailable) {
+      return from(fetch(`${this.API_URL}/clans/${id}`, { method: "DELETE" }).then(() => void 0)).pipe(tap(() => this.deleteClan(id)), catchError(() => {
+        this.deleteClan(id);
+        return of(void 0);
+      }));
+    }
+    this.deleteClan(id);
+    return of(void 0);
   }
   static {
     this.\u0275fac = function ClanService_Factory(__ngFactoryType__) {
@@ -39575,7 +39715,7 @@ var ClanService = class _ClanService {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ClanService, [{
     type: Injectable,
     args: [{ providedIn: "root" }]
-  }], null, null);
+  }], () => [], null);
 })();
 
 // src/app/players/player.ts
@@ -39890,7 +40030,7 @@ var Players = class _Players {
     };
   }
   static {
-    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Players, selectors: [["app-players"]], decls: 19, vars: 3, consts: [[1, "players"], [2, "display", "flex", "justify-content", "center", "gap", "1rem", "margin-bottom", "1rem", "align-items", "center"], [1, "btn-add-player", 3, "click"], ["placeholder", "Search players...", 3, "searchQueryChange", "searchQuery"], ["for", "levelFilter"], ["id", "levelFilter", 3, "change"], ["value", "All"], [3, "value"], [1, "grid"], [2, "grid-column", "1 / -1", "text-align", "center", "padding", "2rem", "color", "#b0bec5"], [1, "new-player-form"], [1, "card"], [1, "card", 3, "click"], [1, "avatar-container"], [1, "player-avatar", 3, "src", "alt"], [1, "avatar-placeholder"], [1, "player-level"], [1, "level-badge"], [1, "level-progress"], [1, "progress-bar"], [1, "progress-fill"], [1, "xp-to-next"], [1, "btn-remove", 3, "click"], [3, "ngSubmit", "formGroup"], ["for", "nickname"], ["id", "nickname", "formControlName", "nickname"], ["for", "level"], ["id", "level", "formControlName", "level", "type", "number", "inputmode", "numeric", "min", "1", "max", "10", "step", "1"], [1, "error"], ["for", "avatar"], [1, "avatar-selector"], ["type", "button", 1, "avatar-btn", 3, "selected"], [1, "form-actions"], ["type", "submit", 1, "btn-add-player", 3, "disabled"], ["type", "button", 3, "click"], ["type", "button", 1, "avatar-btn", 3, "click"]], template: function Players_Template(rf, ctx) {
+    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Players, selectors: [["app-players"]], decls: 19, vars: 3, consts: [[1, "players"], [2, "display", "flex", "justify-content", "center", "gap", "1rem", "margin-bottom", "1rem", "align-items", "center"], [1, "btn-add-player", 3, "click"], [3, "searchQueryChange", "searchQuery"], ["for", "levelFilter"], ["id", "levelFilter", 3, "change"], ["value", "All"], [3, "value"], [1, "grid"], [2, "grid-column", "1 / -1", "text-align", "center", "padding", "2rem", "color", "#b0bec5"], [1, "new-player-form"], [1, "card"], [1, "card", 3, "click"], [1, "avatar-container"], [1, "player-avatar", 3, "src", "alt"], [1, "avatar-placeholder"], [1, "player-level"], [1, "level-badge"], [1, "level-progress"], [1, "progress-bar"], [1, "progress-fill"], [1, "xp-to-next"], [1, "btn-remove", 3, "click"], [3, "ngSubmit", "formGroup"], ["for", "nickname"], ["id", "nickname", "formControlName", "nickname"], ["for", "level"], ["id", "level", "formControlName", "level", "type", "number", "inputmode", "numeric", "min", "1", "max", "10", "step", "1"], [1, "error"], ["for", "avatar"], [1, "avatar-selector"], ["type", "button", 1, "avatar-btn", 3, "selected"], [1, "form-actions"], ["type", "submit", 1, "btn-add-player", 3, "disabled"], ["type", "button", 3, "click"], ["type", "button", 1, "avatar-btn", 3, "click"]], template: function Players_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "h2");
         \u0275\u0275text(2, "\u{1F464} Players");
@@ -39946,7 +40086,7 @@ var Players = class _Players {
   <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; align-items: center;">\r
     <button class="btn-add-player" (click)="addPlayer()">\u2795 Add Player</button>\r
     <div>\r
-      <app-search [(searchQuery)]="searchTerm" placeholder="Search players..."></app-search>\r
+      <app-search [(searchQuery)]="searchTerm"></app-search>\r
       <label for="levelFilter">Filter by Level</label>\r
       <select id="levelFilter" (change)="levelFilter.set($any($event.target).value)">\r
         <option value="All">All</option>\r
@@ -40705,7 +40845,7 @@ var Clans = class _Clans {
     };
   }
   static {
-    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Clans, selectors: [["app-clans"]], decls: 15, vars: 3, consts: [[1, "clans-container"], [1, "header-section"], [1, "subtitle"], ["placeholder", "Search clans...", 3, "searchQueryChange", "searchQuery"], [1, "btn-add", 3, "click"], [1, "icon"], [1, "clans-grid"], [1, "empty-state"], [1, "new-clan-form"], [1, "clan-card"], [1, "clan-card", 3, "click"], [1, "card-header"], [1, "capacity-badge"], [1, "description"], [1, "card-footer"], [1, "members-info"], [1, "members-count"], ["title", "Delete this clan", 1, "btn-remove", 3, "click"], [3, "ngSubmit", "formGroup"], ["for", "name"], ["id", "name", "formControlName", "name"], ["for", "description"], ["id", "description", "formControlName", "description"], ["for", "capacity"], ["id", "capacity", "formControlName", "capacity", "type", "number", "inputmode", "numeric", "pattern", "\\d*", "min", "1", "step", "1"], [1, "form-actions"], ["type", "submit", 1, "btn-add", 3, "disabled"], ["type", "button", 3, "click"]], template: function Clans_Template(rf, ctx) {
+    this.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _Clans, selectors: [["app-clans"]], decls: 15, vars: 3, consts: [[1, "clans-container"], [1, "header-section"], [1, "subtitle"], [3, "searchQueryChange", "searchQuery"], [1, "btn-add", 3, "click"], [1, "icon"], [1, "clans-grid"], [1, "empty-state"], [1, "new-clan-form"], [1, "clan-card"], [1, "clan-card", 3, "click"], [1, "card-header"], [1, "capacity-badge"], [1, "description"], [1, "card-footer"], [1, "members-info"], [1, "members-count"], ["title", "Delete this clan", 1, "btn-remove", 3, "click"], [3, "ngSubmit", "formGroup"], ["for", "name"], ["id", "name", "formControlName", "name"], ["for", "description"], ["id", "description", "formControlName", "description"], ["for", "capacity"], ["id", "capacity", "formControlName", "capacity", "type", "number", "inputmode", "numeric", "pattern", "\\d*", "min", "1", "step", "1"], [1, "form-actions"], ["type", "submit", 1, "btn-add", 3, "disabled"], ["type", "button", 3, "click"]], template: function Clans_Template(rf, ctx) {
       if (rf & 1) {
         \u0275\u0275elementStart(0, "div", 0)(1, "div", 1)(2, "h1");
         \u0275\u0275text(3, "\u{1F3F0} Clans");
@@ -40748,7 +40888,7 @@ var Clans = class _Clans {
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Clans, [{
     type: Component,
-    args: [{ selector: "app-clans", standalone: true, imports: [CommonModule, ReactiveFormsModule, SearchComponent], template: '<div class="clans-container">\r\n  <div class="header-section">\r\n    <h1>\u{1F3F0} Clans</h1>\r\n    <p class="subtitle">Manage and organize your gaming clans</p>\r\n  </div>\r\n\r\n  <app-search [(searchQuery)]="searchTerm" placeholder="Search clans..."></app-search>\r\n\r\n  <button class="btn-add" (click)="addClan()">\r\n    <span class="icon">\u2795</span> Add New Clan\r\n  </button>\r\n\r\n  <div class="clans-grid">\r\n    @if (clans().length) {\r\n      @for (c of clans(); track c.id) {\r\n        <div class="clan-card" (click)="openDetail(c.id)">\r\n          <div class="card-header">\r\n            <h3>{{ c.name }}</h3>\r\n            <span class="capacity-badge">{{ c.members.length }}/{{ c.capacity }}</span>\r\n          </div>\r\n          <p class="description">{{ c.description }}</p>\r\n          <div class="card-footer">\r\n            <div class="members-info">\r\n              <span class="members-count">{{ c.members.length }} members</span>\r\n            </div>\r\n            <button \r\n              class="btn-remove" \r\n              (click)="removeClan(c.id); $event.stopPropagation()"\r\n              title="Delete this clan">\r\n              \u274C\r\n            </button>\r\n          </div>\r\n        </div>\r\n      }\r\n    } @else {\r\n      <div class="empty-state">\r\n        <p>\u{1F3DC}\uFE0F No clans yet. Create your first one!</p>\r\n      </div>\r\n    }\r\n  </div>\r\n\r\n  @if (showForm()) {\r\n    <div class="new-clan-form">\r\n      <form [formGroup]="clanForm" (ngSubmit)="createClan()">\r\n        <div>\r\n          <label for="name">Clan Name</label>\r\n          <input id="name" formControlName="name" />\r\n        </div>\r\n        <div>\r\n          <label for="description">Description</label>\r\n          <textarea id="description" formControlName="description"></textarea>\r\n        </div>\r\n        <div>\r\n          <label for="capacity">Capacity</label>\r\n          <input id="capacity" formControlName="capacity" type="number" inputmode="numeric" pattern="\\d*" min="1" step="1" />\r\n        </div>\r\n        <div class="form-actions">\r\n          <button type="submit" class="btn-add" [disabled]="!clanForm.valid">Create</button>\r\n          <button type="button" (click)="showForm.set(false)">Cancel</button>\r\n        </div>\r\n      </form>\r\n    </div>\r\n  }\r\n</div>\r\n', styles: ['/* src/app/clans/clans.scss */\n.clans-container {\n  padding: 2rem;\n  background:\n    linear-gradient(\n      135deg,\n      #0f0f1e 0%,\n      #1a1a2e 100%);\n  min-height: 100%;\n}\n.clans-container .header-section {\n  margin-bottom: 2rem;\n  text-align: center;\n}\n.clans-container .header-section h1 {\n  color: #ffd54f;\n  font-size: 2.5rem;\n  margin: 0 0 0.5rem;\n  text-shadow: 0 2px 8px rgba(255, 213, 79, 0.3);\n}\n.clans-container .header-section .subtitle {\n  color: #b0bec5;\n  font-size: 1rem;\n  margin: 0;\n}\n.clans-container .btn-add {\n  display: inline-block;\n  margin-bottom: 2rem;\n  background:\n    linear-gradient(\n      135deg,\n      #42a5f5,\n      #2196f3);\n  color: white;\n  border: none;\n  border-radius: 8px;\n  padding: 12px 24px;\n  font-size: 1rem;\n  cursor: pointer;\n  transition: all 0.3s ease;\n  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);\n}\n.clans-container .btn-add .icon {\n  margin-right: 8px;\n}\n.clans-container .btn-add:hover {\n  background:\n    linear-gradient(\n      135deg,\n      #2196f3,\n      #1976d2);\n  transform: translateY(-2px);\n  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);\n}\n.clans-container .btn-add:active {\n  transform: translateY(0);\n}\n.clans-container .clans-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 2rem;\n}\n.clans-container .clans-grid .clan-card {\n  background:\n    linear-gradient(\n      135deg,\n      #23233b 0%,\n      #2d2d4a 100%);\n  border: 2px solid rgba(100, 181, 246, 0.2);\n  border-radius: 12px;\n  padding: 1.5rem;\n  cursor: pointer;\n  transition: all 0.3s ease;\n  position: relative;\n  overflow: hidden;\n}\n.clans-container .clans-grid .clan-card::before {\n  content: "";\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 3px;\n  background:\n    linear-gradient(\n      90deg,\n      #42a5f5,\n      #ffd54f);\n  transform: translateX(-100%);\n  transition: transform 0.3s ease;\n}\n.clans-container .clans-grid .clan-card:hover {\n  background:\n    linear-gradient(\n      135deg,\n      #2d2d4a 0%,\n      #3a3a5a 100%);\n  border-color: rgba(100, 181, 246, 0.5);\n  transform: translateY(-8px);\n  box-shadow: 0 12px 32px rgba(66, 165, 245, 0.2);\n}\n.clans-container .clans-grid .clan-card:hover::before {\n  transform: translateX(0);\n}\n.clans-container .clans-grid .clan-card .card-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: 1rem;\n}\n.clans-container .clans-grid .clan-card .card-header h3 {\n  color: #ffd54f;\n  margin: 0;\n  font-size: 1.3rem;\n}\n.clans-container .clans-grid .clan-card .card-header .capacity-badge {\n  background: rgba(66, 165, 245, 0.2);\n  color: #64b5f6;\n  padding: 4px 12px;\n  border-radius: 20px;\n  font-size: 0.85rem;\n  font-weight: bold;\n}\n.clans-container .clans-grid .clan-card .description {\n  color: #b0bec5;\n  margin: 1rem 0;\n  font-size: 0.95rem;\n}\n.clans-container .clans-grid .clan-card .card-footer {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-top: 1rem;\n  padding-top: 1rem;\n  border-top: 1px solid rgba(100, 181, 246, 0.1);\n}\n.clans-container .clans-grid .clan-card .card-footer .members-info .members-count {\n  color: #81c784;\n  font-weight: bold;\n  font-size: 0.9rem;\n}\n.clans-container .clans-grid .clan-card .card-footer .btn-remove {\n  background: rgba(211, 47, 47, 0.2);\n  border: 1px solid #d32f2f;\n  color: #ff6b6b;\n  padding: 6px 12px;\n  border-radius: 6px;\n  cursor: pointer;\n  transition: all 0.2s ease;\n  font-size: 1rem;\n}\n.clans-container .clans-grid .clan-card .card-footer .btn-remove:hover {\n  background: rgba(211, 47, 47, 0.4);\n  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);\n}\n.clans-container .clans-grid .empty-state {\n  grid-column: 1/-1;\n  text-align: center;\n  padding: 3rem 1rem;\n}\n.clans-container .clans-grid .empty-state p {\n  color: #b0bec5;\n  font-size: 1.2rem;\n}\n/*# sourceMappingURL=clans.css.map */\n', "/* src/app/clans/clans.forms.scss */\n.new-clan-form {\n  margin: 1rem 0 2rem 0;\n}\n.new-clan-form form {\n  display: grid;\n  gap: 0.6rem;\n  max-width: 640px;\n  margin: 0 auto;\n}\n.new-clan-form form label {\n  color: #c0ccd6;\n  font-size: 0.9rem;\n}\n.new-clan-form form input,\n.new-clan-form form textarea,\n.new-clan-form form select {\n  width: 100%;\n  padding: 0.5rem 0.75rem;\n  border-radius: 8px;\n  border: 1px solid rgba(255, 255, 255, 0.06);\n  background: rgba(255, 255, 255, 0.02);\n  color: #e6eef7;\n  outline: none;\n}\n.new-clan-form form .form-actions {\n  display: flex;\n  gap: 0.5rem;\n  justify-content: flex-end;\n}\n.new-clan-form form .btn-add {\n  padding: 8px 12px;\n}\n/*# sourceMappingURL=clans.forms.css.map */\n"] }]
+    args: [{ selector: "app-clans", standalone: true, imports: [CommonModule, ReactiveFormsModule, SearchComponent], template: '<div class="clans-container">\r\n  <div class="header-section">\r\n    <h1>\u{1F3F0} Clans</h1>\r\n    <p class="subtitle">Manage and organize your gaming clans</p>\r\n  </div>\r\n\r\n  <app-search [(searchQuery)]="searchTerm"></app-search>\r\n\r\n  <button class="btn-add" (click)="addClan()">\r\n    <span class="icon">\u2795</span> Add New Clan\r\n  </button>\r\n\r\n  <div class="clans-grid">\r\n    @if (clans().length) {\r\n      @for (c of clans(); track c.id) {\r\n        <div class="clan-card" (click)="openDetail(c.id)">\r\n          <div class="card-header">\r\n            <h3>{{ c.name }}</h3>\r\n            <span class="capacity-badge">{{ c.members.length }}/{{ c.capacity }}</span>\r\n          </div>\r\n          <p class="description">{{ c.description }}</p>\r\n          <div class="card-footer">\r\n            <div class="members-info">\r\n              <span class="members-count">{{ c.members.length }} members</span>\r\n            </div>\r\n            <button \r\n              class="btn-remove" \r\n              (click)="removeClan(c.id); $event.stopPropagation()"\r\n              title="Delete this clan">\r\n              \u274C\r\n            </button>\r\n          </div>\r\n        </div>\r\n      }\r\n    } @else {\r\n      <div class="empty-state">\r\n        <p>\u{1F3DC}\uFE0F No clans yet. Create your first one!</p>\r\n      </div>\r\n    }\r\n  </div>\r\n\r\n  @if (showForm()) {\r\n    <div class="new-clan-form">\r\n      <form [formGroup]="clanForm" (ngSubmit)="createClan()">\r\n        <div>\r\n          <label for="name">Clan Name</label>\r\n          <input id="name" formControlName="name" />\r\n        </div>\r\n        <div>\r\n          <label for="description">Description</label>\r\n          <textarea id="description" formControlName="description"></textarea>\r\n        </div>\r\n        <div>\r\n          <label for="capacity">Capacity</label>\r\n          <input id="capacity" formControlName="capacity" type="number" inputmode="numeric" pattern="\\d*" min="1" step="1" />\r\n        </div>\r\n        <div class="form-actions">\r\n          <button type="submit" class="btn-add" [disabled]="!clanForm.valid">Create</button>\r\n          <button type="button" (click)="showForm.set(false)">Cancel</button>\r\n        </div>\r\n      </form>\r\n    </div>\r\n  }\r\n</div>\r\n', styles: ['/* src/app/clans/clans.scss */\n.clans-container {\n  padding: 2rem;\n  background:\n    linear-gradient(\n      135deg,\n      #0f0f1e 0%,\n      #1a1a2e 100%);\n  min-height: 100%;\n}\n.clans-container .header-section {\n  margin-bottom: 2rem;\n  text-align: center;\n}\n.clans-container .header-section h1 {\n  color: #ffd54f;\n  font-size: 2.5rem;\n  margin: 0 0 0.5rem;\n  text-shadow: 0 2px 8px rgba(255, 213, 79, 0.3);\n}\n.clans-container .header-section .subtitle {\n  color: #b0bec5;\n  font-size: 1rem;\n  margin: 0;\n}\n.clans-container .btn-add {\n  display: inline-block;\n  margin-bottom: 2rem;\n  background:\n    linear-gradient(\n      135deg,\n      #42a5f5,\n      #2196f3);\n  color: white;\n  border: none;\n  border-radius: 8px;\n  padding: 12px 24px;\n  font-size: 1rem;\n  cursor: pointer;\n  transition: all 0.3s ease;\n  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);\n}\n.clans-container .btn-add .icon {\n  margin-right: 8px;\n}\n.clans-container .btn-add:hover {\n  background:\n    linear-gradient(\n      135deg,\n      #2196f3,\n      #1976d2);\n  transform: translateY(-2px);\n  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.5);\n}\n.clans-container .btn-add:active {\n  transform: translateY(0);\n}\n.clans-container .clans-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 2rem;\n}\n.clans-container .clans-grid .clan-card {\n  background:\n    linear-gradient(\n      135deg,\n      #23233b 0%,\n      #2d2d4a 100%);\n  border: 2px solid rgba(100, 181, 246, 0.2);\n  border-radius: 12px;\n  padding: 1.5rem;\n  cursor: pointer;\n  transition: all 0.3s ease;\n  position: relative;\n  overflow: hidden;\n}\n.clans-container .clans-grid .clan-card::before {\n  content: "";\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  height: 3px;\n  background:\n    linear-gradient(\n      90deg,\n      #42a5f5,\n      #ffd54f);\n  transform: translateX(-100%);\n  transition: transform 0.3s ease;\n}\n.clans-container .clans-grid .clan-card:hover {\n  background:\n    linear-gradient(\n      135deg,\n      #2d2d4a 0%,\n      #3a3a5a 100%);\n  border-color: rgba(100, 181, 246, 0.5);\n  transform: translateY(-8px);\n  box-shadow: 0 12px 32px rgba(66, 165, 245, 0.2);\n}\n.clans-container .clans-grid .clan-card:hover::before {\n  transform: translateX(0);\n}\n.clans-container .clans-grid .clan-card .card-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-bottom: 1rem;\n}\n.clans-container .clans-grid .clan-card .card-header h3 {\n  color: #ffd54f;\n  margin: 0;\n  font-size: 1.3rem;\n}\n.clans-container .clans-grid .clan-card .card-header .capacity-badge {\n  background: rgba(66, 165, 245, 0.2);\n  color: #64b5f6;\n  padding: 4px 12px;\n  border-radius: 20px;\n  font-size: 0.85rem;\n  font-weight: bold;\n}\n.clans-container .clans-grid .clan-card .description {\n  color: #b0bec5;\n  margin: 1rem 0;\n  font-size: 0.95rem;\n}\n.clans-container .clans-grid .clan-card .card-footer {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  margin-top: 1rem;\n  padding-top: 1rem;\n  border-top: 1px solid rgba(100, 181, 246, 0.1);\n}\n.clans-container .clans-grid .clan-card .card-footer .members-info .members-count {\n  color: #81c784;\n  font-weight: bold;\n  font-size: 0.9rem;\n}\n.clans-container .clans-grid .clan-card .card-footer .btn-remove {\n  background: rgba(211, 47, 47, 0.2);\n  border: 1px solid #d32f2f;\n  color: #ff6b6b;\n  padding: 6px 12px;\n  border-radius: 6px;\n  cursor: pointer;\n  transition: all 0.2s ease;\n  font-size: 1rem;\n}\n.clans-container .clans-grid .clan-card .card-footer .btn-remove:hover {\n  background: rgba(211, 47, 47, 0.4);\n  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);\n}\n.clans-container .clans-grid .empty-state {\n  grid-column: 1/-1;\n  text-align: center;\n  padding: 3rem 1rem;\n}\n.clans-container .clans-grid .empty-state p {\n  color: #b0bec5;\n  font-size: 1.2rem;\n}\n/*# sourceMappingURL=clans.css.map */\n', "/* src/app/clans/clans.forms.scss */\n.new-clan-form {\n  margin: 1rem 0 2rem 0;\n}\n.new-clan-form form {\n  display: grid;\n  gap: 0.6rem;\n  max-width: 640px;\n  margin: 0 auto;\n}\n.new-clan-form form label {\n  color: #c0ccd6;\n  font-size: 0.9rem;\n}\n.new-clan-form form input,\n.new-clan-form form textarea,\n.new-clan-form form select {\n  width: 100%;\n  padding: 0.5rem 0.75rem;\n  border-radius: 8px;\n  border: 1px solid rgba(255, 255, 255, 0.06);\n  background: rgba(255, 255, 255, 0.02);\n  color: #e6eef7;\n  outline: none;\n}\n.new-clan-form form .form-actions {\n  display: flex;\n  gap: 0.5rem;\n  justify-content: flex-end;\n}\n.new-clan-form form .btn-add {\n  padding: 8px 12px;\n}\n/*# sourceMappingURL=clans.forms.css.map */\n"] }]
   }], () => [{ type: Router }, { type: ClanService }, { type: PlayerService }, { type: FormBuilder }], null);
 })();
 (() => {

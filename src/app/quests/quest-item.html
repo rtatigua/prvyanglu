@@ -7,7 +7,7 @@
   <p class="description">{{ quest.description }}</p>
 
   <div class="meta">
-    <span class="status">{{ quest.completed ? 'Completed' : 'In Progress' }}</span>
+    <span class="xp-badge">{{ quest.xp }} XP</span>
     <div class="right">
       @if (quest.xp > 100) {
         <span class="badge mega">→ MEGA XP!</span>

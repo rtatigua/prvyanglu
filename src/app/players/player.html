@@ -3,7 +3,7 @@
   <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; align-items: center;">
     <button class="btn-add-player" (click)="addPlayer()">➕ Add Player</button>
     <div>
-      <app-search [(searchQuery)]="searchTerm" placeholder="Search players..."></app-search>
+      <app-search [(searchQuery)]="searchTerm"></app-search>
       <label for="levelFilter">Filter by Level</label>
       <select id="levelFilter" (change)="levelFilter.set($any($event.target).value)">
         <option value="All">All</option>

@@ -1,9 +1,13 @@
 import { Injectable, signal } from '@angular/core';
 import { Player, Quest, Clan } from '../models';
 import { playerLevels } from '../levels';
+import { Observable, of, from } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
+  private readonly API_URL = 'http://localhost:3000';
+  private _apiAvailable = false;
   // ===== PRIVATE STATE =====
   private _players = signal<Player[]>([
     { id: 1, nickname: 'Knightmare', xp: 150, assignedQuests: [1], completedQuests: [2], clanId: 1, avatar: '🤺' },
@@ -31,6 +35,24 @@ export class PlayerService {
 
   constructor() {
     this.updateClanMembers();
+    this.loadPlayersFromAPI();
+  }
+
+  private loadPlayersFromAPI() {
+    // Try to load from json-server API using fetch
+    fetch(`${this.API_URL}/players`)
+      .then(res => {
+        if (!res.ok) throw new Error('Network error');
+        return res.json();
+      })
+      .then((players: Player[]) => {
+        if (players && players.length > 0) {
+          this._players.set(players);
+          this._apiAvailable = true;
+          this.updateClanMembers();
+        }
+      })
+      .catch(() => { /* leave in-memory data as fallback */ });
   }
 
   private updateClanMembers() {
@@ -148,6 +170,82 @@ export class PlayerService {
     if (clan) {
       clan.members = clan.members.filter(m => m.id !== playerId);
     }
+  }
+
+  // ===== ASYNC API METHODS =====
+  addPlayerAsync(player: Partial<Player>): Observable<Player> {
+    const newPlayer: Player = {
+      id: 0,
+      nickname: player.nickname ?? 'New Player',
+      xp: player.xp ?? 0,
+      assignedQuests: player.assignedQuests ?? [],
+      completedQuests: player.completedQuests ?? [],
+      clanId: player.clanId,
+      avatar: player.avatar ?? this.AVATAR_OPTIONS[0],
+    };
+
+    if (this._apiAvailable) {
+      return from(fetch(`${this.API_URL}/players`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPlayer)
+      }).then(res => res.json() as Promise<Player>)).pipe(
+        tap(created => {
+          this._players.set([...this._players(), created]);
+          this.updateClanMembers();
+        }),
+        catchError(() => of(this.addPlayer(player)))
+      );
+    }
+
+    return of(this.addPlayer(player));
+  }
+
+  deletePlayerAsync(id: number): Observable<void> {
+    if (this._apiAvailable) {
+      return from(fetch(`${this.API_URL}/players/${id}`, { method: 'DELETE' }).then(() => undefined)).pipe(
+        tap(() => {
+          this.deletePlayer(id);
+        }),
+        catchError(() => {
+          this.deletePlayer(id);
+          return of(void 0);
+        })
+      );
+    }
+    this.deletePlayer(id);
+    return of(void 0);
+  }
+
+  updatePlayerAsync(id: number, player: Partial<Player>): Observable<Player> {
+    if (this._apiAvailable) {
+      return from(fetch(`${this.API_URL}/players/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(player)
+      }).then(res => res.json() as Promise<Player>)).pipe(
+        tap(updated => {
+          this._players.set(this._players().map(p => p.id === id ? updated : p));
+          this.updateClanMembers();
+        }),
+        catchError(() => {
+          const current = this.getPlayerById(id);
+          if (current) {
+            this._players.set(this._players().map(p => p.id === id ? { ...current, ...player } : p));
+            this.updateClanMembers();
+            return of({ ...current, ...player } as Player);
+          }
+          return of(current as unknown as Player);
+        })
+      );
+    }
+    const current = this.getPlayerById(id);
+    if (current) {
+      this._players.set(this._players().map(p => p.id === id ? { ...current, ...player } : p));
+      this.updateClanMembers();
+      return of({ ...current, ...player } as Player);
+    }
+    return of(current as unknown as Player);
   }
 
   // ===== UTILITY METHODS =====

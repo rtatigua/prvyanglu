@@ -1,0 +1,116 @@
+{
+  "quests": [
+    {
+      "id": 1,
+      "title": "Slay the Dragon",
+      "description": "Defeat the mighty dragon in the mountain cave. Beware of its fire breath!",
+      "xp": 500,
+      "image": null
+    },
+    {
+      "id": 2,
+      "title": "Collect Healing Herbs",
+      "description": "Gather 20 healing herbs from the enchanted forest for the village healer.",
+      "xp": 150,
+      "image": null
+    },
+    {
+      "id": 3,
+      "title": "Find the Lost Treasure",
+      "description": "Locate the hidden treasure in the ancient ruins before the bandits find it.",
+      "xp": 400,
+      "image": null
+    },
+    {
+      "id": 4,
+      "title": "Rescue the Villagers",
+      "description": "Save the innocent villagers captured by goblin raiders.",
+      "xp": 300,
+      "image": null
+    },
+    {
+      "id": 5,
+      "title": "Defeat the Shadow Knight",
+      "description": "Battle the cursed Shadow Knight in the dark tower and break the curse.",
+      "xp": 600,
+      "image": null
+    },
+    {
+      "id": 6,
+      "title": "Retrieve the Ancient Artifact",
+      "description": "Find the mystical artifact hidden in the temple of the ancients.",
+      "xp": 350,
+      "image": null
+    }
+  ],
+  "players": [
+    {
+      "id": 1,
+      "nickname": "Knightmare",
+      "xp": 1250,
+      "assignedQuests": [1, 4],
+      "completedQuests": [2, 3],
+      "clanId": 1,
+      "avatar": "🤺"
+    },
+    {
+      "id": 2,
+      "nickname": "Herbalist",
+      "xp": 450,
+      "assignedQuests": [2, 6],
+      "completedQuests": [],
+      "clanId": null,
+      "avatar": "🌿"
+    },
+    {
+      "id": 3,
+      "nickname": "TreasureHunter",
+      "xp": 850,
+      "assignedQuests": [3, 5],
+      "completedQuests": [1],
+      "clanId": 2,
+      "avatar": "💎"
+    },
+    {
+      "id": 4,
+      "nickname": "ShadowAssassin",
+      "xp": 1100,
+      "assignedQuests": [5],
+      "completedQuests": [1, 2, 4],
+      "clanId": 1,
+      "avatar": "🐉"
+    },
+    {
+      "id": 5,
+      "nickname": "HolyPriest",
+      "xp": 600,
+      "assignedQuests": [4, 6],
+      "completedQuests": [2],
+      "clanId": 2,
+      "avatar": "⚔️"
+    }
+  ],
+  "clans": [
+    {
+      "id": 1,
+      "name": "Dragon Slayers",
+      "description": "Elite warriors dedicated to defeating dragons and protecting the realm",
+      "capacity": 10,
+      "image": null
+    },
+    {
+      "id": 2,
+      "name": "Treasure Seekers",
+      "description": "Adventurers hunting for ancient treasures and lost artifacts",
+      "capacity": 8,
+      "image": null
+    },
+    {
+      "id": 3,
+      "name": "Shadow Order",
+      "description": "Mysterious guild of skilled assassins and spies",
+      "capacity": 6,
+      "image": null
+    }
+  ]
+}

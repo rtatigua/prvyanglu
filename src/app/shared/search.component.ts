@@ -1,20 +1,20 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, model, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-search',
   standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
 export class SearchComponent {
-  @Input() searchQuery = '';
-  @Output() searchQueryChange = new EventEmitter<string>();
+  // Model input for two-way binding
+  searchQuery = model<string>('');
+  placeholder = input<string>('🔍 Search...');
 
-  @Input() placeholder = 'Search...';
-
-  onInput(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.searchQuery = value;
-    this.searchQueryChange.emit(value);
+  clearSearch() {
+    this.searchQuery.set('');
   }
 }

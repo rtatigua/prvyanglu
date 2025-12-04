@@ -1,8 +1,11 @@
-<div class="search">
+<div class="search-container">
   <input
     type="search"
-    [placeholder]="placeholder"
-    [value]="searchQuery"
-    (input)="onInput($event)"
+    class="search-input"
+    [placeholder]="placeholder()"
+    [(ngModel)]="searchQuery"
   />
+  @if (searchQuery()) {
+    <button class="clear-btn" (click)="clearSearch()">✕</button>
+  }
 </div>

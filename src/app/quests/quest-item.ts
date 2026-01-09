@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Quest } from './quest.service';
+import { Quest } from '../models';
 
 @Component({
   selector: 'app-quest-item',
@@ -10,7 +10,7 @@ import { Quest } from './quest.service';
 })
 export class QuestItemComponent {
   @Input() quest!: Quest;
-  @Output() delete = new EventEmitter<number>();
+  @Output() delete = new EventEmitter<string>();
 
   onDelete() {
     this.delete.emit(this.quest.id);

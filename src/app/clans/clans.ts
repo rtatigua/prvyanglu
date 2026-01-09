@@ -1,80 +1,121 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, OnDestroy } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Clan, Player, Quest } from '../models';
-import { ClanService } from './clans.service';
-import { PlayerService } from '../players/player.service';
+import { Clan, ClanFirestoreService } from './clan-firestore.service';
 import { SearchComponent } from '../shared/search.component';
+import { PlayerFirestoreService, Player } from '../players/player-firestore.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-clans',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SearchComponent],
+  imports: [CommonModule, SearchComponent],
   templateUrl: './clans.html',
   styleUrls: ['./clans.scss', './clans.forms.scss'],
 })
-export class Clans {
+export class Clans implements OnDestroy {
   showForm = signal(false);
   searchTerm = signal<string>('');
 
-  clanForm: FormGroup;
+  // signal-backed form fields
+  name = signal<string>('');
+  description = signal<string>('');
+  capacity = signal<number>(5);
+  formValid = computed(() => this.name().trim().length >= 8 && Number(this.capacity()) >= 1);
 
-  constructor(private router: Router, private clanService: ClanService, private playerService: PlayerService, private fb: FormBuilder) {
-    this.clanForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(8)]],
-      description: [''],
-      capacity: [5, [Validators.required, Validators.min(1)]]
-    });
-  }
+  // Observable clans a players z Firestore, konvertované na signals
+  clans = toSignal(this.clanService.clans$, { initialValue: [] });
+  players = toSignal(this.playerService.players$, { initialValue: [] });
 
-  clans = computed(() => {
+  // Computed filtered clans based on search term
+  filteredClans = computed(() => {
     const search = this.searchTerm().trim().toLowerCase();
-    const base = this.clanService.getClans().map((c: any) => ({ ...c, members: this.playerService.getPlayers().filter((p: Player) => p.clanId === c.id) } as unknown as Clan));
+    const base = this.clans().map((c: Clan) => ({
+      ...c,
+      members: this.players().filter((p: Player) => p.clanId === c.id)
+    }));
     if (!search) return base;
-    return base.filter(c => (c.name || '').toLowerCase().includes(search) || (c.description || '').toLowerCase().includes(search));
+    return base.filter((c: any) => (c.name || '').toLowerCase().includes(search) || (c.description || '').toLowerCase().includes(search));
   });
 
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private router: Router,
+    private clanService: ClanFirestoreService,
+    private playerService: PlayerFirestoreService
+  ) {
+  }
+
   addClan() {
-    this.clanForm.reset({ name: '', description: '', capacity: 5 });
+    this.name.set('');
+    this.description.set('');
+    this.capacity.set(5);
     this.showForm.set(true);
   }
 
   createClan() {
-    if (!this.clanForm.valid) {
-      alert('Clan Name is required and must be at least 8 characters long.');
+    if (!this.formValid()) {
+      alert('Názov klanu je povinný a musí mať aspoň 8 znakov.');
       return;
     }
-    const val = this.clanForm.value;
-    if (!val.name || val.name.trim().length < 8) {
-      alert('Clan Name must be at least 8 characters long.');
-      return;
-    }
-    const capacity = Number(val.capacity) || 0;
+    const name = this.name().trim();
+    const description = this.description() || '';
+    const capacity = Number(this.capacity()) || 0;
     if (!capacity || capacity <= 0) {
-      alert('Capacity must be greater than 0!');
+      alert('Kapacita musí byť väčšia ako 0!');
       return;
     }
-    this.clanService.addClan({ name: val.name, description: val.description, capacity: capacity });
-    this.showForm.set(false);
-    this.clanForm.reset({ name: '', description: '', capacity: 5 });
+    
+    const newClan = {
+      name,
+      description,
+      capacity
+    };
+
+    this.clanService.addClan(newClan)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (id) => {
+          console.log('Klan pridaný s ID:', id);
+          this.showForm.set(false);
+          this.name.set('');
+          this.description.set('');
+          this.capacity.set(5);
+        },
+        error: (err) => {
+          console.error('Chyba pri pridávaní klanu:', err);
+          alert('Chyba pri pridávaní klanu. Prosím skúste neskôr.');
+        }
+      });
   }
 
-  removeClan(id: number) {
-    // Unassign players from the clan first
-    this.playerService.getPlayers().forEach(p => {
-      if (p.clanId === id) {
-        this.playerService.setPlayerClan(p.id, undefined);
-      }
-    });
-    this.clanService.deleteClan(id);
+  removeClan(id: string) {
+    this.clanService.deleteClan(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          console.log('Klan vymazaný');
+        },
+        error: (err) => {
+          console.error('Chyba pri vymazávaní klanu:', err);
+          alert('Chyba pri vymazávaní klanu. Prosím skúste neskôr.');
+        }
+      });
   }
 
-  openDetail(id: number) {
+  openDetail(id: string) {
     this.router.navigate(['/clans', id]);
   }
 
-  getAvailablePlayers(clanId: number): Player[] {
-    return this.playerService.getPlayers().filter(p => p.clanId !== clanId);
+  getAvailablePlayers(clanId: string): Player[] {
+    return this.players().filter((p: Player) => p.clanId !== clanId);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -1,26 +1,34 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, OnDestroy } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Player, Quest, Clan } from '../models';
-import { playerLevels } from '../levels';
-import { PlayerService } from './player.service';
+import { Player, PlayerFirestoreService } from './player-firestore.service';
 import { SearchComponent } from '../shared/search.component';
-import { ClanService } from '../clans/clans.service';
+import { ClanFirestoreService } from '../clans/clan-firestore.service';
+import { playerLevels } from '../levels';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-players',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SearchComponent],
+  imports: [CommonModule, SearchComponent],
   templateUrl: './player.html',
   styleUrls: ['./player.scss','./player.forms.scss'],
 })
-export class Players {
+export class Players implements OnDestroy {
   showForm = signal(false);
-  avatarOptions: string[] = [];
-  playerForm: FormGroup;
-  players = computed(() => this.playerService.getPlayers());
-  clans = computed(() => this.clanService.getClans().map((c: any) => ({ ...c, members: this.playerService.getPlayers().filter((p: Player) => p.clanId === c.id) } as unknown as Clan)));
+  avatarOptions: string[] = ['🤺', '🌿', '💎', '🐉', '⚔️', '🎯', '👑', '🧙', '🏹', '⚡'];
+
+  // signal-based form fields
+  nickname = signal<string>('');
+  level = signal<number>(1);
+  avatar = signal<string>('⚔️');
+  formValid = computed(() => this.nickname().trim().length >= 3 && this.level() >= 1 && this.level() <= 10);
+
+  // Observable players z Firestore, konvertované na signal
+  players = toSignal(this.playerService.players$, { initialValue: [] });
+  clans = toSignal(this.clanService.clans$, { initialValue: [] });
 
   // Computed signals for each player's level data
   playersWithLevelData = computed(() => 
@@ -39,15 +47,6 @@ export class Players {
   // Search state
   searchTerm = signal<string>('');
 
-  // Two-way friendly model property for template binding
-  // get/set proxies the `searchTerm` signal so templates can use `[(model)]="searchModel"`
-  get searchModel(): string {
-    return this.searchTerm();
-  }
-  set searchModel(v: string) {
-    this.searchTerm.set(v ?? '');
-  }
-
   // Computed filtered players based on selected level title and search term
   filteredPlayersWithLevelData = computed(() => {
     const sel = this.levelFilter();
@@ -62,41 +61,56 @@ export class Players {
     return list;
   });
 
-  constructor(private router: Router, private playerService: PlayerService, private clanService: ClanService, private fb: FormBuilder) {
-    this.avatarOptions = this.playerService.getAvatarOptions();
-    this.playerForm = this.fb.group({
-      nickname: ['', [Validators.required, Validators.minLength(8)]],
-      level: [1, [Validators.required, Validators.min(1), Validators.max(10)]],
-      avatar: ['⚔️']
-    });
+  private destroy$ = new Subject<void>();
 
-    // Watch for level changes to enforce max level
-    this.playerForm.get('level')?.valueChanges.subscribe((level) => {
-      if (level >= 10) {
-        this.playerForm.get('level')?.setValue(10, { emitEvent: false });
-      }
-    });
+  constructor(
+    private router: Router, 
+    private playerService: PlayerFirestoreService, 
+    private clanService: ClanFirestoreService
+  ) {
   }
 
-  
-
   addPlayer() {
-    this.playerForm.reset({ nickname: '', level: 1, avatar: '⚔️' });
+    this.nickname.set('');
+    this.level.set(1);
+    this.avatar.set('⚔️');
     this.showForm.set(true);
   }
 
   createPlayer() {
-    if (!this.playerForm.valid) {
-      alert('Nickname is required and must be at least 8 characters long.');
+    if (!this.formValid()) {
+      alert('Prezývka je povinná a musí mať aspoň 8 znakov.');
       return;
     }
-    const val = this.playerForm.value;
-    const level = Number(val.level) || 1;
+    const level = Number(this.level()) || 1;
     const xp = playerLevels.find(l => l.level === level)?.xpRequired ?? 0;
-    this.playerService.addPlayer({ nickname: val.nickname, xp: xp, avatar: val.avatar });
-    this.playerForm.reset({ nickname: '', level: 1, avatar: '⚔️' });
-    this.showForm.set(false);
+    
+    const newPlayer = {
+      nickname: this.nickname(),
+      xp: xp,
+      avatar: this.avatar(),
+      assignedQuests: [],
+      completedQuests: [],
+      clanId: undefined
+    };
+
+    this.playerService.addPlayer(newPlayer)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (id) => {
+          console.log('Hráč pridaný s ID:', id);
+          this.nickname.set('');
+          this.level.set(1);
+          this.avatar.set('⚔️');
+          this.showForm.set(false);
+        },
+        error: (err) => {
+          console.error('Chyba pri pridávaní hráča:', err);
+          alert('Chyba pri pridávaní hráča. Prosím skúste neskôr.');
+        }
+      });
   }
+
   getPlayerLevel(xp: number): number {
     let level = 1;
     for (let i = playerLevels.length - 1; i >= 0; i--) {
@@ -130,24 +144,36 @@ export class Players {
     return Math.max(0, next.xpRequired - xp);
   }
 
-  removePlayer(id: number) {
-    const player = this.playerService.getPlayerById(id);
-    if (player && player.clanId) {
-      this.clanService.removeMember(player.clanId, id);
-    }
-    this.playerService.deletePlayer(id);
+  removePlayer(id: string) {
+    this.playerService.deletePlayer(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          console.log('Hráč vymazaný');
+        },
+        error: (err) => {
+          console.error('Chyba pri vymazávaní hráča:', err);
+          alert('Chyba pri vymazávaní hráča. Prosím skúste neskôr.');
+        }
+      });
   }
 
-  openDetail(id: number) {
+  openDetail(id: string) {
     this.router.navigate(['/players', id]);
   }
 
-  getClanName(id?: number) {
-    return this.clanService.getClanById(id ?? -1)?.name || 'No clan';
+  getClanName(id?: string) {
+    if (!id) return 'No clan';
+    return this.clanService.getClans().find(c => c.id === id)?.name || 'No clan';
   }
 
   isEmoji(text?: string): boolean {
     if (!text) return false;
     return /^[\p{Emoji}]+$/u.test(text);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

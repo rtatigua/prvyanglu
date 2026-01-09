@@ -1,104 +1,124 @@
 import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { QuestService, Quest } from './quest.service';
+import { QuestFirestoreService, Quest } from './quest-firestore.service';
 import { SearchComponent } from '../shared/search.component';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-quests',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, SearchComponent],
+  imports: [CommonModule, SearchComponent],
   templateUrl: './quests.html',
   styleUrls: ['./quests.scss', './quests.forms.scss']
 })
 export class Quests implements OnInit, OnDestroy {
-  quests = signal<Quest[]>([]);
   showForm = signal(false);
   searchTerm = signal<string>('');
-  questForm: FormGroup;
+  // signal-backed form fields
+  title = signal<string>('');
+  description = signal<string>('');
+  xp = signal<number>(50);
+  formValid = computed(() => this.title().trim().length >= 8 && Number(this.xp()) > 0);
 
   // map questId -> expanded (show full description)
-  private expandedMap = signal<Record<number, boolean>>({});
+  private expandedMap = signal<Record<string, boolean>>({});
+
+  // Observable na Quests z Firestore, konvertované na signal
+  quests = toSignal(this.questService.quests$, { initialValue: [] });
 
   questCount = computed(() => this.quests().length);
 
   filteredQuests = computed(() => {
     const s = this.searchTerm().trim().toLowerCase();
     if (!s) return this.quests();
-    return this.quests().filter(q => (q.title || '').toLowerCase().includes(s) || (q.description || '').toLowerCase().includes(s));
+    return this.quests().filter((q: Quest) => (q.title || '').toLowerCase().includes(s) || (q.description || '').toLowerCase().includes(s));
   });
 
-  constructor(private questService: QuestService, private router: Router, private fb: FormBuilder) {
-    this.questForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(8)]],
-      description: ['', Validators.required],
-      xp: [50, [Validators.required, Validators.min(1)]]
-    });
+  private destroy$ = new Subject<void>();
+
+  constructor(private questService: QuestFirestoreService, private router: Router) {
   }
 
   ngOnInit(): void {
-    console.log('Component was created');
-    this.quests.set(this.questService.getQuests());
+    console.log('Quests komponent inicializovaný');
   }
 
   ngOnDestroy(): void {
-    console.log('Component will be destroyed.');
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   addQuest() {
-    // open form when clicking add
     this.showForm.set(true);
   }
 
   createQuest() {
-    if (!this.questForm.valid) {
-      alert('Quest Title is required and must be at least 8 characters long.');
+    if (!this.formValid()) {
+      alert('Názov questu je povinný a musí mať aspoň 8 znakov.');
       return;
     }
-    const val = this.questForm.value;
-    if (!val.title || val.title.trim().length < 8) {
-      alert('Quest Title must be at least 8 characters long.');
-      return;
-    }
-    const xp = Number(val.xp) || 0;
+    const title = this.title().trim();
+    const description = this.description() || '';
+    const xp = Number(this.xp()) || 0;
     if (!xp || xp <= 0) {
-      alert('XP must be greater than 0!');
+      alert('XP musí byť väčšie ako 0!');
       return;
     }
-    const current = this.questService.getQuests();
-    const maxId = Math.max(...current.map(q => q.id), 0);
-    const q: Quest = {
-      id: maxId + 1,
-      title: val.title,
-      description: val.description || '',
-      xp: xp,
+
+    const newQuest = {
+      title,
+      description,
+      xp
     };
-    this.questService.addQuest(q);
-    this.quests.set(this.questService.getQuests());
-    this.showForm.set(false);
-    this.questForm.reset({ title: '', description: '', xp: 50 });
+
+    this.questService.addQuest(newQuest)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (id) => {
+          console.log('Quest pridaný s ID:', id);
+          this.showForm.set(false);
+          this.title.set('');
+          this.description.set('');
+          this.xp.set(50);
+        },
+        error: (err) => {
+          console.error('Chyba pri pridávaní questu:', err);
+          alert('Chyba pri pridávaní questu. Prosím skúste neskôr.');
+        }
+      });
   }
 
-  deleteQuest(id: number) {
-    this.quests.set(this.quests().filter(q => q.id !== id));
-    // also remove any expanded state for deleted quest
-    const map = { ...this.expandedMap() };
-    if (map[id]) {
-      delete map[id];
-      this.expandedMap.set(map);
-    }
+  deleteQuest(id: string) {
+    this.questService.deleteQuest(id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          console.log('Quest vymazaný');
+          const map = { ...this.expandedMap() };
+          if (map[id]) {
+            delete map[id];
+            this.expandedMap.set(map);
+          }
+        },
+        error: (err) => {
+          console.error('Chyba pri vymazávaní questu:', err);
+          alert('Chyba pri vymazávaní questu. Prosím skúste neskôr.');
+        }
+      });
   }
 
-  goToDetail(id: number) {
+  goToDetail(id: string) {
     this.router.navigate(['/quests', id]);
   }
 
-  isExpanded(id: number) {
+  isExpanded(id: string) {
     return !!this.expandedMap()[id];
   }
 
-  toggleExpand(id: number) {
+  toggleExpand(id: string) {
     const map = { ...this.expandedMap() };
     map[id] = !map[id];
     this.expandedMap.set(map);

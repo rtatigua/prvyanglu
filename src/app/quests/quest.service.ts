@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable, of, from } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
@@ -15,11 +15,11 @@ export type Quest = {
 export class QuestService {
   private readonly API_URL = 'http://localhost:3000';
   private _apiAvailable = false;
-  private quests: Quest[] = [
+  private quests = signal<Quest[]>([
     { id: 1, title: 'Slay the Dragon', description: 'Defeat the beast in the cave.', xp: 120 },
     { id: 2, title: 'Collect Herbs', description: 'Gather 10 healing herbs.', xp: 40 },
     { id: 3, title: 'Find the Lost Treasure', description: 'Locate the treasure map.', xp: 200 },
-  ];
+  ]);
 
   constructor() {
     this.loadQuestsFromAPI();
@@ -33,7 +33,7 @@ export class QuestService {
       })
       .then((quests: Quest[]) => {
         if (quests && quests.length > 0) {
-          this.quests = quests;
+          this.quests.set(quests);
           this._apiAvailable = true;
         }
       })
@@ -41,19 +41,19 @@ export class QuestService {
   }
 
   getQuests(): Quest[] {
-    return [...this.quests];
+    return [...this.quests()];
   }
 
   getQuestById(id: number): Quest | undefined {
-    return this.quests.find(q => q.id === id);
+    return this.quests().find(q => q.id === id);
   }
 
   addQuest(newQuest: Quest) {
-    this.quests.push(newQuest);
+    this.quests.set([...this.quests(), newQuest]);
   }
 
   deleteQuest(id: number) {
-    this.quests = this.quests.filter(q => q.id !== id);
+    this.quests.set(this.quests().filter(q => q.id !== id));
   }
 
   // ===== ASYNC API METHODS =====

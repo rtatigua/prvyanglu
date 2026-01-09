@@ -11,6 +11,13 @@
           } @else {
             <span class="emoji-avatar">⚔️</span>
           }
+
+          <div class="avatar-upload">
+            <label class="btn-upload">
+              Change Avatar
+              <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden />
+            </label>
+          </div>
         </div>
         <div class="info-text">
           <h2>{{ player.nickname }}</h2>

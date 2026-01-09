@@ -20,9 +20,9 @@ export class QuestListComponent {
   // Input: fallback message when list is empty
   @Input() emptyMessage: string = 'No quests.';
   // Output: emits the quest id when the action button is clicked
-  @Output() onAction = new EventEmitter<number>();
+  @Output() onAction = new EventEmitter<string>();
   
-  handleActionClick(qid: number) {
+  handleActionClick(qid: string) {
     this.onAction.emit(qid);
   }
 }

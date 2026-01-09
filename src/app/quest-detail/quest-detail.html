@@ -1,9 +1,9 @@
-@if (quest) {
+@if (quest()) {
   <div class="quest-detail">
-    <h2>{{ quest.title }}</h2>
+    <h2>{{ quest()?.title }}</h2>
     <img src="assets/logo.jpg" alt="Quest Image" class="quest-image">
-    <p><strong>Description:</strong> {{ quest.description }}</p>
-    <p><strong>XP Reward:</strong> {{ quest.xp }}</p>
+    <p><strong>Description:</strong> {{ quest()?.description }}</p>
+    <p><strong>XP Reward:</strong> {{ quest()?.xp }}</p>
 
     <button (click)="goBack()">⬅ Back to Quests</button>
   </div>

@@ -12,24 +12,24 @@
 
   @if (showForm()) {
     <div class="new-quest-form">
-      <form [formGroup]="questForm" (ngSubmit)="createQuest()">
+      <form (submit)="createQuest(); $event.preventDefault()">
         <div>
           <label for="title">Title</label>
-          <input id="title" formControlName="title" />
+          <input id="title" [value]="title()" (input)="title.set($any($event.target).value)" />
         </div>
 
         <div>
           <label for="description">Description</label>
-          <textarea id="description" formControlName="description"></textarea>
+          <textarea id="description" [value]="description()" (input)="description.set($any($event.target).value)"></textarea>
         </div>
 
         <div>
           <label for="xp">XP</label>
-          <input id="xp" formControlName="xp" type="number" inputmode="numeric" pattern="\d*" min="1" step="1" />
+          <input id="xp" [value]="xp()" (input)="xp.set(+$any($event.target).value)" type="number" inputmode="numeric" pattern="\\d*" min="1" step="1" />
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn-add-quest" [disabled]="!questForm.valid">Create</button>
+          <button type="submit" class="btn-add-quest" [disabled]="!formValid()">Create</button>
           <button type="button" (click)="showForm.set(false)">Cancel</button>
         </div>
       </form>

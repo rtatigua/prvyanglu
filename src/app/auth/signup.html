@@ -1,0 +1,67 @@
+<div class="signup-page">
+  <div class="signup-container">
+    <h2>Sign Up</h2>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        Email
+        <input type="email" formControlName="email" />
+      </label>
+      @if (form.controls.email.touched && form.controls.email.invalid) {
+        <div class="error">Please enter a valid email.</div>
+      }
+
+      <label>
+        Password
+        <input type="password" formControlName="password" />
+      </label>
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <div class="error">Password must be at least 6 characters.</div>
+      }
+
+      <label>
+        Nickname
+        <input type="text" formControlName="nickname" />
+      </label>
+      @if (form.controls.nickname.touched && form.controls.nickname.invalid) {
+        <div class="error">Choose a nickname (min 2 characters).</div>
+      }
+
+      <label>
+        Avatar (optional)
+        <input type="file" accept="image/*" (change)="onAvatarSelected($event)" />
+      </label>
+
+      @if (avatarPreview) {
+        <div class="avatar-preview">
+          <img [src]="avatarPreview" alt="Avatar preview" style="max-width:120px;max-height:120px;border-radius:8px;" />
+        </div>
+      }
+      @else {
+        @if (selectedAvatar) {
+          <div class="avatar-filename">Selected: {{ selectedAvatar.name }}</div>
+        }
+      }
+
+
+      <label>
+        Optional sound (voice clip)
+        <input type="file" accept="audio/*" (change)="onSoundSelected($event)" />
+      </label>
+
+      @if (selectedSound) {
+        <div class="sound-filename">Selected sound: {{ selectedSound.name }}</div>
+      }
+
+      @if (error) {
+        <div class="error">{{ error }}</div>
+      }
+
+      @if (loading) {
+        <button type="button" disabled>Creating account…</button>
+      }
+      @else {
+        <button type="submit">Create account</button>
+      }
+    </form>
+  </div>
+</div>

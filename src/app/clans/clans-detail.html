@@ -1,21 +1,21 @@
-@if (clan) {
+@if (clan()) {
   <div class="clan-detail-container">
     <div class="detail-header">
       <button class="btn-back" (click)="goBack()">⬅ Back</button>
-      <h1>{{ clan.name }}</h1>
+      <h1>{{ clan()?.name ?? 'Clan' }}</h1>
     </div>
 
     <div class="clan-info">
-      <p class="description">{{ clan.description }}</p>
+      <p class="description">{{ clan()?.description ?? '-' }}</p>
       <div class="capacity-info">
         <div class="capacity-bar">
           <div 
             class="capacity-fill" 
-            [style.width.%]="(clan.members.length / clan.capacity) * 100">
+            [style.width.%]="((clan()?.members?.length ?? 0) / (clan()?.capacity ?? 1)) * 100">
           </div>
         </div>
         <p class="capacity-text">
-          <strong>Members:</strong> {{ clan.members.length }}/{{ clan.capacity }}
+          <strong>Members:</strong> {{ (clan()?.members?.length ?? 0) }}/{{ clan()?.capacity ?? 0 }}
         </p>
       </div>
     </div>
@@ -26,18 +26,19 @@
         <h3>Add Member to Clan</h3>
         <div class="form-group">
           <select 
-            [(ngModel)]="selectedPlayerId" 
+            [ngModel]="selectedPlayerId()" 
+            (ngModelChange)="selectedPlayerId.set($event)"
             class="player-select"
-            [disabled]="availablePlayers.length === 0">
+            [disabled]="availablePlayers().length === 0">
             <option [value]="null">-- Select a player to add --</option>
-            @for (p of availablePlayers; track p.id) {
+            @for (p of availablePlayers(); track p.id) {
               <option [ngValue]="p.id">{{ p.nickname }} (Level {{ getPlayerLevel(p.xp) }})</option>
             }
           </select>
           <button 
             (click)="addPlayerToClan()" 
             class="btn-add-player"
-            [disabled]="!selectedPlayerId || isAtCapacity()">
+            [disabled]="!selectedPlayerId() || isAtCapacity()">
             ➕ Add Player
           </button>
         </div>
@@ -52,8 +53,8 @@
     <div class="members-section">
       <h2>Members</h2>
       <div class="members-grid">
-        @if (clan.members.length) {
-          @for (m of clan.members; track m.id) {
+        @if ((clan()?.members?.length ?? 0) > 0) {
+          @for (m of clan()!.members!; track m.id) {
             <div class="member-card">
               <div class="member-header">
                 @if (m.avatar) {

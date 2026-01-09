@@ -1,5 +1,5 @@
 export interface Quest {
-  id: number;
+  id: string;
   title: string;
   description: string;
   xp: number;
@@ -8,18 +8,18 @@ export interface Quest {
 
 // 🔹 Hráč
 export interface Player {
-  id: number;
+  id: string;
   nickname: string;
   xp: number;
-  assignedQuests: number[]; // quest IDs not yet completed
-  completedQuests: number[]; // quest IDs completed
-  clanId?: number; // prepojenie na clan (only one clan per player)
+  assignedQuests: string[]; // quest IDs not yet completed
+  completedQuests: string[]; // quest IDs completed
+  clanId?: string; // prepojenie na clan (only one clan per player)
   avatar?: string; // emoji or image URL
 }
 
 // 🔹 Clan
 export interface Clan {
-  id: number;
+  id: string;
   name: string;
   description: string;
   capacity: number;

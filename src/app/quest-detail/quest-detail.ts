@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QuestService, Quest } from '../quests/quest.service';
+import { Quest, QuestFirestoreService } from '../quests/quest-firestore.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-quest-detail',
@@ -10,18 +13,30 @@ import { QuestService, Quest } from '../quests/quest.service';
   templateUrl: './quest-detail.html',
   styleUrls: ['./quest-detail.scss']
 })
-export class QuestDetail {
-  quest?: Quest;
+export class QuestDetail implements OnInit, OnDestroy {
+  quest = signal<Quest | undefined>(undefined);
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private questService: QuestService
+    private questService: QuestFirestoreService
   ) {}
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.quest = this.questService.getQuests().find(q => q.id === id);
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.questService.getQuestById(id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(quest => {
+          this.quest.set(quest);
+        });
+    }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   goBack() {

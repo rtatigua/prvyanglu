@@ -16,12 +16,12 @@
         <div class="clan-card" (click)="openDetail(c.id)">
           <div class="card-header">
             <h3>{{ c.name }}</h3>
-            <span class="capacity-badge">{{ c.members.length }}/{{ c.capacity }}</span>
+            <span class="capacity-badge">{{ (c.members?.length ?? 0) }}/{{ c.capacity }}</span>
           </div>
           <p class="description">{{ c.description }}</p>
           <div class="card-footer">
             <div class="members-info">
-              <span class="members-count">{{ c.members.length }} members</span>
+              <span class="members-count">{{ (c.members?.length ?? 0) }} members</span>
             </div>
             <button 
               class="btn-remove" 
@@ -41,21 +41,21 @@
 
   @if (showForm()) {
     <div class="new-clan-form">
-      <form [formGroup]="clanForm" (ngSubmit)="createClan()">
+      <form (submit)="createClan(); $event.preventDefault()">
         <div>
           <label for="name">Clan Name</label>
-          <input id="name" formControlName="name" />
+          <input id="name" [value]="name()" (input)="name.set($any($event.target).value)" />
         </div>
         <div>
           <label for="description">Description</label>
-          <textarea id="description" formControlName="description"></textarea>
+          <textarea id="description" [value]="description()" (input)="description.set($any($event.target).value)"></textarea>
         </div>
         <div>
           <label for="capacity">Capacity</label>
-          <input id="capacity" formControlName="capacity" type="number" inputmode="numeric" pattern="\d*" min="1" step="1" />
+          <input id="capacity" [value]="capacity()" (input)="capacity.set(+$any($event.target).value)" type="number" inputmode="numeric" pattern="\\d*" min="1" step="1" />
         </div>
         <div class="form-actions">
-          <button type="submit" class="btn-add" [disabled]="!clanForm.valid">Create</button>
+          <button type="submit" class="btn-add" [disabled]="!formValid()">Create</button>
           <button type="button" (click)="showForm.set(false)">Cancel</button>
         </div>
       </form>

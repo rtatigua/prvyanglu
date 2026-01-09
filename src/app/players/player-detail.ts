@@ -1,25 +1,28 @@
 import { playerLevels } from '../levels';
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Player, Quest, Clan } from '../models';
-import { PlayerService } from './player.service';
-import { QuestService } from '../quests/quest.service';
+import { Player, PlayerFirestoreService } from './player-firestore.service';
+import { Quest, QuestFirestoreService } from '../quests/quest-firestore.service';
 import { QuestListComponent } from '../shared/quest-list.component';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 @Component({
   selector: 'app-player-detail',
   standalone: true,
-  imports: [CommonModule, QuestListComponent],
+  imports: [CommonModule, QuestListComponent, RouterLink],
   templateUrl: './player-detail.html',
   styleUrls: ['./player-detail.scss'],
 })
-export class PlayerDetail implements OnInit {
+export class PlayerDetail implements OnInit, OnDestroy {
   playerSignal = signal<Player | undefined>(undefined);
   assignedQuests = signal<Quest[]>([]);
   completedQuests = signal<Quest[]>([]);
-  allQuests = signal<Quest[]>([]);
-  selectedQuestId?: number;
+  allQuests = toSignal(this.questService.quests$, { initialValue: [] });
+  private destroy$ = new Subject<void>();
 
   // Computed signal for player level data
   playerLevelData = computed(() => {
@@ -32,24 +35,62 @@ export class PlayerDetail implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private playerService: PlayerService,
-    private questService: QuestService
+    private playerService: PlayerFirestoreService,
+    private questService: QuestFirestoreService
   ) {}
 
-  ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.loadPlayerData(id);
+  async onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    await this.uploadAvatar(file);
   }
 
-  private loadPlayerData(id: number) {
-    const player = this.playerService.getPlayerById(id);
-    this.playerSignal.set(player);
-    this.allQuests.set(this.questService.getQuests());
-
-    if (player) {
-      this.assignedQuests.set(this.allQuests().filter((q: Quest) => player.assignedQuests.includes(q.id)));
-      this.completedQuests.set(this.allQuests().filter((q: Quest) => player.completedQuests.includes(q.id)));
+  private async uploadAvatar(file: File) {
+    const player = this.playerSignal();
+    if (!player) return;
+    try {
+      const storage = getStorage();
+      const storageRef = ref(storage, `avatars/${player.id}/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      this.playerService.updatePlayer(player.id, { avatar: url }).pipe(takeUntil(this.destroy$)).subscribe(() => {
+        // reload or set signal will be updated from subscription in loadPlayerData
+      });
+    } catch (err) {
+      console.error('Avatar upload failed', err);
     }
+  }
+
+  ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.loadPlayerData(id);
+    }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadPlayerData(id: string) {
+    this.playerService.players$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(players => {
+        const player = players.find(p => p.id === id);
+        this.playerSignal.set(player);
+
+        if (player) {
+          const quests = this.allQuests();
+          this.assignedQuests.set(
+            quests.filter((q: Quest) => player.assignedQuests.includes(q.id))
+          );
+          this.completedQuests.set(
+            quests.filter((q: Quest) => player.completedQuests.includes(q.id))
+          );
+        }
+      });
   }
 
   getPlayerLevel(xp: number): number {
@@ -68,37 +109,63 @@ export class PlayerDetail implements OnInit {
     return /^[\p{Emoji}]+$/u.test(text);
   }
 
-  completeQuest(questId: number) {
+  completeQuest(questId: string) {
     const player = this.playerSignal();
     if (player) {
-      const quest = this.questService.getQuestById(questId);
+      const quest = this.allQuests().find((q: Quest) => q.id === questId);
       const xp = quest?.xp ?? 0;
-      this.playerService.completeQuest(player.id, questId, xp);
-      this.loadPlayerData(player.id);
+      const updatedCompletedQuests = [...player.completedQuests, questId];
+      const updatedXp = player.xp + xp;
+      
+      this.playerService.updatePlayer(player.id, {
+        completedQuests: updatedCompletedQuests,
+        xp: updatedXp
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
     }
   }
 
-  uncompleteQuest(questId: number) {
+  uncompleteQuest(questId: string) {
     const player = this.playerSignal();
     if (player) {
-      this.playerService.uncompleteQuest(player.id, questId);
-      this.loadPlayerData(player.id);
+      const quest = this.allQuests().find((q: Quest) => q.id === questId);
+      const xp = quest?.xp ?? 0;
+      const updatedCompletedQuests = player.completedQuests.filter(q => q !== questId);
+      const updatedXp = Math.max(0, player.xp - xp);
+      
+      this.playerService.updatePlayer(player.id, {
+        completedQuests: updatedCompletedQuests,
+        xp: updatedXp
+      })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
     }
   }
 
   assignQuest(questIdRaw: any) {
-    const questId = Number(questIdRaw);
+    const questId = questIdRaw as string;
     const player = this.playerSignal();
     if (!player || !questId) return;
-    this.playerService.assignQuestToPlayer(player.id, questId);
-    this.loadPlayerData(player.id);
+    
+    const updatedAssignedQuests = [...player.assignedQuests, questId];
+    this.playerService.updatePlayer(player.id, {
+      assignedQuests: updatedAssignedQuests
+    })
+    .pipe(takeUntil(this.destroy$))
+    .subscribe();
   }
 
-  unassignQuest(questId: number) {
+  unassignQuest(questId: string) {
     const player = this.playerSignal();
     if (!player) return;
-    this.playerService.removeQuestFromPlayer(player.id, questId);
-    this.loadPlayerData(player.id);
+    
+    const updatedAssignedQuests = player.assignedQuests.filter(q => q !== questId);
+    this.playerService.updatePlayer(player.id, {
+      assignedQuests: updatedAssignedQuests
+    })
+    .pipe(takeUntil(this.destroy$))
+    .subscribe();
   }
 
   goBack() {

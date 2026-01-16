@@ -79,15 +79,6 @@
       "completedQuests": [1, 2, 4],
       "clanId": 1,
       "avatar": "🐉"
-    },
-    {
-      "id": 5,
-      "nickname": "HolyPriest",
-      "xp": 600,
-      "assignedQuests": [4, 6],
-      "completedQuests": [2],
-      "clanId": 2,
-      "avatar": "⚔️"
     }
   ],
   "clans": [

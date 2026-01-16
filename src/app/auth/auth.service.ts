@@ -1,7 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Auth } from '@angular/fire/auth';
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { Router } from '@angular/router';
 import { PlayerFirestoreService } from '../players/player-firestore.service';
 import { firstValueFrom } from 'rxjs';
@@ -51,7 +50,7 @@ export class AuthService {
   /**
    * Create account and corresponding player record. Returns player id.
    */
-  async register(email: string, password: string, nickname?: string, avatarFile?: File, soundFile?: File): Promise<string> {
+  async register(email: string, password: string, nickname?: string, avatar?: string): Promise<string> {
     try {
       const cred = await createUserWithEmailAndPassword(this.auth, email, password);
       const uid = cred.user.uid;
@@ -63,33 +62,9 @@ export class AuthService {
         xp: 0,
         assignedQuests: [],
         completedQuests: [],
-        avatar: '⚔️',
+        avatar: avatar || '\u2694\ufe0f',
         uid
       };
-
-      // optionally upload avatar and/or sound to Storage and attach URLs
-      // Upload avatar and sound to Storage — fail registration if upload fails
-      if (avatarFile || soundFile) {
-        const storage = getStorage();
-        try {
-          if (avatarFile) {
-            const aRef = storageRef(storage, `avatars/${uid}/${Date.now()}_${avatarFile.name}`);
-            await uploadBytes(aRef, avatarFile);
-            const url = await getDownloadURL(aRef);
-            newPlayer.avatar = url;
-          }
-
-          if (soundFile) {
-            const sRef = storageRef(storage, `sounds/${uid}/${Date.now()}_${soundFile.name}`);
-            await uploadBytes(sRef, soundFile);
-            const soundUrl = await getDownloadURL(sRef);
-            newPlayer.sound = soundUrl;
-          }
-        } catch (uploadErr) {
-          console.error('Storage upload error during register', uploadErr);
-          throw uploadErr; // surface upload error so signup can show it
-        }
-      }
 
       const id = await firstValueFrom(this.playerService.addPlayer(newPlayer));
       return id;

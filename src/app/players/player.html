@@ -1,7 +1,6 @@
 <div class="players">
   <h2>👤 Players</h2>
   <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem; align-items: center;">
-    <button class="btn-add-player" (click)="addPlayer()">➕ Add Player</button>
     <div>
       <app-search [(searchQuery)]="searchTerm"></app-search>
       <label for="levelFilter">Filter by Level</label>
@@ -33,7 +32,6 @@
             <span class="xp-to-next">{{ p.xpToNext }} XP to next level</span>
           </div>
           <p>Clan: {{ getClanName(p.clanId) }}</p>
-          <button class="btn-remove" (click)="removePlayer(p.id); $event.stopPropagation()">❌ Remove</button>
         </div>
       }
     } @else {
@@ -43,38 +41,4 @@
     }
   </div>
 
-  @if (showForm()) {
-    <div class="new-player-form">
-      <form (submit)="createPlayer(); $event.preventDefault()">
-        <div>
-          <label for="nickname">Nickname</label>
-          <input id="nickname" [value]="nickname()" (input)="nickname.set($any($event.target).value)" />
-        </div>
-        <div>
-          <label for="level">Level</label>
-          <input id="level" [value]="level()" (input)="level.set(+$any($event.target).value)" type="number" inputmode="numeric" min="1" max="10" step="1" />
-          @if (level() == 10) {
-            <span class="error">Max level is 10 (you can't put higher number)</span>
-          }
-        </div>
-        <div>
-          <label for="avatar">Avatar</label>
-          <div class="avatar-selector">
-            @for (a of avatarOptions; track a) {
-              <button type="button"
-                      (click)="avatar.set(a)"
-                      [class.selected]="avatar() === a"
-                      class="avatar-btn">
-                {{ a }}
-              </button>
-            }
-          </div>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn-add-player" [disabled]="!formValid()">Create</button>
-          <button type="button" (click)="showForm.set(false)">Cancel</button>
-        </div>
-      </form>
-    </div>
-  }
 </div>

@@ -4,3 +4,7 @@
 .signup-container label { display:block; margin-bottom:8px; }
 .signup-container input { width:100%; padding:8px; margin-top:4px; }
 .error { color:#c62828; font-size:13px; margin:6px 0; }
+.avatar-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.avatar-btn { padding: 8px 12px; font-size: 20px; border: 2px solid #ddd; background: white; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+.avatar-btn:hover { border-color: #666; transform: scale(1.1); }
+.avatar-btn.selected { border-color: #4CAF50; background: #e8f5e9; }

@@ -27,30 +27,18 @@
       }
 
       <label>
-        Avatar (optional)
-        <input type="file" accept="image/*" (change)="onAvatarSelected($event)" />
-      </label>
-
-      @if (avatarPreview) {
-        <div class="avatar-preview">
-          <img [src]="avatarPreview" alt="Avatar preview" style="max-width:120px;max-height:120px;border-radius:8px;" />
+        Avatar
+        <div class="avatar-selector">
+          @for (a of avatarOptions; track a) {
+            <button type="button"
+                    (click)="selectedAvatar = a"
+                    [class.selected]="selectedAvatar === a"
+                    class="avatar-btn">
+              {{ a }}
+            </button>
+          }
         </div>
-      }
-      @else {
-        @if (selectedAvatar) {
-          <div class="avatar-filename">Selected: {{ selectedAvatar.name }}</div>
-        }
-      }
-
-
-      <label>
-        Optional sound (voice clip)
-        <input type="file" accept="audio/*" (change)="onSoundSelected($event)" />
       </label>
-
-      @if (selectedSound) {
-        <div class="sound-filename">Selected sound: {{ selectedSound.name }}</div>
-      }
 
       @if (error) {
         <div class="error">{{ error }}</div>

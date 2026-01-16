@@ -19,10 +19,9 @@ export class Signup {
   });
 
   error = '';
-  selectedAvatar?: File | null = null;
-  selectedSound?: File | null = null;
+  selectedAvatar = '⚔️';
   loading = false;
-  avatarPreview?: string | null = null;
+  avatarOptions: string[] = ['🤺', '🌿', '💎', '🐉', '⚔️', '🎯', '👑', '🧙', '🏹', '⚡'];
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {}
 
@@ -37,9 +36,7 @@ export class Signup {
     try {
       this.loading = true;
       const nickArg: string | undefined = (nickname ?? undefined) as string | undefined;
-      const avatarArg = this.selectedAvatar ?? undefined;
-      const soundArg = this.selectedSound ?? undefined;
-      const playerId = await this.auth.register(email!, password!, nickArg, avatarArg, soundArg);
+      const playerId = await this.auth.register(email!, password!, nickArg, this.selectedAvatar);
       await this.router.navigate(['/players', playerId]);
     } catch (err: any) {
       this.error = err?.message || 'Registration failed';
@@ -49,34 +46,5 @@ export class Signup {
     }
   }
 
-  onAvatarSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      // revoke previous preview URL
-      if (this.avatarPreview) {
-        URL.revokeObjectURL(this.avatarPreview);
-        this.avatarPreview = null;
-      }
-      this.selectedAvatar = input.files[0];
-      try {
-        this.avatarPreview = URL.createObjectURL(this.selectedAvatar);
-      } catch (e) {
-        this.avatarPreview = null;
-      }
-    }
-  }
-
-  onSoundSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      this.selectedSound = input.files[0];
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.avatarPreview) {
-      URL.revokeObjectURL(this.avatarPreview);
-      this.avatarPreview = null;
-    }
-  }
+  ngOnDestroy(): void {}
 }
